@@ -9,6 +9,7 @@
 import React, { useState } from 'react';
 import { StyleSheet } from 'react-native';
 import { Container, Input, Button, Item, Content, Text } from 'native-base';
+import { TezosConseilClient } from 'conseiljs';
 
 import {
   Header,
@@ -28,46 +29,12 @@ const App: () => React$Node = () => {
   const [text, setText] = useState('tz3gN8NTLNLJg5KRsUU47NHNVHbdhcFXjjaB');
   const [balance, setBalance] = useState(0);
 
-
-  function getQuery() {
-    return {
-      aggregation: [],
-      fields: [],
-      limit: 1,
-      orderBy: [],
-      predicates: [
-        {
-          field: 'account_id',
-          inverse: false,
-          operation: 'eq',
-          set: [text]
-        }
-      ]
-    }
-  }
-
-  async function getBalanceApi() {
-    const url = `${serverInfo.url}/v2/data/tezos/${serverInfo.network}/accounts`;
-    const query = getQuery();
-    return fetch(url, {
-      method: 'post',
-      headers: { 'apiKey': serverInfo.apiKey, 'Content-Type': 'application/json' },
-      body: JSON.stringify(query)
-    })
-    .then((r) => r.json())
-    .then((responseJson) => {
-      console.log('newBal---', responseJson);
-      return responseJson[0].balance
-    })
-    .catch((error) => {
-      console.log(error);
-      return 0;
-    });
-  }
-
   async function getBalance() {
-    const newBal = await getBalanceApi();
-    setBalance(newBal);
+    const newBal = await TezosConseilClient.getAccount(serverInfo, serverInfo.network, text)
+    .catch((err) => {
+      return {balance: 0}
+    });
+    setBalance(newBal.balance);
   }
   return (
     <>
