@@ -8,7 +8,8 @@
 
 import React, { useState } from 'react';
 import { StyleSheet } from 'react-native';
-import { Container, Input, Button, Item, Content, Text } from 'native-base';
+import { Container, Input, Button, Item, Text } from 'native-base';
+import RNSecureStorage, { ACCESSIBLE } from 'rn-secure-storage'
 import { TezosConseilClient } from 'conseiljs';
 
 import {
@@ -28,6 +29,8 @@ const serverInfo = {
 const App: () => React$Node = () => {
   const [text, setText] = useState('tz3gN8NTLNLJg5KRsUU47NHNVHbdhcFXjjaB');
   const [balance, setBalance] = useState(0);
+  const [secureTxt, setSecureTxt] = useState('');
+  const [localHash, setLocalHash] = useState('');
 
   async function getBalance() {
     const newBal = await TezosConseilClient.getAccount(serverInfo, serverInfo.network, text)
@@ -35,6 +38,16 @@ const App: () => React$Node = () => {
       return {balance: 0}
     });
     setBalance(newBal.balance);
+  }
+
+  async function onSaveToStorage() {
+    const result = await RNSecureStorage.set('hash', secureTxt, {accessible: ACCESSIBLE.WHEN_UNLOCKED});
+    console.log('save------', result);
+  }
+
+  async function onGetFromStorage() {
+    const newHash = await RNSecureStorage.get('hash');
+    setLocalHash(newHash);
   }
   return (
     <>
@@ -54,6 +67,30 @@ const App: () => React$Node = () => {
             <Text style={styles.buttonText}>Get</Text>
           </Button>
       </Container>
+      <Container style={styles.main}>
+          <Item regular>
+            <Input
+              style={styles.input}
+              placeholder="Type here hash!"
+              onChangeText={txt => setSecureTxt(txt)}
+              value={secureTxt}
+            />
+          </Item>
+
+          <Text style={styles.balanceTitle}>
+            Saved Value: {localHash}
+          </Text>
+
+          <Container style={styles.buttonGr}>
+            <Button style={styles.secureBtn} onPress={() => onSaveToStorage()}>
+              <Text style={styles.buttonText}>Save</Text>
+            </Button>
+            <Button style={styles.secureBtn} onPress={() => onGetFromStorage()}>
+              <Text style={styles.buttonText}>Get</Text>
+            </Button>
+          </Container>
+          
+      </Container>
     </>
   );
 };
@@ -66,7 +103,7 @@ const styles = StyleSheet.create({
   },
   main: {
     paddingHorizontal: 30,
-    paddingVertical: 50,
+    paddingVertical: 10,
     backgroundColor: Colors.white,
     justifyContent: "center"
   },
@@ -75,11 +112,19 @@ const styles = StyleSheet.create({
     fontSize: 24
   },
   button: {
-    marginTop: 32,
+    marginTop: 32
   },
   buttonText: {
     width: '100%',
     textAlign: 'center'
+  },
+  buttonGr: {
+    flexDirection: 'row',
+    marginTop: 32,
+    justifyContent: 'space-between'
+  },
+  secureBtn: {
+    width: '40%'
   }
 });
 

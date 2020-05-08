@@ -23,6 +23,7 @@
     "react-native-level-fs": "^3.0.0",
     "readable-stream": "^1.0.33",
     "rn-nodeify": "^10.2.0",
+    "rn-secure-storage": "^2.0.4",
     "stream-browserify": "^1.0.0"
   },
   "devDependencies": {
