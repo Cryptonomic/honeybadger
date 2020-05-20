@@ -9,8 +9,11 @@
 import React, { useState } from 'react';
 import { StyleSheet } from 'react-native';
 import { Container, Input, Button, Item, Text } from 'native-base';
-import RNSecureStorage, { ACCESSIBLE } from 'rn-secure-storage'
+import RNSecureStorage, { ACCESSIBLE } from 'rn-secure-storage';
+import { Snackbar } from 'react-native-paper';
+import TransportHID from '@ledgerhq/react-native-hid';
 import { TezosConseilClient } from 'conseiljs';
+import { KeyStoreUtils } from 'conseiljs-ledgersigner';
 
 import {
   Header,
@@ -26,11 +29,15 @@ const serverInfo = {
   network: 'carthagenet'
 };
 
+const derivationPath = `44'/1729'/0'/0'/0'`;
+
 const App: () => React$Node = () => {
   const [text, setText] = useState('tz3gN8NTLNLJg5KRsUU47NHNVHbdhcFXjjaB');
   const [balance, setBalance] = useState(0);
   const [secureTxt, setSecureTxt] = useState('');
   const [localHash, setLocalHash] = useState('');
+  const [pkh, setPkh] = useState('');
+  const [open, setOpen] = useState(false);
 
   async function getBalance() {
     const newBal = await TezosConseilClient.getAccount(serverInfo, serverInfo.network, text)
@@ -49,48 +56,82 @@ const App: () => React$Node = () => {
     const newHash = await RNSecureStorage.get('hash');
     setLocalHash(newHash);
   }
+  async function onGetLederAddress() {
+    const devicesList = await TransportHID.list();
+    if (devicesList.length === 0) {
+      setOpen(true);
+
+    } else {
+      const newKeyStore = await KeyStoreUtils.unlockAddress(derivationPath).catch(() => {
+        return {
+          publicKeyHash: ''
+        }
+      });
+      setPkh(newKeyStore.publicKeyHash);
+    }
+    
+  }
+
   return (
     <>
       <Container style={styles.main}>
-          <Item regular>
-            <Input
-              style={styles.input}
-              placeholder="Type here address!"
-              onChangeText={text => setText(text)}
-              defaultValue={text}
-            />
-          </Item>
-          <Text style={styles.balanceTitle}>
-            {balance}
-          </Text>
-          <Button style={styles.button} onPress={() => getBalance()}>
-            <Text style={styles.buttonText}>Get</Text>
-          </Button>
+        <Item regular>
+          <Input
+            style={styles.input}
+            placeholder="Type here address!"
+            onChangeText={text => setText(text)}
+            defaultValue={text}
+          />
+        </Item>
+        <Text style={styles.balanceTitle}>
+          {balance}
+        </Text>
+        <Button style={styles.button} onPress={() => getBalance()}>
+          <Text style={styles.buttonText}>Get</Text>
+        </Button>
       </Container>
       <Container style={styles.main}>
-          <Item regular>
-            <Input
-              style={styles.input}
-              placeholder="Type here hash!"
-              onChangeText={txt => setSecureTxt(txt)}
-              value={secureTxt}
-            />
-          </Item>
+        <Item regular>
+          <Input
+            style={styles.input}
+            placeholder="Type here hash!"
+            onChangeText={txt => setSecureTxt(txt)}
+            value={secureTxt}
+          />
+        </Item>
 
-          <Text style={styles.balanceTitle}>
-            Saved Value: {localHash}
-          </Text>
+        <Text style={styles.balanceTitle}>
+          Saved Value: {localHash}
+        </Text>
 
-          <Container style={styles.buttonGr}>
-            <Button style={styles.secureBtn} onPress={() => onSaveToStorage()}>
-              <Text style={styles.buttonText}>Save</Text>
-            </Button>
-            <Button style={styles.secureBtn} onPress={() => onGetFromStorage()}>
-              <Text style={styles.buttonText}>Get</Text>
-            </Button>
-          </Container>
+        <Container style={styles.buttonGr}>
+          <Button style={styles.secureBtn} onPress={() => onSaveToStorage()}>
+            <Text style={styles.buttonText}>Save</Text>
+          </Button>
+          <Button style={styles.secureBtn} onPress={() => onGetFromStorage()}>
+            <Text style={styles.buttonText}>Get</Text>
+          </Button>
+        </Container>
           
       </Container>
+
+      <Container style={styles.main}>
+          <Text style={styles.balanceTitle}>
+            PublicKeyHash: {pkh}
+          </Text>
+
+          <Button style={styles.button} onPress={() => onGetLederAddress()}>
+            <Text style={styles.buttonText}>Connect Ledger</Text>
+          </Button>
+          
+      </Container>
+      <Snackbar
+        visible={open}
+        duration={3000}
+        onDismiss={()=>setOpen(false)}
+      >
+        Ledger device not found
+      </Snackbar>
     </>
   );
 };
