@@ -49,7 +49,7 @@ const Loading = ({navigation}) => {
                     bgColor="#fcd104">
                     <Text style={{fontSize: 16}}>
                         {progress === 100 ? (
-                            <Checkmark />
+                            <View style={styles.icon}><Checkmark /></View>
                         ) : (
                             'preparing account...'
                         )}
@@ -69,6 +69,10 @@ const styles = StyleSheet.create({
     item: {
         marginBottom: 100,
     },
+    icon: {
+        width: 81,
+        height: 65
+    }
 });
 
 export default Loading;

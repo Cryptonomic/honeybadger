@@ -1,19 +1,29 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {StyleSheet} from 'react-native';
-import {Container, Input, Button, Item, Text, View} from 'native-base';
+import {
+    Container,
+    Button,
+    Text,
+    View,
+    Header,
+} from 'native-base';
 import RNSecureStorage, {ACCESSIBLE} from 'rn-secure-storage';
 import {Snackbar} from 'react-native-paper';
 import TransportHID from '@ledgerhq/react-native-hid';
-// import { TezosConseilClient } from 'conseiljs';
-// import { KeyStoreUtils } from 'conseiljs-ledgersigner';
+import {TezosConseilClient} from 'conseiljs';
+import {KeyStoreUtils} from 'conseiljs-ledgersigner';
 
 import {
-    Header,
     LearnMoreLinks,
     Colors,
     DebugInstructions,
     ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
+
+import Transactions from '../components/Transactions';
+import Delegation from '../components/Delegation';
+import Receive from '../assets/receive.svg';
+import Send from '../assets/send.svg';
 
 const serverInfo = {
     url: 'https://conseil-dev.cryptonomic-infra.tech:443',
@@ -30,14 +40,17 @@ const Account = ({navigation}) => {
     const [localHash, setLocalHash] = useState('');
     const [pkh, setPkh] = useState('');
     const [open, setOpen] = useState(false);
+    const [tab, setTab] = useState(0);
 
     async function getBalance() {
-        // const newBal = await TezosConseilClient.getAccount(serverInfo, serverInfo.network, text)
-        // .catch((err) => {
-        //   return {balance: 0}
-        // });
-        // setBalance(newBal.balance);
-        setBalance(400);
+        const newBal = await TezosConseilClient.getAccount(
+            serverInfo,
+            serverInfo.network,
+            text,
+        ).catch(err => {
+            return {balance: 0};
+        });
+        setBalance(newBal.balance);
     }
 
     async function onSaveToStorage() {
@@ -58,17 +71,190 @@ const Account = ({navigation}) => {
         if (devicesList.length === 0) {
             setOpen(true);
         } else {
-            // const newKeyStore = await KeyStoreUtils.unlockAddress(derivationPath).catch(() => {
-            //   return {
-            //     publicKeyHash: ''
-            //   }
-            // });
-            // setPkh(newKeyStore.publicKeyHash);
-            setPkh('newKeyStore.publicKeyHash');
+            const newKeyStore = await KeyStoreUtils.unlockAddress(
+                derivationPath,
+            ).catch(() => {
+                return {
+                    publicKeyHash: '',
+                };
+            });
+            setPkh(newKeyStore.publicKeyHash);
         }
     }
+
+    const changeTab = newTab => {
+        if (newTab === tab) {
+            return;
+        }
+
+        setTab(newTab);
+    };
+
+    useEffect(() => {
+        getBalance();
+    }, []);
+
+    // navigation.replace('Welcome')
+
     return (
-        <>
+        <Container style={styles.container}>
+            <View style={styles.top}>
+                <Header transparent />
+                <View style={styles.account}>
+                    <Text>{`My account (tz3gN8NTLN)`}</Text>
+                    <Button style={styles.menu} transparent>
+                        <View style={styles.icon}>
+                            <View style={styles.dot} />
+                            <View style={styles.dot} />
+                            <View style={styles.dot} />
+                        </View>
+                    </Button>
+                </View>
+                <View style={styles.amount}>
+                    <View style={styles.center}>
+                        <Text>{balance}</Text>
+                    </View>
+                    <View style={styles.center}>
+                        <Text>$0.00</Text>
+                    </View>
+                </View>
+                <View style={styles.actions}>
+                    <View style={styles.center}>
+                        <Button transparent>
+                            <View style={styles.actionCircle}>
+                                <Receive />
+                            </View>
+                        </Button>
+                        <Text style={styles.actionLabel}>Receive</Text>
+                    </View>
+                    <View style={styles.center}>
+                        <Button transparent>
+                            <View style={styles.actionCircle}>
+                                <Send />
+                            </View>
+                        </Button>
+                        <Text style={styles.actionLabel}>Send</Text>
+                    </View>
+                </View>
+            </View>
+            <View style={styles.bottom}>
+                <View style={styles.tabs}>
+                    <View
+                        style={styles.tab}
+                        borderBottomColor={tab === 0 ? '#f1c20e' : '#e8e8e8'}>
+                        <Button
+                            style={styles.center}
+                            transparent
+                            onPress={() => changeTab(0)}>
+                            <Text>Transactions</Text>
+                        </Button>
+                    </View>
+                    <View
+                        style={styles.tab}
+                        borderBottomColor={tab === 1 ? '#f1c20e' : '#e8e8e8'}>
+                        <Button
+                            style={styles.center}
+                            transparent
+                            onPress={() => changeTab(1)}>
+                            <Text>Delegation</Text>
+                        </Button>
+                    </View>
+                </View>
+                <View style={styles.tabContainer}>
+                    {tab === 0 && <Transactions />}
+                    {tab === 1 && <Delegation />}
+                </View>
+            </View>
+        </Container>
+    );
+};
+
+const styles = StyleSheet.create({
+    container: {
+        backgroundColor: '#fcd104',
+    },
+    top: {
+        height: '45%',
+    },
+    bottom: {
+        backgroundColor: '#ffffff',
+        height: '100%',
+        borderTopLeftRadius: 26,
+        borderTopRightRadius: 26,
+        alignItems: 'center',
+    },
+    menu: {
+        width: 24,
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderRadius: 0,
+        position: 'absolute',
+        right: 15,
+    },
+    icon: {
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    dot: {
+        width: 5,
+        height: 5,
+        borderRadius: 5,
+        backgroundColor: '#595252',
+        margin: 2,
+    },
+    account: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        position: 'relative',
+    },
+    amount: {
+        marginTop: 20,
+    },
+    actions: {
+        marginTop: 100,
+        flexDirection: 'row',
+        justifyContent: 'center',
+    },
+    actionCircle: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: 86,
+        height: 86,
+        backgroundColor: 'rgba(0, 0, 0, 0.05)',
+        borderRadius: 86,
+        margin: 20,
+        padding: 25,
+    },
+    actionLabel: {
+        marginTop: 30,
+    },
+    tabs: {
+        width: '90%',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+    },
+    tab: {
+        borderBottomWidth: 3,
+        borderRadius: 0,
+        width: '50%',
+        justifyContent: 'center',
+    },
+    tabContainer: {
+        marginTop: 50,
+    },
+    center: {
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+});
+
+export default Account;
+
+/*
+
+            <>
             <Container style={styles.main}>
                 <Item regular>
                     <Input
@@ -110,6 +296,7 @@ const Account = ({navigation}) => {
                     </Button>
                 </Container>
             </Container>
+        </>
 
             <Container style={styles.main}>
                 <Text style={styles.balanceTitle}>PublicKeyHash: {pkh}</Text>
@@ -120,19 +307,16 @@ const Account = ({navigation}) => {
                     <Text style={styles.buttonText}>Connect Ledger</Text>
                 </Button>
             </Container>
-            <Button onPress={() => navigation.replace('Welcome')}><Text>go to welcome</Text></Button>
+
             <Snackbar
                 visible={open}
                 duration={3000}
                 onDismiss={() => setOpen(false)}>
                 Ledger device not found
             </Snackbar>
-        </>
-    );
-};
 
-const styles = StyleSheet.create({
-    input: {
+
+            input: {
         height: 40,
         borderWidth: 1,
         borderRadius: 3,
@@ -162,6 +346,5 @@ const styles = StyleSheet.create({
     secureBtn: {
         width: '40%',
     },
-});
 
-export default Account;
+*/
