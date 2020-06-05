@@ -120,6 +120,7 @@ const Account = ({navigation}) => {
                     <Text style={styles.buttonText}>Connect Ledger</Text>
                 </Button>
             </Container>
+            <Button onPress={() => navigation.replace('Welcome')}><Text>go to welcome</Text></Button>
             <Snackbar
                 visible={open}
                 duration={3000}

@@ -16,8 +16,8 @@
     "@react-native-community/masked-view": "^0.1.10",
     "assert": "^1.1.1",
     "buffer": "^4.9.1",
-    "conseiljs": "file:../../ConseilJS/ConseilJS-core/conseiljs-5.0.0-alpha.1.tgz",
-    "conseiljs-ledgersigner": "file:../../ConseilJS/ConseilJS-ledgersigner/conseiljs-ledgersigner-5.0.0-beta.0.tgz",
+    "conseiljs": "file:../../ConseilJS/ConseilJS-core/conseiljs-5.0.0-alpha.2.tgz",
+    "conseiljs-ledgersigner": "file:../../ConseilJS/ConseilJS-ledgersigner/conseiljs-ledgersigner-5.0.0-alpha.0.tgz",
     "events": "^1.0.0",
     "native-base": "^2.13.12",
     "process": "^0.11.0",
@@ -32,6 +32,7 @@
     "react-native-reanimated": "^1.9.0",
     "react-native-safe-area-context": "^3.0.2",
     "react-native-screens": "^2.8.0",
+    "react-native-svg": "^12.1.0",
     "react-navigation": "4.3.9",
     "react-navigation-stack": "^2.5.1",
     "readable-stream": "^1.0.33",
@@ -47,6 +48,7 @@
     "eslint": "^6.5.1",
     "jest": "^24.9.0",
     "metro-react-native-babel-preset": "^0.58.0",
+    "react-native-svg-transformer": "^0.14.3",
     "react-test-renderer": "16.11.0"
   },
   "jest": {
