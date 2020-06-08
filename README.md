@@ -14,7 +14,7 @@ sudo gem install cocoapods
 
 ```bash
 yarn install
-cd ios && pod install
+cd ios && pod install && cd ..
 yarn start (in one terminal)
 yarn run ios (in another terminal)
 ```
