@@ -8,10 +8,15 @@ const Transactions = () => {
     return (
         <View style={styles.container}>
             <TransactionsIllustration />
-            <Text style={styles.text}>
-                You don’t have any transactions. Fund your account to get
-                started.
-            </Text>
+            <View style={styles.text}>
+                <Text style={styles.typo1}>
+                    You don’t have any transactions.{' '}
+                </Text>
+                <Text style={[styles.typo1, styles.typo2]}>
+                    Fund your account{' '}
+                </Text>
+                <Text style={styles.typo1}>to get started.</Text>
+            </View>
         </View>
     );
 };
@@ -22,8 +27,20 @@ const styles = StyleSheet.create({
     },
     text: {
         marginTop: 50,
-        paddingLeft: 80,
-        paddingRight: 80,
+        paddingHorizontal: 50,
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        justifyContent: 'center',
+    },
+    typo1: {
+        fontFamily: 'Roboto-Light',
+        fontSize: 18,
+        fontWeight: '300',
+        lineHeight: 24,
+    },
+    typo2: {
+        fontWeight: '600',
+        color: 'rgb(43, 29, 215)',
     },
 });
 
