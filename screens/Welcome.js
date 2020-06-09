@@ -19,14 +19,14 @@ const Welcome = ({navigation}) => {
             </View>
             <View style={styles.item}>
                 <View style={styles.text}>
-                    <Text>Product of</Text>
+                    <Text style={styles.typo1}>Product of</Text>
                     <Cryptonomic style={styles.logoCrytponomic} />
-                    <Text>Cryptonomic</Text>
+                    <Text style={styles.typo2}>Cryptonomic</Text>
                 </View>
             </View>
             <View style={styles.item}>
                 <Button style={styles.btn} onPress={getStarted}>
-                    <Text>Get Started</Text>
+                    <Text style={styles.typo3}>Get Started</Text>
                 </Button>
             </View>
         </Container>
@@ -83,6 +83,26 @@ const styles = StyleSheet.create({
         width: '100%',
         height: '30%',
     },
+    typo1: {
+        fontFamily: 'Roboto-Light',
+        fontSize: 16,
+        fontWeight: '300',
+        letterSpacing: 0.13,
+        color: 'rgb(80, 80, 80)'
+    },
+    typo2: {
+        fontFamily: 'Roboto-Light',
+        fontSize: 16,
+        fontWeight: '500',
+        letterSpacing: 0.13,
+        color: 'rgb(80, 80, 80)'
+    },
+    typo3: {
+        fontFamily: 'Roboto-Medium',
+        fontSize: 17,
+        fontWeight: '500',
+        letterSpacing: 0.85
+    }
 });
 
 export default Welcome;
