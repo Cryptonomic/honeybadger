@@ -25,6 +25,8 @@ import Delegation from '../components/Delegation';
 import Receive from '../assets/receive.svg';
 import Send from '../assets/send.svg';
 
+import { truncateHash } from '../utils/general';
+
 const serverInfo = {
     url: 'https://conseil-dev.cryptonomic-infra.tech:443',
     apiKey: 'galleon',
@@ -101,7 +103,7 @@ const Account = ({navigation}) => {
             <View style={styles.top}>
                 <Header transparent />
                 <View style={styles.account}>
-                    <Text>{`My account (tz3gN8NTLN)`}</Text>
+                    <Text>{`My account (${truncateHash(text)})`}</Text>
                     <Button style={styles.menu} transparent>
                         <View style={styles.icon}>
                             <View style={styles.dot} />
