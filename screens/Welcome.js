@@ -13,7 +13,7 @@ const Welcome = ({navigation}) => {
         <Container>
             <Wave style={styles.wave} />
             <WaveShadow style={styles.waveShadow} />
-            <View style={styles.bg} />
+            <View style={styles.waveBg} />
             <View style={styles.top}>
                 <Logo style={styles.logo} />
             </View>
@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.2,
         shadowRadius: 10,
     },
-    bg: {
+    waveBg: {
         position: 'absolute',
         backgroundColor: '#fcd104',
         width: '100%',
