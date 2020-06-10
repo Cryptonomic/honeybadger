@@ -47,7 +47,7 @@ const Loading = ({navigation}) => {
                     color="#4b4b4b"
                     shadowColor="#ff8f00"
                     bgColor="#fcd104">
-                    <Text style={{fontSize: 16}}>
+                    <Text style={styles.typo1}>
                         {progress === 100 ? (
                             <View style={styles.icon}><Checkmark /></View>
                         ) : (
@@ -72,6 +72,13 @@ const styles = StyleSheet.create({
     icon: {
         width: 81,
         height: 65
+    },
+    typo1: {
+        fontFamily: 'Roboto-Regular',
+        fontSize: 18,
+        fontWeight: 'normal',
+        lineHeight: 42,
+        color: 'rgb(26, 25, 25)'
     }
 });
 

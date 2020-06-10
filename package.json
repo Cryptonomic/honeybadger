@@ -5,7 +5,7 @@
   "scripts": {
     "android": "react-native run-android",
     "ios": "react-native run-ios",
-    "start": "react-native start",
+    "start": "react-native link && react-native start",
     "test": "jest",
     "lint": "eslint .",
     "postinstall": "rn-nodeify --install buffer,process,stream,events,assert --hack"
