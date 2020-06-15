@@ -2,10 +2,10 @@ import React from 'react';
 import {StyleSheet} from 'react-native';
 import {Container, Text, Button, View} from 'native-base';
 
-import Logo from '../assets/galleon-logo.svg';
-import Cryptonomic from '../assets/cryptonomic-icon.svg';
-import Wave from '../assets/splash-wave.svg';
-import WaveShadow from '../assets/splash-wave-shadow.svg';
+import Logo from '../../assets/galleon-logo.svg';
+import Cryptonomic from '../../assets/cryptonomic-icon.svg';
+import Wave from '../../assets/splash-wave.svg';
+import WaveShadow from '../../assets/splash-wave-shadow.svg';
 
 const Welcome = ({navigation}) => {
     const getStarted = () => navigation.replace('Loading');
@@ -88,21 +88,21 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: '300',
         letterSpacing: 0.13,
-        color: 'rgb(80, 80, 80)'
+        color: 'rgb(80, 80, 80)',
     },
     typo2: {
         fontFamily: 'Roboto-Light',
         fontSize: 16,
         fontWeight: '500',
         letterSpacing: 0.13,
-        color: 'rgb(80, 80, 80)'
+        color: 'rgb(80, 80, 80)',
     },
     typo3: {
         fontFamily: 'Roboto-Medium',
         fontSize: 17,
         fontWeight: '500',
-        letterSpacing: 0.85
-    }
+        letterSpacing: 0.85,
+    },
 });
 
 export default Welcome;

@@ -18,8 +18,8 @@ import {
 
 import Transactions from '../components/Transactions';
 import Delegation from '../components/Delegation';
-import Receive from '../assets/receive.svg';
-import Send from '../assets/send.svg';
+import Receive from '../../assets/receive.svg';
+import Send from '../../assets/send.svg';
 
 import {truncateHash} from '../utils/general';
 
