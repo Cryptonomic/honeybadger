@@ -5,7 +5,9 @@ import RNSecureStorage, {ACCESSIBLE} from 'rn-secure-storage';
 import {Snackbar} from 'react-native-paper';
 import TransportHID from '@ledgerhq/react-native-hid';
 import {TezosConseilClient} from 'conseiljs';
-import {KeyStoreUtils} from 'conseiljs-ledgersigner';
+// import {KeyStoreUtils} from 'conseiljs-ledgersigner';
+import crypto from 'crypto';
+import KeyStoreUtils from '../softsigner';
 
 import {
     LearnMoreLinks,
@@ -63,19 +65,19 @@ const Account = ({navigation}) => {
         }
     }
     async function onGetLederAddress() {
-        const devicesList = await TransportHID.list();
-        if (devicesList.length === 0) {
-            setOpen(true);
-        } else {
-            const newKeyStore = await KeyStoreUtils.unlockAddress(
-                derivationPath,
-            ).catch(() => {
-                return {
-                    publicKeyHash: '',
-                };
-            });
-            setPkh(newKeyStore.publicKeyHash);
-        }
+        // const devicesList = await TransportHID.list();
+        // if (devicesList.length === 0) {
+        //     setOpen(true);
+        // } else {
+        //     const newKeyStore = await KeyStoreUtils.unlockAddress(
+        //         derivationPath,
+        //     ).catch(() => {
+        //         return {
+        //             publicKeyHash: '',
+        //         };
+        //     });
+        //     setPkh(newKeyStore.publicKeyHash);
+        // }
     }
 
     const changeTab = newTab => {
@@ -88,9 +90,14 @@ const Account = ({navigation}) => {
 
     useEffect(() => {
         getBalance();
-    }, []);
+    }, [getBalance]);
 
     // navigation.replace('Welcome')
+
+    const onPress = async () => {
+        const keys = await KeyStoreUtils.generateIdentity();
+        console.log('keys', keys);
+    };
 
     return (
         <Container style={styles.container}>
@@ -118,7 +125,7 @@ const Account = ({navigation}) => {
                 </View>
                 <View style={styles.actions}>
                     <View style={styles.center}>
-                        <Button transparent>
+                        <Button transparent onPress={onPress}>
                             <View style={styles.actionCircle}>
                                 <Receive />
                             </View>

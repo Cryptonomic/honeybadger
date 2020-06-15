@@ -5,16 +5,17 @@
   "scripts": {
     "android": "react-native run-android",
     "ios": "react-native run-ios",
-    "start": "react-native link && react-native start",
+    "start": "react-native start",
     "test": "jest",
     "lint": "eslint .",
-    "postinstall": "rn-nodeify --install buffer,process,stream,events,assert --hack"
+    "postinstall": "rn-nodeify --install buffer,process,stream,events,assert,crypto,vm --hack --yarn"
   },
   "dependencies": {
     "@ledgerhq/react-native-hid": "^5.15.0",
     "@ledgerhq/react-native-ledger-core": "^4.11.0",
     "@react-native-community/masked-view": "^0.1.10",
     "assert": "^1.1.1",
+    "bip39": "^3.0.2",
     "buffer": "^4.9.1",
     "conseiljs": "file:../../ConseilJS/ConseilJS-core/conseiljs-5.0.0-alpha.2.tgz",
     "conseiljs-ledgersigner": "file:../../ConseilJS/ConseilJS-ledgersigner/conseiljs-ledgersigner-5.0.0-alpha.0.tgz",
@@ -30,16 +31,19 @@
     "react-native-os": "^1.2.6",
     "react-native-paper": "^3.10.1",
     "react-native-progress-circle": "^2.1.0",
+    "react-native-randombytes": "^3.0.0",
     "react-native-reanimated": "^1.9.0",
     "react-native-safe-area-context": "^3.0.2",
     "react-native-screens": "^2.8.0",
+    "react-native-sodium": "^0.3.8",
     "react-native-svg": "^12.1.0",
     "react-navigation": "4.3.9",
     "react-navigation-stack": "^2.5.1",
     "readable-stream": "^1.0.33",
     "rn-nodeify": "^10.2.0",
     "rn-secure-storage": "^2.0.4",
-    "stream-browserify": "^1.0.0"
+    "stream-browserify": "^1.0.0",
+    "vm-browserify": "0.0.4"
   },
   "devDependencies": {
     "@babel/core": "^7.6.2",
@@ -64,7 +68,8 @@
     "_stream_duplex": "readable-stream/duplex",
     "_stream_passthrough": "readable-stream/passthrough",
     "stream": "stream-browserify",
-    "fs": "react-native-level-fs"
+    "fs": "react-native-level-fs",
+    "vm": "vm-browserify"
   },
   "browser": {
     "crypto": "react-native-crypto",
@@ -75,6 +80,7 @@
     "_stream_duplex": "readable-stream/duplex",
     "_stream_passthrough": "readable-stream/passthrough",
     "stream": "stream-browserify",
-    "fs": "react-native-level-fs"
+    "fs": "react-native-level-fs",
+    "vm": "vm-browserify"
   }
 }
