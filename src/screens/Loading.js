@@ -3,7 +3,7 @@ import {StyleSheet} from 'react-native';
 import {Container, Text, Button, View} from 'native-base';
 import ProgressCircle from 'react-native-progress-circle';
 
-import Checkmark from '../assets/checkmark.svg';
+import Checkmark from '../../assets/checkmark.svg';
 
 const Loading = ({navigation}) => {
     const [ready, setReady] = useState(false);
@@ -35,7 +35,7 @@ const Loading = ({navigation}) => {
             const newProgress = progress + 15;
             setProgress(newProgress);
         }, 1000);
-    }, [progress, ready]);
+    }, [navigation, progress, ready]);
 
     return (
         <Container style={styles.container}>
@@ -49,7 +49,9 @@ const Loading = ({navigation}) => {
                     bgColor="#fcd104">
                     <Text style={styles.typo1}>
                         {progress === 100 ? (
-                            <View style={styles.icon}><Checkmark /></View>
+                            <View style={styles.icon}>
+                                <Checkmark />
+                            </View>
                         ) : (
                             'preparing account...'
                         )}
@@ -71,15 +73,15 @@ const styles = StyleSheet.create({
     },
     icon: {
         width: 81,
-        height: 65
+        height: 65,
     },
     typo1: {
         fontFamily: 'Roboto-Regular',
         fontSize: 18,
         fontWeight: 'normal',
         lineHeight: 42,
-        color: 'rgb(26, 25, 25)'
-    }
+        color: 'rgb(26, 25, 25)',
+    },
 });
 
 export default Loading;

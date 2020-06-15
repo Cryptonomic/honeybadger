@@ -15,7 +15,7 @@ export async function generateIdentity(
 ) {
     try {
         return restoreIdentityFromMnemonic(
-            bip39.generateMnemonic(strength),
+            mnemonic || bip39.generateMnemonic(strength),
             password,
         );
     } catch (e) {
