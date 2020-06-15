@@ -27,6 +27,7 @@
     "react-native-crypto": "^2.2.0",
     "react-native-fs": "^2.16.6",
     "react-native-gesture-handler": "^1.6.1",
+    "react-native-keychain": "^6.1.1",
     "react-native-level-fs": "^3.0.0",
     "react-native-os": "^1.2.6",
     "react-native-paper": "^3.10.1",
@@ -41,7 +42,6 @@
     "react-navigation-stack": "^2.5.1",
     "readable-stream": "^1.0.33",
     "rn-nodeify": "^10.2.0",
-    "rn-secure-storage": "^2.0.4",
     "stream-browserify": "^1.0.0",
     "vm-browserify": "0.0.4"
   },

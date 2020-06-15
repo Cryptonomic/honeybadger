@@ -1,6 +1,8 @@
-import React from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, {useEffect} from 'react';
 import {StyleSheet} from 'react-native';
 import {Container, Text, Button, View} from 'native-base';
+import * as Keychain from 'react-native-keychain';
 
 import Logo from '../../assets/galleon-logo.svg';
 import Cryptonomic from '../../assets/cryptonomic-icon.svg';
@@ -8,6 +10,20 @@ import Wave from '../../assets/splash-wave.svg';
 import WaveShadow from '../../assets/splash-wave-shadow.svg';
 
 const Welcome = ({navigation}) => {
+    useEffect(() => {
+        async function load() {
+            try {
+                const wallet = await Keychain.getGenericPassword();
+                if (wallet) {
+                    navigation.replace('Account');
+                }
+            } catch (error) {
+                console.log("Keychain couldn't be accessed!", error);
+            }
+        }
+        load();
+    }, []);
+
     const getStarted = () => navigation.replace('Loading');
     return (
         <Container>

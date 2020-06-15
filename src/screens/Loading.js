@@ -2,7 +2,9 @@ import React, {useState, useEffect} from 'react';
 import {StyleSheet} from 'react-native';
 import {Container, Text, Button, View} from 'native-base';
 import ProgressCircle from 'react-native-progress-circle';
+import * as Keychain from 'react-native-keychain';
 
+import KeyStoreUtils from '../softsigner';
 import Checkmark from '../../assets/checkmark.svg';
 
 const Loading = ({navigation}) => {
@@ -10,12 +12,20 @@ const Loading = ({navigation}) => {
     const [progress, setProgress] = useState(0);
 
     useEffect(() => {
-        try {
-            // add create account request
-            setTimeout(() => {
+        async function save() {
+            try {
+                const keys = await KeyStoreUtils.generateIdentity();
+                await Keychain.resetGenericPassword();
+                await Keychain.setGenericPassword(
+                    'newwallet',
+                    JSON.stringify(keys),
+                );
                 setReady(true);
-            }, 4000);
-        } catch {}
+            } catch (e) {
+                console.log('[ERROR]', e);
+            }
+        }
+        save();
     }, []);
 
     useEffect(() => {
@@ -34,7 +44,7 @@ const Loading = ({navigation}) => {
         setTimeout(() => {
             const newProgress = progress + 15;
             setProgress(newProgress);
-        }, 1000);
+        }, 600);
     }, [navigation, progress, ready]);
 
     return (

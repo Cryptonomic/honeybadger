@@ -6354,6 +6354,11 @@ react-native-keyboard-aware-scroll-view@0.9.1:
     prop-types "^15.6.2"
     react-native-iphone-x-helper "^1.0.3"
 
+react-native-keychain@^6.1.1:
+  version "6.1.1"
+  resolved "https://registry.yarnpkg.com/react-native-keychain/-/react-native-keychain-6.1.1.tgz#3c14e4df9e5599f8d5a708da75d27f9d2424d7c1"
+  integrity sha512-WYvAg7FbYPyX8jJ1rY/IQGS+6zK5LtNMRa3E8x1n0M5Lmsm/9CHtakzbmqT+rLvFE7DpPBg7qFawMuUoDjjtYA==
+
 react-native-level-fs@^3.0.0:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/react-native-level-fs/-/react-native-level-fs-3.0.1.tgz#f3054614c2bc1a379dcb3d3ee51b6a1b66123283"
@@ -6834,11 +6839,6 @@ rn-nodeify@^10.2.0:
     run-parallel "^1.1.2"
     semver "^5.0.1"
     xtend "^4.0.0"
-
-rn-secure-storage@^2.0.4:
-  version "2.0.4"
-  resolved "https://registry.yarnpkg.com/rn-secure-storage/-/rn-secure-storage-2.0.4.tgz#1e7ae1e91514ed39e487ed3b47b73b638344cbd9"
-  integrity sha512-pDMLLHu2vXWTvEWdeYEP7g04sQQrTu6uc8STIf9ecbipV+N6fJ6nqM8+jMxBq1+u+8oa1L9hGmIwUYKixPpGSw==
 
 rsvp@^4.8.4:
   version "4.8.5"

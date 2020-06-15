@@ -1,20 +1,20 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, {useState, useEffect} from 'react';
 import {StyleSheet} from 'react-native';
 import {Container, Button, Text, View, Header} from 'native-base';
-import RNSecureStorage, {ACCESSIBLE} from 'rn-secure-storage';
-import {Snackbar} from 'react-native-paper';
-import TransportHID from '@ledgerhq/react-native-hid';
+// import RNSecureStorage, {ACCESSIBLE} from 'rn-secure-storage';
+// import {Snackbar} from 'react-native-paper';
+// import TransportHID from '@ledgerhq/react-native-hid';
 import {TezosConseilClient} from 'conseiljs';
 // import {KeyStoreUtils} from 'conseiljs-ledgersigner';
-import crypto from 'crypto';
-import KeyStoreUtils from '../softsigner';
+import * as Keychain from 'react-native-keychain';
 
-import {
-    LearnMoreLinks,
-    Colors,
-    DebugInstructions,
-    ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+// import {
+//     LearnMoreLinks,
+//     Colors,
+//     DebugInstructions,
+//     ReloadInstructions,
+// } from 'react-native/Libraries/NewAppScreen';
 
 import Transactions from '../components/Transactions';
 import Delegation from '../components/Delegation';
@@ -40,45 +40,34 @@ const Account = ({navigation}) => {
     const [open, setOpen] = useState(false);
     const [tab, setTab] = useState(0);
 
-    async function getBalance() {
-        const newBal = await TezosConseilClient.getAccount(
-            serverInfo,
-            serverInfo.network,
-            text,
-        ).catch(err => {
-            return {balance: 0};
-        });
-        setBalance(newBal.balance);
-    }
+    // async function onSaveToStorage() {
+    //     const result = await RNSecureStorage.set('hash', secureTxt, {
+    //         accessible: ACCESSIBLE.WHEN_UNLOCKED,
+    //     });
+    //     console.log('save------', result);
+    // }
 
-    async function onSaveToStorage() {
-        const result = await RNSecureStorage.set('hash', secureTxt, {
-            accessible: ACCESSIBLE.WHEN_UNLOCKED,
-        });
-        console.log('save------', result);
-    }
-
-    async function onGetFromStorage() {
-        const newHash = await RNSecureStorage.get('hash');
-        if (newHash) {
-            setLocalHash(newHash);
-        }
-    }
-    async function onGetLederAddress() {
-        // const devicesList = await TransportHID.list();
-        // if (devicesList.length === 0) {
-        //     setOpen(true);
-        // } else {
-        //     const newKeyStore = await KeyStoreUtils.unlockAddress(
-        //         derivationPath,
-        //     ).catch(() => {
-        //         return {
-        //             publicKeyHash: '',
-        //         };
-        //     });
-        //     setPkh(newKeyStore.publicKeyHash);
-        // }
-    }
+    // async function onGetFromStorage() {
+    //     const newHash = await RNSecureStorage.get('hash');
+    //     if (newHash) {
+    //         setLocalHash(newHash);
+    //     }
+    // }
+    // async function onGetLederAddress() {
+    //     const devicesList = await TransportHID.list();
+    //     if (devicesList.length === 0) {
+    //         setOpen(true);
+    //     } else {
+    //         const newKeyStore = await KeyStoreUtils.unlockAddress(
+    //             derivationPath,
+    //         ).catch(() => {
+    //             return {
+    //                 publicKeyHash: '',
+    //             };
+    //         });
+    //         setPkh(newKeyStore.publicKeyHash);
+    //     }
+    // }
 
     const changeTab = newTab => {
         if (newTab === tab) {
@@ -89,15 +78,31 @@ const Account = ({navigation}) => {
     };
 
     useEffect(() => {
-        getBalance();
-    }, [getBalance]);
-
-    // navigation.replace('Welcome')
-
-    const onPress = async () => {
-        const keys = await KeyStoreUtils.generateIdentity();
-        console.log('keys', keys);
-    };
+        async function getBalance() {
+            const newBal = await TezosConseilClient.getAccount(
+                serverInfo,
+                serverInfo.network,
+                text,
+            ).catch(() => {
+                return {balance: 0};
+            });
+            setBalance(newBal.balance);
+        }
+        async function load() {
+            try {
+                const wallet = await Keychain.getGenericPassword();
+                if (wallet) {
+                    console.log('wallet', wallet);
+                    getBalance();
+                } else {
+                    navigation.replace('Welcome');
+                }
+            } catch (error) {
+                console.log("Keychain couldn't be accessed!", error);
+            }
+        }
+        load();
+    }, []);
 
     return (
         <Container style={styles.container}>
@@ -125,7 +130,7 @@ const Account = ({navigation}) => {
                 </View>
                 <View style={styles.actions}>
                     <View style={styles.center}>
-                        <Button transparent onPress={onPress}>
+                        <Button transparent>
                             <View style={styles.actionCircle}>
                                 <Receive />
                             </View>
