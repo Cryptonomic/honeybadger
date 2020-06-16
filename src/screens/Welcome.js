@@ -3,6 +3,9 @@ import React, {useEffect} from 'react';
 import {StyleSheet} from 'react-native';
 import {Container, Text, Button, View} from 'native-base';
 import * as Keychain from 'react-native-keychain';
+import {useDispatch} from 'react-redux';
+
+import {setKeysAction} from '../reducers/app/actions';
 
 import Logo from '../../assets/galleon-logo.svg';
 import Cryptonomic from '../../assets/cryptonomic-icon.svg';
@@ -10,11 +13,13 @@ import Wave from '../../assets/splash-wave.svg';
 import WaveShadow from '../../assets/splash-wave-shadow.svg';
 
 const Welcome = ({navigation}) => {
+    const dispatch = useDispatch();
     useEffect(() => {
         async function load() {
             try {
-                const wallet = await Keychain.getGenericPassword();
-                if (wallet) {
+                const keys = await Keychain.getGenericPassword();
+                if (keys) {
+                    dispatch(setKeysAction(JSON.parse(keys.password)));
                     navigation.replace('Account');
                 }
             } catch (error) {

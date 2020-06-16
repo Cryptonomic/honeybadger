@@ -40,7 +40,10 @@
     "react-native-svg": "^12.1.0",
     "react-navigation": "4.3.9",
     "react-navigation-stack": "^2.5.1",
+    "react-redux": "^7.2.0",
     "readable-stream": "^1.0.33",
+    "redux": "^4.0.5",
+    "redux-thunk": "^2.3.0",
     "rn-nodeify": "^10.2.0",
     "stream-browserify": "^1.0.0",
     "vm-browserify": "0.0.4"
