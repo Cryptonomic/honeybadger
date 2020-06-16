@@ -5,7 +5,7 @@
   "scripts": {
     "android": "react-native run-android",
     "ios": "react-native run-ios",
-    "start": "react-native start",
+    "start": "react-native link && react-native start",
     "test": "jest",
     "lint": "eslint .",
     "postinstall": "rn-nodeify --install buffer,process,stream,events,assert,crypto,vm --hack --yarn"
@@ -16,8 +16,8 @@
     "@react-native-community/masked-view": "^0.1.10",
     "assert": "^1.1.1",
     "buffer": "^4.9.1",
-    "conseiljs": "file:../../ConseilJS/ConseilJS-core/conseiljs-5.0.0-alpha.2.tgz",
-    "conseiljs-ledgersigner": "file:../../ConseilJS/ConseilJS-ledgersigner/conseiljs-ledgersigner-5.0.0-alpha.0.tgz",
+    "conseiljs": "5.0.2-beta.2",
+    "conseiljs-ledgersigner": "5.0.2-beta.1",
     "events": "^1.0.0",
     "native-base": "^2.13.12",
     "process": "^0.11.0",
