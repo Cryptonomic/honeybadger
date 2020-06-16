@@ -8,6 +8,9 @@ import {Container, Button, Text, View, Header} from 'native-base';
 import {TezosConseilClient} from 'conseiljs';
 // import {KeyStoreUtils} from 'conseiljs-ledgersigner';
 import * as Keychain from 'react-native-keychain';
+import KeyStoreUtils from '../softsigner';
+import bip39 from 'react-native-bip39';
+import sodium from 'react-native-sodium';
 
 // import {
 //     LearnMoreLinks,
@@ -92,7 +95,6 @@ const Account = ({navigation}) => {
             try {
                 const wallet = await Keychain.getGenericPassword();
                 if (wallet) {
-                    console.log('wallet', wallet);
                     getBalance();
                 } else {
                     navigation.replace('Welcome');

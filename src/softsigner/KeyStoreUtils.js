@@ -4,8 +4,9 @@ import {
     KeyStoreType,
     TezosMessageUtils,
 } from 'conseiljs';
+import {Buffer} from 'buffer';
 
-import * as bip39 from 'bip39';
+import bip39 from 'react-native-bip39';
 import * as CryptoUtils from './utils/CryptoUtils';
 
 export async function generateIdentity(
@@ -13,14 +14,10 @@ export async function generateIdentity(
     password = '',
     mnemonic,
 ) {
-    try {
-        return restoreIdentityFromMnemonic(
-            mnemonic || bip39.generateMnemonic(strength),
-            password,
-        );
-    } catch (e) {
-        console.log('[ERROR]', e);
-    }
+    return restoreIdentityFromMnemonic(
+        mnemonic || (await bip39.generateMnemonic(strength)),
+        password,
+    );
 }
 
 export async function generateKeys(seed) {
@@ -34,51 +31,42 @@ export async function restoreIdentityFromMnemonic(
     pkh,
     derivationPath,
 ) {
-    try {
-        if (![12, 15, 18, 21, 24].includes(mnemonic.split(' ').length)) {
-            throw new Error('Invalid mnemonic length.');
-        }
-        if (!bip39.validateMnemonic(mnemonic)) {
-            throw new Error('The given mnemonic could not be validated.');
-        }
-
-        const seed = (await bip39.mnemonicToSeed(mnemonic, password)).slice(
-            0,
-            32,
-        );
-        const keys = await generateKeys(seed);
-
-        //TODO: Error: Incorrect hex length, 90 to parse a key
-
-        // const secretKey = TezosMessageUtils.readKeyWithHint(
-        //     keys.secretKey,
-        //     'edsk',
-        // );
-        // const publicKey = TezosMessageUtils.readKeyWithHint(
-        //     keys.publicKey,
-        //     'edpk',
-        // );
-        // const publicKeyHash = TezosMessageUtils.computeKeyHash(
-        //     keys.publicKey,
-        //     'tz1',
-        // );
-
-        // if (!!pkh && publicKeyHash !== pkh) {
-        //     throw new Error(
-        //         'The given mnemonic and passphrase do not correspond to the supplied public key hash',
-        //     );
-        // }
-
-        return {
-            publicKey: keys.publicKey,
-            secretKey: keys.secretKey,
-            // publicKeyHash,
-            curve: KeyStoreCurve.ED25519,
-            storeType: KeyStoreType.Mnemonic,
-            seed: mnemonic,
-            derivationPath,
-        };
-    } catch (e) {
-        console.log('[ERROR]', e);
+    if (![12, 15, 18, 21, 24].includes(mnemonic.split(' ').length)) {
+        throw new Error('Invalid mnemonic length.');
     }
+    if (!bip39.validateMnemonic(mnemonic)) {
+        throw new Error('The given mnemonic could not be validated.');
+    }
+
+    const seed = (await bip39.mnemonicToSeed(mnemonic, '')).slice(0, 32);
+    const keys = await generateKeys(seed);
+
+    const secretKey = TezosMessageUtils.readKeyWithHint(
+        Buffer.from(keys.secretKey, 'hex'),
+        'edsk',
+    );
+    const publicKey = TezosMessageUtils.readKeyWithHint(
+        Buffer.from(keys.publicKey, 'hex'),
+        'edpk',
+    );
+    const publicKeyHash = TezosMessageUtils.computeKeyHash(
+        Buffer.from(keys.publicKey, 'hex'),
+        'tz1',
+    );
+
+    if (!!pkh && publicKeyHash !== pkh) {
+        throw new Error(
+            'The given mnemonic and passphrase do not correspond to the supplied public key hash',
+        );
+    }
+
+    return {
+        publicKey,
+        secretKey,
+        publicKeyHash,
+        curve: KeyStoreCurve.ED25519,
+        storeType: KeyStoreType.Mnemonic,
+        seed: mnemonic,
+        derivationPath,
+    };
 }
