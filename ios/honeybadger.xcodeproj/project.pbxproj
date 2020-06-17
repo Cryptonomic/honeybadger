@@ -44,6 +44,7 @@
 		846FC2B624614537B6A1506C /* rubicon-icon-font.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0320124463934C5FBF588DF1 /* rubicon-icon-font.ttf */; };
 		15BECE46487A44A18AD853AA /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0E1BAE4447C04534867BC4E4 /* SimpleLineIcons.ttf */; };
 		FFCD4A3372804447B81F8AD2 /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B011BC32B5EA4226B6D1A5A3 /* Zocial.ttf */; };
+		01CBE4BC4BD84BA18F4DB060 /* customicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C333A255E6FC4577B740B859 /* customicons.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -115,6 +116,7 @@
 		0320124463934C5FBF588DF1 /* rubicon-icon-font.ttf */ = {isa = PBXFileReference; name = "rubicon-icon-font.ttf"; path = "../node_modules/native-base/Fonts/rubicon-icon-font.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		0E1BAE4447C04534867BC4E4 /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; name = "SimpleLineIcons.ttf"; path = "../node_modules/native-base/Fonts/SimpleLineIcons.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		B011BC32B5EA4226B6D1A5A3 /* Zocial.ttf */ = {isa = PBXFileReference; name = "Zocial.ttf"; path = "../node_modules/native-base/Fonts/Zocial.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		C333A255E6FC4577B740B859 /* customicons.ttf */ = {isa = PBXFileReference; name = "customicons.ttf"; path = "../assets/fonts/customicons.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -274,6 +276,7 @@
 				0320124463934C5FBF588DF1 /* rubicon-icon-font.ttf */,
 				0E1BAE4447C04534867BC4E4 /* SimpleLineIcons.ttf */,
 				B011BC32B5EA4226B6D1A5A3 /* Zocial.ttf */,
+				C333A255E6FC4577B740B859 /* customicons.ttf */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -445,6 +448,7 @@
 				846FC2B624614537B6A1506C /* rubicon-icon-font.ttf in Resources */,
 				15BECE46487A44A18AD853AA /* SimpleLineIcons.ttf in Resources */,
 				FFCD4A3372804447B81F8AD2 /* Zocial.ttf in Resources */,
+				01CBE4BC4BD84BA18F4DB060 /* customicons.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
