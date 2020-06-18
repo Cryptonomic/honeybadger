@@ -2,7 +2,7 @@ import React from 'react';
 import {StyleSheet} from 'react-native';
 import {View, Text, Button} from 'native-base';
 
-import DelegationIllustration from '../assets/delegation-illustration.svg';
+import DelegationIllustration from '../../assets/delegation-illustration.svg';
 
 const Delegation = () => {
     return (
