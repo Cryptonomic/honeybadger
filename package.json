@@ -1,23 +1,32 @@
 {
   "name": "honeybadger",
   "version": "0.0.1",
-  "private": true,
+  "description": "An open-source mobile wallet framework for the Tezos blockchain.",
   "scripts": {
     "android": "react-native run-android",
     "ios": "react-native run-ios",
     "start": "react-native start",
     "test": "jest",
-    "lint": "eslint .",
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "postinstall": "rn-nodeify --install buffer,process,stream,events,assert --hack"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Cryptonomic/honeybadger.git"
+  },
+  "author": {
+    "name": "Cryptonomic Inc",
+    "email": "info@cryptonomic.tech",
+    "url": "https://github.com/cryptonomic/honeybadger"
+  },
+  "license": "GPL-3.0-only",
   "dependencies": {
     "@ledgerhq/react-native-hid": "^5.15.0",
     "@ledgerhq/react-native-ledger-core": "^4.11.0",
     "@react-native-community/masked-view": "^0.1.10",
     "assert": "^1.1.1",
     "buffer": "^4.9.1",
-    "conseiljs": "file:../../ConseilJS/ConseilJS-core/conseiljs-5.0.0-alpha.2.tgz",
-    "conseiljs-ledgersigner": "file:../../ConseilJS/ConseilJS-ledgersigner/conseiljs-ledgersigner-5.0.0-alpha.0.tgz",
+    "conseiljs": "5.0.0-alpha.2",
     "events": "^1.0.0",
     "native-base": "^2.13.12",
     "process": "^0.11.0",
@@ -50,7 +59,8 @@
     "jest": "^24.9.0",
     "metro-react-native-babel-preset": "^0.58.0",
     "react-native-svg-transformer": "^0.14.3",
-    "react-test-renderer": "16.11.0"
+    "react-test-renderer": "16.11.0",
+    "typescript": "^3.9.5"
   },
   "jest": {
     "preset": "react-native"

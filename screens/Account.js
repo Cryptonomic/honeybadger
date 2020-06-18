@@ -11,7 +11,7 @@ import RNSecureStorage, {ACCESSIBLE} from 'rn-secure-storage';
 import {Snackbar} from 'react-native-paper';
 import TransportHID from '@ledgerhq/react-native-hid';
 import {TezosConseilClient} from 'conseiljs';
-import {KeyStoreUtils} from 'conseiljs-ledgersigner';
+//import {KeyStoreUtils} from 'conseiljs-ledgersigner';
 
 import {
     LearnMoreLinks,
@@ -66,7 +66,8 @@ const Account = ({navigation}) => {
             setLocalHash(newHash);
         }
     }
-    async function onGetLederAddress() {
+
+    /*async function onGetLederAddress() {
         const devicesList = await TransportHID.list();
         if (devicesList.length === 0) {
             setOpen(true);
@@ -80,7 +81,7 @@ const Account = ({navigation}) => {
             });
             setPkh(newKeyStore.publicKeyHash);
         }
-    }
+    }*/
 
     const changeTab = newTab => {
         if (newTab === tab) {
