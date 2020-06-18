@@ -16,11 +16,11 @@ import {truncateHash} from '../utils/general';
 
 const Account = ({navigation}) => {
     const dispatch = useDispatch();
-    const publicKeyHash = useSelector(state => state.app.publicKeyHash);
-    const balance = useSelector(state => state.app.balance);
+    const publicKeyHash = useSelector((state) => state.app.publicKeyHash);
+    const balance = useSelector((state) => state.app.balance);
     const [tab, setTab] = useState(0);
 
-    const changeTab = newTab => {
+    const changeTab = (newTab) => {
         if (newTab === tab) {
             return;
         }
@@ -43,6 +43,10 @@ const Account = ({navigation}) => {
         }
         load();
     }, []);
+
+    const onPressReceive = () => {
+        navigation.navigate('Receive');
+    };
 
     return (
         <Container style={styles.container}>
@@ -70,7 +74,7 @@ const Account = ({navigation}) => {
                 </View>
                 <View style={styles.actions}>
                     <View style={styles.center}>
-                        <Button transparent>
+                        <Button transparent onPress={onPressReceive}>
                             <View style={styles.actionCircle}>
                                 <Receive />
                             </View>

@@ -31,6 +31,7 @@
     "react-native-level-fs": "^3.0.0",
     "react-native-os": "^1.2.6",
     "react-native-progress-circle": "^2.1.0",
+    "react-native-qrcode-svg": "^6.0.6",
     "react-native-randombytes": "^3.0.0",
     "react-native-reanimated": "^1.9.0",
     "react-native-safe-area-context": "^3.0.2",
