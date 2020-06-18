@@ -1,42 +1,20 @@
 import React from 'react';
 import {StyleSheet} from 'react-native';
 import {useSelector} from 'react-redux';
-import {
-    Header,
-    Container,
-    View,
-    Text,
-    Left,
-    Right,
-    Button,
-    Title,
-    Body,
-} from 'native-base';
+import {Container, View, Text, Button} from 'native-base';
 import QRCode from 'react-native-qrcode-svg';
 
 import CustomIcon from '../components/CustomIcon';
+import CustomButton from '../components/CustomButton';
+import CustomHeader from '../components/CustomHeader';
 import {splitHash} from '../utils/general';
 
-const Receive = () => {
+const Receive = ({navigation}) => {
     const address = useSelector((state) => state.app.publicKeyHash);
     const addressParts = splitHash(address);
     return (
         <Container style={styles.container}>
-            <Header style={styles.header} transparent>
-                <Left>
-                    <Button transparent>
-                        <CustomIcon name="Back-Arrow" size={16} />
-                    </Button>
-                </Left>
-                <Body>
-                    <Title style={styles.headerTitle}>Receive</Title>
-                </Body>
-                <Right>
-                    <Button transparent>
-                        <CustomIcon name="Cancel" size={16} />
-                    </Button>
-                </Right>
-            </Header>
+            <CustomHeader title="Receive" goBack={() => navigation.goBack()} />
             <View style={styles.main}>
                 <Text style={styles.title}>
                     Share your account address to receive XTZ or Tezos tokens
@@ -61,17 +39,11 @@ const Receive = () => {
                 </View>
                 <View style={styles.actions}>
                     <View>
-                        <Button style={styles.actionButton}>
-                            <CustomIcon name="Copy" size={35} />
-                        </Button>
-                        <Text style={styles.actionText}>Copy</Text>
+                        <CustomButton icon="Copy" label="Copy" />
                     </View>
                     <View style={styles.line} />
                     <View>
-                        <Button style={styles.actionButton}>
-                            <CustomIcon name="Share-Android" size={35} />
-                        </Button>
-                        <Text style={styles.actionText}>Share</Text>
+                        <CustomButton icon="Share-Android" label="Share" />
                     </View>
                 </View>
             </View>
@@ -82,16 +54,6 @@ const Receive = () => {
 const styles = StyleSheet.create({
     container: {
         backgroundColor: '#fcd104',
-    },
-    header: {
-        marginHorizontal: 10,
-    },
-    headerTitle: {
-        fontFamily: 'Roboto-Medium',
-        fontSize: 20,
-        fontWeight: '500',
-        lineHeight: 24,
-        letterSpacing: 0.83,
     },
     main: {
         marginTop: 20,
@@ -141,18 +103,6 @@ const styles = StyleSheet.create({
         marginBottom: 90,
         flexDirection: 'row',
         justifyContent: 'center',
-    },
-    actionButton: {
-        width: 84,
-        height: 84,
-        borderRadius: 42,
-        backgroundColor: 'rgba(0, 0, 0, 0.05)',
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    actionText: {
-        marginTop: 15,
-        textAlign: 'center',
     },
     line: {
         width: 1,

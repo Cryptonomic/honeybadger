@@ -44,8 +44,8 @@ const Account = ({navigation}) => {
         load();
     }, []);
 
-    const onPressReceive = () => {
-        navigation.navigate('Receive');
+    const onPress = (value) => {
+        navigation.navigate(value);
     };
 
     return (
@@ -74,7 +74,7 @@ const Account = ({navigation}) => {
                 </View>
                 <View style={styles.actions}>
                     <View style={styles.center}>
-                        <Button transparent onPress={onPressReceive}>
+                        <Button transparent onPress={() => onPress('Receive')}>
                             <View style={styles.actionCircle}>
                                 <Receive />
                             </View>
@@ -84,7 +84,7 @@ const Account = ({navigation}) => {
                         </Text>
                     </View>
                     <View style={styles.center}>
-                        <Button transparent>
+                        <Button transparent onPress={() => onPress('Send')}>
                             <View style={styles.actionCircle}>
                                 <Send />
                             </View>
