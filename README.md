@@ -1,22 +1,24 @@
 # honeybadger
 
-## OSX instructions
+honeybadger is a sister project to [Tezori/Galleon](https://github.com/Cryptonomic/T2). It is a wallet framework targeting mobile platforms, written in TypeScript with react-native. Presently, honeybadger supports the Tezos blockchain and aims to provide deep support for that platform beyond simple transfers and staking operations. honeybadger is based on [ConseilJS](https://github.com/Cryptonomic/ConseilJS).
 
-### Intall development tools
+## Development on OSX
+
+### Install development tools
+
 ```bash
-brew install yarn
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash
 brew install watchman
 sudo gem install bundler:2.1.4
 sudo gem install cocoapods
+nvm install 12.16.3
 ```
 
-*some xcode steps*
-
 ```bash
-yarn install
+npm install
 cd ios && pod install && cd ..
-yarn start (in one terminal)
-yarn run ios (in another terminal)
+npm start (in one terminal)
+npm run ios (in another terminal)
 ```
 
 ### Resetting the build
@@ -25,3 +27,11 @@ yarn run ios (in another terminal)
 watchman watch-del-all
 rm -rf ./node_modules
 ```
+
+## Architecture Overview
+
+*TBD*
+
+## Support
+
+*TBD*
