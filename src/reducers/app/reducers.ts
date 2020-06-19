@@ -1,10 +1,11 @@
-import {SET_KEYS, SET_BALANCE} from './actions';
+import {SET_KEYS, SET_BALANCE, SET_SEND_STEP} from './actions';
 
 const initialState = {
     publicKey: null,
     secretKey: null,
     publicKeyHash: null,
     balance: 0,
+    sendStep: 1,
 };
 
 const app = (state = initialState, action) => {
@@ -14,6 +15,8 @@ const app = (state = initialState, action) => {
             return {...state, publicKey, secretKey, publicKeyHash};
         case SET_BALANCE:
             return {...state, balance: action.balance};
+        case SET_SEND_STEP:
+            return {...state, sendStep: action.step};
         default:
             return state;
     }

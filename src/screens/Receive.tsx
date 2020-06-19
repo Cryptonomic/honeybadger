@@ -1,10 +1,9 @@
 import React from 'react';
 import {StyleSheet} from 'react-native';
 import {useSelector} from 'react-redux';
-import {Container, View, Text, Button} from 'native-base';
+import {Container, View, Text} from 'native-base';
 import QRCode from 'react-native-qrcode-svg';
 
-import CustomIcon from '../components/CustomIcon';
 import CustomButton from '../components/CustomButton';
 import CustomHeader from '../components/CustomHeader';
 import {splitHash} from '../utils/general';
@@ -100,7 +99,7 @@ const styles = StyleSheet.create({
     },
     actions: {
         marginTop: 'auto',
-        marginBottom: 90,
+        marginBottom: 42,
         flexDirection: 'row',
         justifyContent: 'center',
     },
