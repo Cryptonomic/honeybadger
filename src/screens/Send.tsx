@@ -4,13 +4,15 @@ import {Container} from 'native-base';
 
 import CustomHeader from '../components/CustomHeader';
 import SendFirstStep from '../components/SendFirstStep';
+import SendSecondStep from '../components/SendSecondStep';
 import {colors} from '../theme';
 
 const Send = ({navigation}) => {
     return (
         <Container style={styles.container}>
             <CustomHeader title="Send" goBack={() => navigation.goBack()} />
-            <SendFirstStep />
+            {/* <SendFirstStep /> */}
+            <SendSecondStep />
         </Container>
     );
 };
