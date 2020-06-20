@@ -1,11 +1,12 @@
 import React, {useState, useEffect} from 'react';
-import {StyleSheet} from 'react-native';
 import {Container, Text, Button, View} from 'native-base';
 import ProgressCircle from 'react-native-progress-circle';
 
-import Checkmark from '../assets/checkmark.svg';
+import Checkmark from '../../assets/checkmark.svg';
 
-const Loading = ({navigation}) => {
+import styles from './styles'
+
+const Loading = ({navigation} : any) => {
     const [ready, setReady] = useState(false);
     const [progress, setProgress] = useState(0);
 
@@ -59,20 +60,5 @@ const Loading = ({navigation}) => {
         </Container>
     );
 };
-
-const styles = StyleSheet.create({
-    container: {
-        backgroundColor: '#fcd104',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    item: {
-        marginBottom: 100,
-    },
-    icon: {
-        width: 81,
-        height: 65
-    }
-});
 
 export default Loading;

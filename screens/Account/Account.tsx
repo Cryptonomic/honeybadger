@@ -1,17 +1,12 @@
-import React, {useState, useEffect} from 'react';
-import {StyleSheet} from 'react-native';
-import {
-    Container,
-    Button,
-    Text,
-    View,
-    Header,
-} from 'native-base';
+import React, { useState, useEffect } from 'react';
+import { Container, Button, Text, View, Header } from 'native-base';
 import RNSecureStorage, {ACCESSIBLE} from 'rn-secure-storage';
 import {Snackbar} from 'react-native-paper';
-import TransportHID from '@ledgerhq/react-native-hid';
+//import TransportHID from '@ledgerhq/react-native-hid';
 import {TezosConseilClient} from 'conseiljs';
 //import {KeyStoreUtils} from 'conseiljs-ledgersigner';
+
+import styles from './styles'
 
 import {
     LearnMoreLinks,
@@ -20,10 +15,10 @@ import {
     ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
-import Transactions from '../components/Transactions';
-import Delegation from '../components/Delegation';
-import Receive from '../assets/receive.svg';
-import Send from '../assets/send.svg';
+import Transactions from '../../components/Transactions';
+import Delegation from '../../components/Delegation';
+import Receive from '../../assets/receive.svg';
+import Send from '../../assets/send.svg';
 
 const serverInfo = {
     url: 'https://conseil-dev.cryptonomic-infra.tech:443',
@@ -33,7 +28,7 @@ const serverInfo = {
 
 const derivationPath = "44'/1729'/0'/0'/0'";
 
-const Account = ({navigation}) => {
+const Account = ({navigation} : any) => {
     const [text, setText] = useState('tz3gN8NTLNLJg5KRsUU47NHNVHbdhcFXjjaB');
     const [balance, setBalance] = useState(0);
     const [secureTxt, setSecureTxt] = useState('');
@@ -83,7 +78,7 @@ const Account = ({navigation}) => {
         }
     }*/
 
-    const changeTab = newTab => {
+    const changeTab = (newTab : any) => {
         if (newTab === tab) {
             return;
         }
@@ -141,8 +136,7 @@ const Account = ({navigation}) => {
             <View style={styles.bottom}>
                 <View style={styles.tabs}>
                     <View
-                        style={styles.tab}
-                        borderBottomColor={tab === 0 ? '#f1c20e' : '#e8e8e8'}>
+                        style={styles.tab}>
                         <Button
                             style={styles.center}
                             transparent
@@ -151,8 +145,7 @@ const Account = ({navigation}) => {
                         </Button>
                     </View>
                     <View
-                        style={styles.tab}
-                        borderBottomColor={tab === 1 ? '#f1c20e' : '#e8e8e8'}>
+                        style={styles.tab}>
                         <Button
                             style={styles.center}
                             transparent
@@ -169,87 +162,6 @@ const Account = ({navigation}) => {
         </Container>
     );
 };
-
-const styles = StyleSheet.create({
-    container: {
-        backgroundColor: '#fcd104',
-    },
-    top: {
-        height: '45%',
-    },
-    bottom: {
-        backgroundColor: '#ffffff',
-        height: '100%',
-        borderTopLeftRadius: 26,
-        borderTopRightRadius: 26,
-        alignItems: 'center',
-    },
-    menu: {
-        width: 24,
-        alignItems: 'center',
-        justifyContent: 'center',
-        borderRadius: 0,
-        position: 'absolute',
-        right: 15,
-    },
-    icon: {
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    dot: {
-        width: 5,
-        height: 5,
-        borderRadius: 5,
-        backgroundColor: '#595252',
-        margin: 2,
-    },
-    account: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
-        position: 'relative',
-    },
-    amount: {
-        marginTop: 20,
-    },
-    actions: {
-        marginTop: 100,
-        flexDirection: 'row',
-        justifyContent: 'center',
-    },
-    actionCircle: {
-        alignItems: 'center',
-        justifyContent: 'center',
-        width: 86,
-        height: 86,
-        backgroundColor: 'rgba(0, 0, 0, 0.05)',
-        borderRadius: 86,
-        margin: 20,
-        padding: 25,
-    },
-    actionLabel: {
-        marginTop: 30,
-    },
-    tabs: {
-        width: '90%',
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-    },
-    tab: {
-        borderBottomWidth: 3,
-        borderRadius: 0,
-        width: '50%',
-        justifyContent: 'center',
-    },
-    tabContainer: {
-        marginTop: 50,
-    },
-    center: {
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-});
 
 export default Account;
 

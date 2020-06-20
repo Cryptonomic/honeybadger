@@ -1,10 +1,11 @@
 import React from 'react';
-import {StyleSheet} from 'react-native';
 import {Container, Text, Button, View} from 'native-base';
 
-import Logo from '../assets/galleon-logo.svg';
+import styles from './styles';
 
-const Welcome = ({navigation}) => {
+import Logo from '../../assets/galleon-logo.svg';
+
+const Welcome = ({navigation} : any) => {
     const getStarted = () => navigation.replace('Loading');
     return (
         <Container>
@@ -22,25 +23,5 @@ const Welcome = ({navigation}) => {
         </Container>
     );
 };
-
-const styles = StyleSheet.create({
-    top: {
-        height: '70%',
-        backgroundColor: '#fcd104',
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    item: {
-        marginTop: 25,
-        alignItems: 'center',
-    },
-    btn: {
-        width: 256,
-        height: 50,
-        justifyContent: 'center',
-        borderRadius: 25,
-        backgroundColor: '#4b4b4b',
-    },
-});
 
 export default Welcome;
