@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {StyleSheet} from 'react-native';
-import {Text, View, Content, Input, Item, Button} from 'native-base';
+import {Text, View, Input, Item, Button, Icon} from 'native-base';
 
 import CustomButton from '../components/CustomButton';
 import {colors} from '../theme';
@@ -8,13 +8,28 @@ import CustomIcon from '../components/CustomIcon';
 
 import {truncateHash} from '../utils/general';
 
+const errorsMsg = {
+    start: 'Tezos Address start wtih tz or KT',
+    short: 'This address is too short. Tezos Addresses are 42 characters long.',
+};
+
 const SendFirstStep = () => {
     const [isValid, setIsValid] = useState(false);
+    const [isError, setIsError] = useState(false);
     const [address, setAddress] = useState(
-        'tz1Mb7z2BcLyD42hnL9LyLyPyRtK6KjE6Vq',
+        't01Mb7z2BcLyD42hnL9LyLyPyRtK6KjE6Vq',
     );
     const onEnterAddress = (value) => {
         setAddress(value);
+
+        if (
+            value.length >= 2 &&
+            !value.includes('tz', 0) &&
+            !value.includes('KT', 0)
+        ) {
+            setIsError(true);
+        }
+
         if (value.length >= 36) {
             setIsValid(true);
             return;
@@ -27,7 +42,7 @@ const SendFirstStep = () => {
     return (
         <>
             <Text style={styles.title}>Enter Recepient Address</Text>
-            <Content style={styles.address}>
+            <View style={styles.address}>
                 <Item regular style={styles.item}>
                     <Input
                         placeholder="e.g tz1…"
@@ -36,7 +51,22 @@ const SendFirstStep = () => {
                         value={address}
                     />
                 </Item>
-            </Content>
+            </View>
+            {isError && (
+                <View style={styles.error}>
+                    <View style={styles.errorTitle}>
+                        <Icon
+                            name="warning"
+                            type="AntDesign"
+                            style={styles.errorIcon}
+                        />
+                        <Text style={styles.typo3}>Invalid Tezos Address</Text>
+                    </View>
+                    <View style={styles.errorText}>
+                        <Text style={styles.typo4}>{errorsMsg.start}</Text>
+                    </View>
+                </View>
+            )}
             <View style={styles.actions}>
                 {!isValid && (
                     <>
@@ -104,6 +134,28 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: '300',
     },
+    error: {
+        marginTop: 30,
+        width: 259,
+        backgroundColor: '#f30000',
+        alignSelf: 'center',
+        borderRadius: 15.5,
+        padding: 12,
+    },
+    errorTitle: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    errorText: {
+        marginTop: 3,
+        alignSelf: 'center',
+    },
+    errorIcon: {
+        color: '#ffffff',
+        fontSize: 14,
+        marginRight: 8,
+    },
     actions: {
         marginTop: 'auto',
         paddingVertical: 42,
@@ -155,6 +207,20 @@ const styles = StyleSheet.create({
         fontSize: 17,
         fontWeight: '500',
         letterSpacing: 0.85,
+    },
+    typo3: {
+        fontFamily: 'Roboto-Bold',
+        fontSize: 14,
+        fontWeight: 'bold',
+        letterSpacing: 0,
+        color: '#ffffff',
+    },
+    typo4: {
+        fontFamily: 'Roboto-Regular',
+        fontSize: 14,
+        fontWeight: 'normal',
+        letterSpacing: 0,
+        color: '#ffffff',
     },
 });
 
