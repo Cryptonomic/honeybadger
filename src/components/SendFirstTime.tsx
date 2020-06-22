@@ -2,11 +2,13 @@ import React from 'react';
 import {StyleSheet} from 'react-native';
 import {Text, View, Button} from 'native-base';
 
+import FirstTimeAddress from '../../assets/first-time-address-illustration.svg';
+
 const SendFirstTime = () => {
     return (
         <>
             <View style={styles.container}>
-                <Text>Picture</Text>
+                <FirstTimeAddress style={styles.picture} />
                 <Text style={styles.title}>
                     It’s a first time you are sending to this address.
                 </Text>
@@ -33,6 +35,9 @@ const styles = StyleSheet.create({
         borderTopLeftRadius: 26,
         borderTopRightRadius: 26,
         alignItems: 'center',
+    },
+    picture: {
+        marginTop: 81,
     },
     title: {
         marginTop: 45,
