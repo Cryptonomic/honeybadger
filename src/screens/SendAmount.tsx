@@ -1,14 +1,14 @@
 import React, {useState} from 'react';
 import {useSelector} from 'react-redux';
 import {StyleSheet} from 'react-native';
-import {Container, Text, Input, View} from 'native-base';
+import {Container, Text, Input, View, Button} from 'native-base';
 
 import CustomHeader from '../components/CustomHeader';
 import CustomIcon from '../components/CustomIcon';
 import {truncateHash} from '../utils/general';
 import {colors} from '../theme';
 
-const SendSecondStep = ({navigation}) => {
+const SendAmount = ({navigation}) => {
     const address = useSelector((state) => state.app.sendAddress);
     const [amount, setAmount] = useState('1,403,000.908');
     const [currency, setCurrency] = useState('50');
@@ -52,11 +52,12 @@ const SendSecondStep = ({navigation}) => {
                         <CustomIcon name="XTZ" size={16} color="#343434" />
                     </View>
                 </View>
-                <Text
-                    style={[
-                        styles.fee,
-                        styles.typo5,
-                    ]}>{`Transactions fee $${fee}`}</Text>
+                <Text style={[styles.fee, styles.typo5]}>
+                    {`Transactions fee $${fee}`}
+                </Text>
+                <Button style={styles.button}>
+                    <Text style={styles.typo6}>Next</Text>
+                </Button>
             </View>
         </Container>
     );
@@ -114,6 +115,14 @@ const styles = StyleSheet.create({
         marginTop: 4,
         textAlign: 'right',
     },
+    button: {
+        marginTop: 48,
+        height: 50,
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderRadius: 25,
+        backgroundColor: '#4b4b4b',
+    },
     typo1: {
         fontFamily: 'Roboto-Medium',
         fontWeight: '500',
@@ -144,6 +153,12 @@ const styles = StyleSheet.create({
         fontWeight: 'normal',
         color: '#7d7c7c',
     },
+    typo6: {
+        fontFamily: 'Roboto-Medium',
+        fontSize: 17,
+        fontWeight: '500',
+        letterSpacing: 0.85,
+    },
 });
 
-export default SendSecondStep;
+export default SendAmount;
