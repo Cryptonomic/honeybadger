@@ -25,7 +25,9 @@ const Loading = ({navigation}) => {
                     JSON.stringify(keys),
                 );
                 dispatch(setKeysAction(keys));
-                setReady(true);
+                setTimeout(() => {
+                    setReady(true);
+                }, 2000);
             } catch (e) {
                 console.log('[ERROR]', e);
             }
