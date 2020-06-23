@@ -5,7 +5,8 @@ import LoadingScreen from '../screens/Loading';
 import AccountScreen from '../screens/Account';
 import ReceiveScreen from '../screens/Receive';
 import SendAddressScreen from '../screens/SendAddress';
-import SendSendAmountScreen from '../screens/SendAmount';
+import SendAmountScreen from '../screens/SendAmount';
+import SendReviewScreen from '../screens/SendReview';
 import SendFirstTimeScreen from '../screens/SendFirstTime';
 
 const MainNavigator = createStackNavigator(
@@ -15,7 +16,8 @@ const MainNavigator = createStackNavigator(
         Account: AccountScreen,
         Receive: ReceiveScreen,
         SendAddress: SendAddressScreen,
-        SendAmount: SendSendAmountScreen,
+        SendAmount: SendAmountScreen,
+        SendReview: SendReviewScreen,
         SendFirstTime: SendFirstTimeScreen,
     },
     {

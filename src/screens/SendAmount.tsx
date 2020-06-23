@@ -18,6 +18,9 @@ const SendAmount = ({navigation}) => {
     const onChange = (value) => {
         setAmount(value);
     };
+    const goNext = () => {
+        navigation.navigate('SendReview');
+    };
     return (
         <Container style={styles.container}>
             <CustomHeader
@@ -55,7 +58,7 @@ const SendAmount = ({navigation}) => {
                 <Text style={[styles.fee, styles.typo5]}>
                     {`Transactions fee $${fee}`}
                 </Text>
-                <Button style={styles.button}>
+                <Button style={styles.button} onPress={goNext}>
                     <Text style={styles.typo6}>Next</Text>
                 </Button>
             </View>
