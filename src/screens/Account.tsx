@@ -12,15 +12,16 @@ import Delegation from '../components/Delegation';
 import Receive from '../../assets/receive.svg';
 import Send from '../../assets/send.svg';
 
+import CustomIcon from '../components/CustomIcon';
 import {truncateHash} from '../utils/general';
 
 const Account = ({navigation}) => {
     const dispatch = useDispatch();
-    const publicKeyHash = useSelector(state => state.app.publicKeyHash);
-    const balance = useSelector(state => state.app.balance);
+    const publicKeyHash = useSelector((state) => state.app.publicKeyHash);
+    const balance = useSelector((state) => state.app.balance);
     const [tab, setTab] = useState(0);
 
-    const changeTab = newTab => {
+    const changeTab = (newTab) => {
         if (newTab === tab) {
             return;
         }
@@ -44,6 +45,10 @@ const Account = ({navigation}) => {
         load();
     }, []);
 
+    const onPress = (value) => {
+        navigation.navigate(value);
+    };
+
     return (
         <Container style={styles.container}>
             <View style={styles.top}>
@@ -61,8 +66,9 @@ const Account = ({navigation}) => {
                     </Button>
                 </View>
                 <View style={styles.amount}>
-                    <View style={styles.center}>
+                    <View style={[styles.center, styles.row]}>
                         <Text style={styles.typo2}>{balance}</Text>
+                        <CustomIcon name="XTZ" size={30} color="#1a1919" />
                     </View>
                     <View style={styles.center}>
                         <Text style={styles.typo3}>$0.00</Text>
@@ -70,7 +76,7 @@ const Account = ({navigation}) => {
                 </View>
                 <View style={styles.actions}>
                     <View style={styles.center}>
-                        <Button transparent>
+                        <Button transparent onPress={() => onPress('Receive')}>
                             <View style={styles.actionCircle}>
                                 <Receive />
                             </View>
@@ -80,7 +86,9 @@ const Account = ({navigation}) => {
                         </Text>
                     </View>
                     <View style={styles.center}>
-                        <Button transparent>
+                        <Button
+                            transparent
+                            onPress={() => onPress('SendAddress')}>
                             <View style={styles.actionCircle}>
                                 <Send />
                             </View>
@@ -223,6 +231,9 @@ const styles = StyleSheet.create({
     center: {
         alignItems: 'center',
         justifyContent: 'center',
+    },
+    row: {
+        flexDirection: 'row',
     },
     typo1: {
         fontFamily: 'Roboto-Medium',
