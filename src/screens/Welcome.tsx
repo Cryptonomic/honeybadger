@@ -14,18 +14,18 @@ import Wave from '../../assets/splash-wave-shadow.svg';
 const Welcome = ({navigation}) => {
     const dispatch = useDispatch();
     useEffect(() => {
-        // async function load() {
-        //     try {
-        //         const keys = await Keychain.getGenericPassword();
-        //         if (keys) {
-        //             dispatch(setKeysAction(JSON.parse(keys.password)));
-        //             navigation.replace('Account');
-        //         }
-        //     } catch (error) {
-        //         console.log("Keychain couldn't be accessed!", error);
-        //     }
-        // }
-        // load();
+        async function load() {
+            try {
+                const keys = await Keychain.getGenericPassword();
+                if (keys) {
+                    dispatch(setKeysAction(JSON.parse(keys.password)));
+                    navigation.replace('Account');
+                }
+            } catch (error) {
+                console.log("Keychain couldn't be accessed!", error);
+            }
+        }
+        load();
     }, []);
 
     const getStarted = () => navigation.replace('Loading');
