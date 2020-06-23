@@ -13,7 +13,11 @@ const Receive = ({navigation}) => {
     const addressParts = splitHash(address);
     return (
         <Container style={styles.container}>
-            <CustomHeader title="Receive" goBack={() => navigation.goBack()} />
+            <CustomHeader
+                title="Receive"
+                goBack={() => navigation.goBack()}
+                onClose={() => navigation.goBack()}
+            />
             <View style={styles.main}>
                 <Text style={styles.title}>
                     Share your account address to receive XTZ or Tezos tokens
