@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, {useEffect} from 'react';
 import {StyleSheet} from 'react-native';
-import {Container, Text, Button, View} from 'native-base';
+import {Container, Text, Button, View, Header} from 'native-base';
 import * as Keychain from 'react-native-keychain';
 import {useDispatch} from 'react-redux';
 
@@ -9,32 +9,30 @@ import {setKeysAction} from '../reducers/app/actions';
 
 import Logo from '../../assets/galleon-logo.svg';
 import Cryptonomic from '../../assets/cryptonomic-icon.svg';
-import Wave from '../../assets/splash-wave.svg';
-import WaveShadow from '../../assets/splash-wave-shadow.svg';
+import Wave from '../../assets/splash-wave-shadow.svg';
 
 const Welcome = ({navigation}) => {
     const dispatch = useDispatch();
     useEffect(() => {
-        async function load() {
-            try {
-                const keys = await Keychain.getGenericPassword();
-                if (keys) {
-                    dispatch(setKeysAction(JSON.parse(keys.password)));
-                    navigation.replace('Account');
-                }
-            } catch (error) {
-                console.log("Keychain couldn't be accessed!", error);
-            }
-        }
-        load();
+        // async function load() {
+        //     try {
+        //         const keys = await Keychain.getGenericPassword();
+        //         if (keys) {
+        //             dispatch(setKeysAction(JSON.parse(keys.password)));
+        //             navigation.replace('Account');
+        //         }
+        //     } catch (error) {
+        //         console.log("Keychain couldn't be accessed!", error);
+        //     }
+        // }
+        // load();
     }, []);
 
     const getStarted = () => navigation.replace('Loading');
     return (
         <Container>
+            <Header style={styles.header} />
             <Wave style={styles.wave} />
-            <WaveShadow style={styles.waveShadow} />
-            <View style={styles.waveBg} />
             <View style={styles.top}>
                 <Logo style={styles.logo} />
             </View>
@@ -55,9 +53,12 @@ const Welcome = ({navigation}) => {
 };
 
 const styles = StyleSheet.create({
+    header: {
+        backgroundColor: '#fcd104',
+    },
     top: {
-        height: '70%',
-        justifyContent: 'center',
+        height: '65%',
+        paddingTop: 100,
         alignItems: 'center',
     },
     item: {
@@ -85,24 +86,6 @@ const styles = StyleSheet.create({
         position: 'absolute',
         width: '100%',
         height: '70%',
-    },
-    waveShadow: {
-        position: 'absolute',
-        width: '100%',
-        height: '65%',
-        shadowColor: '#000',
-        shadowOffset: {
-            width: 10,
-            height: 10,
-        },
-        shadowOpacity: 0.2,
-        shadowRadius: 10,
-    },
-    waveBg: {
-        position: 'absolute',
-        backgroundColor: '#fcd104',
-        width: '100%',
-        height: '30%',
     },
     typo1: {
         fontFamily: 'Roboto-Light',
