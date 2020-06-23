@@ -4,10 +4,10 @@ import {Header, Button, Left, Right, Title, Body} from 'native-base';
 
 import CustomIcon from '../CustomIcon';
 
-const CustomHeader = ({title, goBack}) => {
+const CustomHeader = ({title, goBack, onClose}) => {
     return (
-        <Header style={styles.header} transparent>
-            <Left>
+        <Header transparent>
+            <Left style={styles.button}>
                 <Button transparent onPress={goBack}>
                     <CustomIcon name="Back-Arrow" size={16} />
                 </Button>
@@ -15,8 +15,8 @@ const CustomHeader = ({title, goBack}) => {
             <Body>
                 <Title style={styles.title}>{title}</Title>
             </Body>
-            <Right>
-                <Button transparent onPress={goBack}>
+            <Right style={styles.button}>
+                <Button transparent onPress={onClose}>
                     <CustomIcon name="Cancel" size={16} />
                 </Button>
             </Right>
@@ -25,8 +25,9 @@ const CustomHeader = ({title, goBack}) => {
 };
 
 const styles = StyleSheet.create({
-    header: {
-        marginHorizontal: 10,
+    button: {
+        flexGrow: 0,
+        flexBasis: 50,
     },
     title: {
         fontFamily: 'Roboto-Medium',

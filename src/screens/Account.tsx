@@ -84,7 +84,9 @@ const Account = ({navigation}) => {
                         </Text>
                     </View>
                     <View style={styles.center}>
-                        <Button transparent onPress={() => onPress('Send')}>
+                        <Button
+                            transparent
+                            onPress={() => onPress('SendAddress')}>
                             <View style={styles.actionCircle}>
                                 <Send />
                             </View>

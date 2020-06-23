@@ -1,13 +1,18 @@
 import React from 'react';
 import {StyleSheet} from 'react-native';
-import {Text, View, Button} from 'native-base';
+import {Text, View, Button, Container, Header} from 'native-base';
 
 import FirstTimeAddress from '../../assets/first-time-address-illustration.svg';
+import {colors} from '../theme';
 
-const SendFirstTime = () => {
+const SendFirstTime = ({navigation}) => {
+    const onPress = () => {
+        navigation.navigate('SendAmount');
+    };
     return (
-        <>
-            <View style={styles.container}>
+        <Container style={styles.container}>
+            <Header transparent />
+            <View style={styles.content}>
                 <FirstTimeAddress style={styles.picture} />
                 <Text style={styles.title}>
                     It’s a first time you are sending to this address.
@@ -20,16 +25,19 @@ const SendFirstTime = () => {
                     In cryptocurrencies there is no way to recover funds once
                     they are sent.
                 </Text>
-                <Button style={styles.button}>
+                <Button style={styles.button} onPress={onPress}>
                     <Text style={styles.buttonText}>Got It!</Text>
                 </Button>
             </View>
-        </>
+        </Container>
     );
 };
 
 const styles = StyleSheet.create({
     container: {
+        backgroundColor: colors.bg,
+    },
+    content: {
         backgroundColor: '#ffffff',
         flexGrow: 1,
         borderTopLeftRadius: 26,

@@ -1,11 +1,14 @@
 import React, {useState} from 'react';
+import {useDispatch} from 'react-redux';
 import {StyleSheet} from 'react-native';
-import {Text, View, Input, Item, Button, Icon} from 'native-base';
+import {Container, Text, View, Input, Item, Button, Icon} from 'native-base';
+
+import {setSendAddress} from '../reducers/app/actions';
 
 import CustomButton from '../components/CustomButton';
-import {colors} from '../theme';
 import CustomIcon from '../components/CustomIcon';
-
+import CustomHeader from '../components/CustomHeader';
+import {colors} from '../theme';
 import {truncateHash} from '../utils/general';
 
 const errorsMsg = {
@@ -13,11 +16,12 @@ const errorsMsg = {
     short: 'This address is too short. Tezos Addresses are 42 characters long.',
 };
 
-const SendFirstStep = () => {
+const SendFirstStep = ({navigation}) => {
+    const dispatch = useDispatch();
     const [isValid, setIsValid] = useState(false);
     const [isError, setIsError] = useState(false);
     const [address, setAddress] = useState(
-        't01Mb7z2BcLyD42hnL9LyLyPyRtK6KjE6Vq',
+        'tz1Mb7z2BcLyD42hnL9LyLyPyRtK6KjE6Vq',
     );
     const onEnterAddress = (value) => {
         setAddress(value);
@@ -28,9 +32,11 @@ const SendFirstStep = () => {
             !value.includes('KT', 0)
         ) {
             setIsError(true);
+            return;
         }
 
         if (value.length >= 36) {
+            dispatch(setSendAddress(value));
             setIsValid(true);
             return;
         }
@@ -39,8 +45,16 @@ const SendFirstStep = () => {
             setIsValid(false);
         }
     };
+    const goNext = () => {
+        navigation.navigate('SendFirstTime');
+    };
     return (
-        <>
+        <Container style={styles.container}>
+            <CustomHeader
+                title="Send"
+                goBack={() => navigation.goBack()}
+                onClose={() => navigation.navigate('Account')}
+            />
             <Text style={styles.title}>Enter Recepient Address</Text>
             <View style={styles.address}>
                 <Item regular style={styles.item}>
@@ -100,13 +114,13 @@ const SendFirstStep = () => {
                             <Text style={styles.typo1}>Recepient Address</Text>
                             <Text>{truncateHash(address)}</Text>
                         </View>
-                        <Button style={styles.nextButton}>
+                        <Button style={styles.nextButton} onPress={goNext}>
                             <Text style={styles.typo2}>Next</Text>
                         </Button>
                     </View>
                 )}
             </View>
-        </>
+        </Container>
     );
 };
 
