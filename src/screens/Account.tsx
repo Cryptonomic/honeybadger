@@ -12,6 +12,7 @@ import Delegation from '../components/Delegation';
 import Receive from '../../assets/receive.svg';
 import Send from '../../assets/send.svg';
 
+import CustomIcon from '../components/CustomIcon';
 import {truncateHash} from '../utils/general';
 
 const Account = ({navigation}) => {
@@ -65,8 +66,9 @@ const Account = ({navigation}) => {
                     </Button>
                 </View>
                 <View style={styles.amount}>
-                    <View style={styles.center}>
+                    <View style={[styles.center, styles.row]}>
                         <Text style={styles.typo2}>{balance}</Text>
+                        <CustomIcon name="XTZ" size={30} color="#1a1919" />
                     </View>
                     <View style={styles.center}>
                         <Text style={styles.typo3}>$0.00</Text>
@@ -229,6 +231,9 @@ const styles = StyleSheet.create({
     center: {
         alignItems: 'center',
         justifyContent: 'center',
+    },
+    row: {
+        flexDirection: 'row',
     },
     typo1: {
         fontFamily: 'Roboto-Medium',
