@@ -1,11 +1,17 @@
 import {TezosConseilClient} from 'conseiljs';
+import {Dispatch} from 'redux';
 
 import {setBalanceAction} from './actions';
 import config from '../../config';
 
-export const getAccount = () => async (dispatch, state) => {
+import {State} from '../types';
+
+export const getAccount = () => async (
+    dispatch: Dispatch,
+    getState: () => State,
+) => {
     try {
-        const publicKeyHash = state().app.publicKeyHash;
+        const publicKeyHash = getState().app.publicKeyHash;
         const account = await TezosConseilClient.getAccount(
             config[0],
             config[0].network,

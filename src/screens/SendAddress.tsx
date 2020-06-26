@@ -11,26 +11,24 @@ import CustomHeader from '../components/CustomHeader';
 import {colors} from '../theme';
 import {truncateHash} from '../utils/general';
 
+import {SendAddressProps} from './types';
+
 const errorsMsg = {
     start: 'Tezos Address start wtih tz or KT',
     short: 'This address is too short. Tezos Addresses are 42 characters long.',
 };
 
-const SendFirstStep = ({navigation}) => {
+const SendAddress = ({navigation}: SendAddressProps) => {
     const dispatch = useDispatch();
     const [isValid, setIsValid] = useState(false);
     const [isError, setIsError] = useState(false);
     const [address, setAddress] = useState(
         'tz1Mb7z2BcLyD42hnL9LyLyPyRtK6KjE6Vq',
     );
-    const onEnterAddress = (value) => {
+    const onEnterAddress = (value: string) => {
         setAddress(value);
 
-        if (
-            value.length >= 2 &&
-            !value.includes('tz', 0) &&
-            !value.includes('KT', 0)
-        ) {
+        if (value.length >= 2 && !value.includes('tz', 0)) {
             setIsError(true);
             return;
         }
@@ -238,4 +236,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default SendFirstStep;
+export default SendAddress;

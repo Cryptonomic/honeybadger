@@ -1,3 +1,5 @@
+import {Action} from 'redux';
+
 import {
     SET_KEYS,
     SET_BALANCE,
@@ -9,16 +11,31 @@ const initialState = {
     publicKey: null,
     secretKey: null,
     publicKeyHash: null,
+    storeType: '',
+    seed: '',
     balance: 0,
     sendStep: 1,
     sendAddress: '',
 };
 
-const app = (state = initialState, action) => {
+const app = (state = initialState, action: Action) => {
     switch (action.type) {
         case SET_KEYS:
-            const {publicKey, secretKey, publicKeyHash} = action.keys;
-            return {...state, publicKey, secretKey, publicKeyHash};
+            const {
+                publicKey,
+                secretKey,
+                publicKeyHash,
+                storeType,
+                seed,
+            } = action.keys;
+            return {
+                ...state,
+                publicKey,
+                secretKey,
+                publicKeyHash,
+                storeType,
+                seed,
+            };
         case SET_BALANCE:
             return {...state, balance: action.balance};
         case SET_SEND_STEP:
