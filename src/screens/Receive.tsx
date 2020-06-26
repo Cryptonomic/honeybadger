@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import {StyleSheet, Clipboard} from 'react-native';
+import Share from 'react-native-share';
 import {useSelector} from 'react-redux';
 import {Container, View, Text} from 'native-base';
 import QRCode from 'react-native-qrcode-svg';
@@ -17,9 +18,19 @@ const Receive = ({navigation}: ReceiveProps) => {
     const address = useSelector((state: State) => state.app.publicKeyHash);
     const [copied, setCopied] = useState(false);
     const addressParts = splitHash(address);
-    const copyToClipboard = () => {
+    const onCopyToClipboard = () => {
         Clipboard.setString(address);
         setCopied(true);
+    };
+    const onShare = async () => {
+        try {
+            await Share.open({
+                message: address,
+                title: 'Share to',
+            });
+        } catch (e) {
+            console.log('[ERROR_SHARE]', e);
+        }
     };
     return (
         <Container style={styles.container}>
@@ -66,13 +77,17 @@ const Receive = ({navigation}: ReceiveProps) => {
                             <CustomButton
                                 icon="Copy"
                                 label="Copy"
-                                onPress={copyToClipboard}
+                                onPress={onCopyToClipboard}
                             />
                         </CustomTooltip>
                     </View>
                     <View style={styles.line} />
                     <View>
-                        <CustomButton icon="Share-Android" label="Share" />
+                        <CustomButton
+                            icon="Share-Android"
+                            label="Share"
+                            onPress={onShare}
+                        />
                     </View>
                 </View>
             </View>

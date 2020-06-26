@@ -4,5 +4,5 @@ export interface CustomButtonProps {
     size?: number;
     color?: string;
     tooltip?: boolean;
-    onPress?: () => void | undefined;
+    onPress?: () => Promise<void | undefined> | void | undefined;
 }
