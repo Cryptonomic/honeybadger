@@ -22,7 +22,7 @@ const SendReview = ({navigation}) => {
         <Container style={styles.container}>
             <CustomHeader
                 title="Review Transaction"
-                goBack={() => navigation.goBack()}
+                onBack={() => navigation.goBack()}
                 onClose={() => navigation.navigate('Account')}
             />
             <View style={styles.paper}>

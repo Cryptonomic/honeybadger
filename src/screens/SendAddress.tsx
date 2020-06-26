@@ -1,7 +1,8 @@
 import React, {useState} from 'react';
 import {useDispatch} from 'react-redux';
-import {StyleSheet} from 'react-native';
+import {StyleSheet, Clipboard} from 'react-native';
 import {Container, Text, View, Input, Item, Button, Icon} from 'native-base';
+import {RNCamera} from 'react-native-camera';
 
 import {setSendAddress} from '../reducers/app/actions';
 
@@ -14,7 +15,7 @@ import {truncateHash} from '../utils/general';
 import {SendAddressProps} from './types';
 
 const errorsMsg = {
-    start: 'Tezos Address start wtih tz or KT',
+    start: 'Tezos Address start wtih tz',
     short: 'This address is too short. Tezos Addresses are 42 characters long.',
 };
 
@@ -22,9 +23,8 @@ const SendAddress = ({navigation}: SendAddressProps) => {
     const dispatch = useDispatch();
     const [isValid, setIsValid] = useState(false);
     const [isError, setIsError] = useState(false);
-    const [address, setAddress] = useState(
-        'tz1Mb7z2BcLyD42hnL9LyLyPyRtK6KjE6Vq',
-    );
+    const [address, setAddress] = useState('');
+    const [showCamera, setShowCamera] = useState(false);
     const onEnterAddress = (value: string) => {
         setAddress(value);
 
@@ -46,78 +46,120 @@ const SendAddress = ({navigation}: SendAddressProps) => {
     const goNext = () => {
         navigation.navigate('SendFirstTime');
     };
+    const onPasteAddress = async () => {
+        const copiedMessage = await Clipboard.getString();
+        setAddress(copiedMessage);
+    };
+    const onScanQrCode = () => setShowCamera(true);
+    const onBarcodeRecognized = ({data}: {data: string}) => {
+        if (data && data.length) {
+            setAddress(data);
+            setShowCamera(false);
+        }
+    };
+    const cameraBtnProps = {
+        size: 30,
+        color: '#ffffff',
+    };
     return (
         <Container style={styles.container}>
-            <CustomHeader
-                title="Send"
-                goBack={() => navigation.goBack()}
-                onClose={() => navigation.navigate('Account')}
-            />
-            <Text style={styles.title}>Enter Recepient Address</Text>
-            <View style={styles.address}>
-                <Item regular style={styles.item}>
-                    <Input
-                        placeholder="e.g tz1…"
-                        style={styles.input}
-                        onChangeText={onEnterAddress}
-                        value={address}
-                    />
-                </Item>
-            </View>
-            {isError && (
-                <View style={styles.error}>
-                    <View style={styles.errorTitle}>
-                        <Icon
-                            name="warning"
-                            type="AntDesign"
-                            style={styles.errorIcon}
+            {showCamera && (
+                <>
+                    <RNCamera
+                        style={styles.camera}
+                        onBarCodeRead={onBarcodeRecognized}>
+                        <CustomHeader
+                            onBack={() => setShowCamera(false)}
+                            leftIconName="Cancel"
+                            backIconCustomStyles={cameraBtnProps}
                         />
-                        <Text style={styles.typo3}>Invalid Tezos Address</Text>
-                    </View>
-                    <View style={styles.errorText}>
-                        <Text style={styles.typo4}>{errorsMsg.start}</Text>
-                    </View>
-                </View>
+                    </RNCamera>
+                </>
             )}
-            <View style={styles.actions}>
-                {!isValid && (
-                    <>
-                        <View>
-                            <CustomButton
-                                icon="Paste"
-                                label="Paste Address"
-                                color="#f5942a"
+            {!showCamera && (
+                <>
+                    <CustomHeader
+                        title="Send"
+                        onBack={() => navigation.goBack()}
+                        onClose={() => navigation.navigate('Account')}
+                    />
+                    <Text style={styles.title}>Enter Recepient Address</Text>
+                    <View style={styles.address}>
+                        <Item regular style={styles.item}>
+                            <Input
+                                placeholder="e.g tz1…"
+                                style={styles.input}
+                                onChangeText={onEnterAddress}
+                                value={address}
                             />
-                        </View>
-                        <View style={styles.actionLine} />
-                        <View>
-                            <CustomButton
-                                icon="Scan"
-                                label="Scan QR Code"
-                                color="#f5942a"
-                            />
-                        </View>
-                    </>
-                )}
-                {isValid && (
-                    <View style={styles.next}>
-                        <View style={styles.nextCircle}>
-                            <CustomIcon
-                                name="Checkmark"
-                                size={16}
-                                color="#ff8f00"
-                            />
-                        </View>
-                        <View>
-                            <Text style={styles.typo1}>Recepient Address</Text>
-                            <Text>{truncateHash(address)}</Text>
-                        </View>
-                        <Button style={styles.nextButton} onPress={goNext}>
-                            <Text style={styles.typo2}>Next</Text>
-                        </Button>
+                        </Item>
                     </View>
-                )}
-            </View>
+                    {isError && (
+                        <View style={styles.error}>
+                            <View style={styles.errorTitle}>
+                                <Icon
+                                    name="warning"
+                                    type="AntDesign"
+                                    style={styles.errorIcon}
+                                />
+                                <Text style={styles.typo3}>
+                                    Invalid Tezos Address
+                                </Text>
+                            </View>
+                            <View style={styles.errorText}>
+                                <Text style={styles.typo4}>
+                                    {errorsMsg.start}
+                                </Text>
+                            </View>
+                        </View>
+                    )}
+                    <View style={styles.actions}>
+                        {!isValid && (
+                            <>
+                                <View>
+                                    <CustomButton
+                                        icon="Paste"
+                                        label="Paste Address"
+                                        color="#f5942a"
+                                        onPress={onPasteAddress}
+                                    />
+                                </View>
+                                <View style={styles.actionLine} />
+                                <View>
+                                    <CustomButton
+                                        icon="Scan"
+                                        label="Scan QR Code"
+                                        color="#f5942a"
+                                        onPress={onScanQrCode}
+                                    />
+                                </View>
+                            </>
+                        )}
+                        {isValid && (
+                            <View style={styles.next}>
+                                <View style={styles.nextCircle}>
+                                    <CustomIcon
+                                        name="Checkmark"
+                                        size={16}
+                                        color="#ff8f00"
+                                    />
+                                </View>
+                                <View>
+                                    <Text style={styles.typo1}>
+                                        Recepient Address
+                                    </Text>
+                                    <Text>{truncateHash(address)}</Text>
+                                </View>
+                                <Button
+                                    style={styles.nextButton}
+                                    onPress={goNext}>
+                                    <Text style={styles.typo2}>Next</Text>
+                                </Button>
+                            </View>
+                        )}
+                    </View>
+                </>
+            )}
         </Container>
     );
 };
@@ -207,6 +249,10 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: 25,
+    },
+    camera: {
+        flex: 1,
+        width: '100%',
     },
     typo1: {
         fontFamily: 'Roboto-Light',

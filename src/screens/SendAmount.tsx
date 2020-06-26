@@ -25,7 +25,7 @@ const SendAmount = ({navigation}) => {
         <Container style={styles.container}>
             <CustomHeader
                 title={title}
-                goBack={() => navigation.goBack()}
+                onBack={() => navigation.goBack()}
                 onClose={() => navigation.navigate('Account')}
             />
             <Text style={styles.title}>Enter Amount</Text>

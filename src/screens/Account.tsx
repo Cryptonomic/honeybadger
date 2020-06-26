@@ -29,6 +29,8 @@ const Account = ({navigation}) => {
         setTab(newTab);
     };
 
+    // navigation.navigate('Welcome');
+
     useEffect(() => {
         async function load() {
             try {
@@ -73,6 +75,7 @@ const Account = ({navigation}) => {
                     <View style={styles.center}>
                         <Text style={styles.typo3}>$0.00</Text>
                     </View>
+                    <Text>Hello World</Text>
                 </View>
                 <View style={styles.actions}>
                     <View style={styles.center}>
