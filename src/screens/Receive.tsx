@@ -1,16 +1,26 @@
-import React from 'react';
-import {StyleSheet} from 'react-native';
+import React, {useState} from 'react';
+import {StyleSheet, Clipboard} from 'react-native';
 import {useSelector} from 'react-redux';
 import {Container, View, Text} from 'native-base';
 import QRCode from 'react-native-qrcode-svg';
 
 import CustomButton from '../components/CustomButton';
+import CustomIcon from '../components/CustomIcon';
 import CustomHeader from '../components/CustomHeader';
+import CustomTooltip from '../components/CustomTooltip';
 import {splitHash} from '../utils/general';
 
-const Receive = ({navigation}) => {
-    const address = useSelector((state) => state.app.publicKeyHash);
+import {State} from '../reducers/types';
+import {ReceiveProps} from './types';
+
+const Receive = ({navigation}: ReceiveProps) => {
+    const address = useSelector((state: State) => state.app.publicKeyHash);
+    const [copied, setCopied] = useState(false);
     const addressParts = splitHash(address);
+    const copyToClipboard = () => {
+        Clipboard.setString(address);
+        setCopied(true);
+    };
     return (
         <Container style={styles.container}>
             <CustomHeader
@@ -42,7 +52,23 @@ const Receive = ({navigation}) => {
                 </View>
                 <View style={styles.actions}>
                     <View>
-                        <CustomButton icon="Copy" label="Copy" />
+                        <CustomTooltip
+                            isVisible={copied}
+                            content={
+                                <View style={styles.tooltipContent}>
+                                    <CustomIcon name="Checkmark" size={16} />
+                                    <Text style={styles.tooltipText}>
+                                        Copied to the clipboard
+                                    </Text>
+                                </View>
+                            }
+                            onClose={() => setCopied(false)}>
+                            <CustomButton
+                                icon="Copy"
+                                label="Copy"
+                                onPress={copyToClipboard}
+                            />
+                        </CustomTooltip>
                     </View>
                     <View style={styles.line} />
                     <View>
@@ -55,6 +81,20 @@ const Receive = ({navigation}) => {
 };
 
 const styles = StyleSheet.create({
+    tooltipArrow: {
+        display: 'none',
+    },
+    tooltipContent: {
+        width: 'auto',
+        height: 48,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingHorizontal: 16,
+    },
+    tooltipText: {
+        marginLeft: 5,
+    },
     container: {
         backgroundColor: '#fcd104',
     },
