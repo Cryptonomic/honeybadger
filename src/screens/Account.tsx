@@ -9,6 +9,7 @@ import {getAccount} from '../reducers/app/thunks';
 
 import Transactions from '../components/Transactions';
 import Delegation from '../components/Delegation';
+import SecurityLevelButton from '../components/SecurityLevelButton';
 import Receive from '../../assets/receive.svg';
 import Send from '../../assets/send.svg';
 
@@ -105,6 +106,9 @@ const Account = ({navigation}: AccountProps) => {
                 </View>
             </View>
             <View style={styles.bottom}>
+                <View style={styles.securityBtn}>
+                    <SecurityLevelButton />
+                </View>
                 <View style={styles.tabs}>
                     <View
                         style={[
@@ -244,6 +248,10 @@ const styles = StyleSheet.create({
     },
     tabBorderInactive: {
         borderBottomColor: '#e8e8e8',
+    },
+    securityBtn: {
+        marginVertical: 20,
+        width: '90%',
     },
     center: {
         alignItems: 'center',
