@@ -15,6 +15,7 @@ import Send from '../../assets/send.svg';
 
 import CustomIcon from '../components/CustomIcon';
 import {truncateHash} from '../utils/general';
+import {formatAmount} from '../utils/currency';
 
 import {State} from '../reducers/types';
 import {AccountProps} from './types';
@@ -75,7 +76,9 @@ const Account = ({navigation}: AccountProps) => {
                 </View>
                 <View style={styles.amount}>
                     <View style={[styles.center, styles.row]}>
-                        <Text style={styles.typo2}>{balance}</Text>
+                        <Text style={styles.typo2}>
+                            {formatAmount(balance)}
+                        </Text>
                         <CustomIcon name="XTZ" size={30} color="#1a1919" />
                     </View>
                     <View style={styles.center}>
