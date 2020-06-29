@@ -16,6 +16,19 @@ const initialState = {
     balance: 0,
     sendStep: 1,
     sendAddress: '',
+    transactions: [
+        {
+            from: 'tz1irJKkXS2DBWkU1NnmFQx1c1L7pbGg4yhk',
+            time: '1593435025908',
+            value: 5.568,
+        },
+        {
+            to: 'tz1irJKkXS2DBWkU1NnmFQx1c1L7pbGg4yhk',
+            time: '1593435096536',
+            value: 25.568,
+        },
+    ],
+    delegations: [],
 };
 
 const app = (state = initialState, action: Action) => {

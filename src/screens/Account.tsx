@@ -25,6 +25,8 @@ const Account = ({navigation}: AccountProps) => {
         (state: State) => state.app.publicKeyHash,
     );
     const balance = useSelector((state: State) => state.app.balance);
+    const transactions = useSelector((state: State) => state.app.transactions);
+    const delegations = useSelector((state: State) => state.app.delegations);
     const [tab, setTab] = useState(0);
 
     const changeTab = (newTab: number) => {
@@ -106,9 +108,12 @@ const Account = ({navigation}: AccountProps) => {
                 </View>
             </View>
             <View style={styles.bottom}>
-                <View style={styles.securityBtn}>
-                    <SecurityLevelButton />
-                </View>
+                {((transactions.length > 0 && tab === 0) ||
+                    (delegations.length > 0 && tab === 1)) && (
+                    <View style={styles.securityBtn}>
+                        <SecurityLevelButton />
+                    </View>
+                )}
                 <View style={styles.tabs}>
                     <View
                         style={[
@@ -235,7 +240,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     tabContainer: {
-        marginTop: 20,
+        width: '90%',
     },
     tabActive: {
         color: 'rgba(0, 0, 0, 0.92)',

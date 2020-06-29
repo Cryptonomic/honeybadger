@@ -24,6 +24,7 @@ const Delegation = () => {
 const styles = StyleSheet.create({
     container: {
         alignItems: 'center',
+        marginTop: 25,
     },
     title: {
         marginTop: 25,

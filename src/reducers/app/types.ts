@@ -7,4 +7,13 @@ export interface State {
     balance: number;
     sendStep: number;
     sendAddress: string;
+    transactions: Array<{}>;
+    delegations: Array<{}>;
+}
+
+export interface Transaction {
+    from?: string;
+    to?: string;
+    time?: number;
+    value?: number;
 }
