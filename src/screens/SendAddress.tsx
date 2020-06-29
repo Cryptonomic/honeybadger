@@ -222,7 +222,7 @@ const styles = StyleSheet.create({
     actionLine: {
         width: 1,
         backgroundColor: '#e8e8e8',
-        marginHorizontal: 60,
+        marginHorizontal: 50,
     },
     next: {
         flexDirection: 'row',

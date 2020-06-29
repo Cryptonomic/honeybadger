@@ -15,21 +15,24 @@ import Send from '../../assets/send.svg';
 import CustomIcon from '../components/CustomIcon';
 import {truncateHash} from '../utils/general';
 
-const Account = ({navigation}) => {
+import {State} from '../reducers/types';
+import {AccountProps} from './types';
+
+const Account = ({navigation}: AccountProps) => {
     const dispatch = useDispatch();
-    const publicKeyHash = useSelector((state) => state.app.publicKeyHash);
-    const balance = useSelector((state) => state.app.balance);
+    const publicKeyHash = useSelector(
+        (state: State) => state.app.publicKeyHash,
+    );
+    const balance = useSelector((state: State) => state.app.balance);
     const [tab, setTab] = useState(0);
 
-    const changeTab = (newTab) => {
+    const changeTab = (newTab: number) => {
         if (newTab === tab) {
             return;
         }
 
         setTab(newTab);
     };
-
-    // navigation.navigate('Welcome');
 
     useEffect(() => {
         async function load() {
@@ -47,14 +50,14 @@ const Account = ({navigation}) => {
         load();
     }, []);
 
-    const onPress = (value) => {
+    const onPress = (value: string) => {
         navigation.navigate(value);
     };
 
     return (
         <Container style={styles.container}>
-            <View style={styles.top}>
-                <Header transparent />
+            <Header transparent />
+            <View>
                 <View style={styles.account}>
                     <Text style={styles.typo1}>{`My account (${truncateHash(
                         publicKeyHash,
@@ -75,7 +78,6 @@ const Account = ({navigation}) => {
                     <View style={styles.center}>
                         <Text style={styles.typo3}>$0.00</Text>
                     </View>
-                    <Text>Hello World</Text>
                 </View>
                 <View style={styles.actions}>
                     <View style={styles.center}>
@@ -105,8 +107,12 @@ const Account = ({navigation}) => {
             <View style={styles.bottom}>
                 <View style={styles.tabs}>
                     <View
-                        style={styles.tab}
-                        borderBottomColor={tab === 0 ? '#f1c20e' : '#e8e8e8'}>
+                        style={[
+                            styles.tab,
+                            tab === 0
+                                ? styles.tabBorderActive
+                                : styles.tabBorderInactive,
+                        ]}>
                         <Button
                             style={styles.center}
                             transparent
@@ -123,8 +129,12 @@ const Account = ({navigation}) => {
                         </Button>
                     </View>
                     <View
-                        style={styles.tab}
-                        borderBottomColor={tab === 1 ? '#f1c20e' : '#e8e8e8'}>
+                        style={[
+                            styles.tab,
+                            tab === 1
+                                ? styles.tabBorderActive
+                                : styles.tabBorderInactive,
+                        ]}>
                         <Button
                             style={styles.center}
                             transparent
@@ -154,12 +164,10 @@ const styles = StyleSheet.create({
     container: {
         backgroundColor: '#fcd104',
     },
-    top: {
-        height: '45%',
-    },
     bottom: {
+        marginTop: 25,
         backgroundColor: '#ffffff',
-        height: '100%',
+        flex: 1,
         borderTopLeftRadius: 26,
         borderTopRightRadius: 26,
         alignItems: 'center',
@@ -193,7 +201,7 @@ const styles = StyleSheet.create({
         marginTop: 20,
     },
     actions: {
-        marginTop: 60,
+        marginTop: 50,
         flexDirection: 'row',
         justifyContent: 'center',
     },
@@ -223,13 +231,19 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     tabContainer: {
-        marginTop: 50,
+        marginTop: 20,
     },
     tabActive: {
         color: 'rgba(0, 0, 0, 0.92)',
     },
     tabInactive: {
         color: 'rgb(125, 124, 124)',
+    },
+    tabBorderActive: {
+        borderBottomColor: '#f1c20e',
+    },
+    tabBorderInactive: {
+        borderBottomColor: '#e8e8e8',
     },
     center: {
         alignItems: 'center',

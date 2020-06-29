@@ -165,7 +165,7 @@ const styles = StyleSheet.create({
     line: {
         width: 1,
         backgroundColor: '#e8e8e8',
-        marginHorizontal: 60,
+        marginHorizontal: 50,
     },
 });
 

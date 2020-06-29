@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     title: {
-        marginTop: 50,
+        marginTop: 25,
     },
     subtitle: {
         marginTop: 10,

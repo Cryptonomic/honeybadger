@@ -10,7 +10,9 @@ import {setKeysAction} from '../reducers/app/actions';
 
 import Checkmark from '../../assets/checkmark.svg';
 
-const Loading = ({navigation}) => {
+import {LoadingProps} from './types';
+
+const Loading = ({navigation}: LoadingProps) => {
     const [ready, setReady] = useState(false);
     const [progress, setProgress] = useState(0);
     const dispatch = useDispatch();
