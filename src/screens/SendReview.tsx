@@ -26,6 +26,7 @@ const SendReview = ({navigation}: SendReviewProps) => {
     const [feeCurrency] = useState(0.029);
     const onSend = () => {
         dispatch(sendTransaction());
+        navigation.replace('Account');
     };
     return (
         <Container style={styles.container}>

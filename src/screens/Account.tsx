@@ -44,6 +44,9 @@ const Account = ({navigation}: AccountProps) => {
                 const wallet = await Keychain.getGenericPassword();
                 if (wallet) {
                     dispatch(syncAccount());
+                    setTimeout(() => {
+                        load();
+                    }, 100000);
                 } else {
                     navigation.replace('Welcome');
                 }
