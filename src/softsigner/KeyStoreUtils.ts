@@ -70,3 +70,35 @@ export async function restoreIdentityFromMnemonic(
         derivationPath,
     };
 }
+
+export async function recoverKeys(
+    secretKey: Buffer,
+): Promise<{publicKey: Buffer; secretKey: Buffer}> {
+    const keys = await CryptoUtils.recoverPublicKey(secretKey);
+    return {publicKey: keys.publicKey, secretKey: keys.privateKey};
+}
+
+export async function restoreIdentityFromSecretKey(
+    secretKey: string,
+): Promise<KeyStore> {
+    const secretKeyBytes = TezosMessageUtils.writeKeyWithHint(
+        secretKey,
+        'edsk',
+    );
+    const keys = await recoverKeys(secretKeyBytes);
+    const publicKey = TezosMessageUtils.readKeyWithHint(
+        Buffer.from(keys.publicKey, 'hex'),
+        'edpk',
+    );
+    const publicKeyHash = TezosMessageUtils.computeKeyHash(
+        keys.publicKey,
+        'tz1',
+    );
+    return {
+        publicKey,
+        secretKey,
+        publicKeyHash,
+        curve: KeyStoreCurve.ED25519,
+        storeType: KeyStoreType.Mnemonic,
+    };
+}

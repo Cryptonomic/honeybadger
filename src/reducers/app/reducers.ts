@@ -1,10 +1,11 @@
-import {Action} from 'redux';
+import {AppActions} from './types';
 
 import {
     SET_KEYS,
     SET_BALANCE,
     SET_SEND_STEP,
     SET_SEND_ADDRESS,
+    SET_TRANSACTIONS,
 } from './actions';
 
 const initialState = {
@@ -14,24 +15,13 @@ const initialState = {
     storeType: '',
     seed: '',
     balance: 0,
+    transactions: [],
+    delegations: [],
     sendStep: 1,
     sendAddress: '',
-    transactions: [
-        {
-            from: 'tz1irJKkXS2DBWkU1NnmFQx1c1L7pbGg4yhk',
-            time: '1593435025908',
-            value: 5.568,
-        },
-        {
-            to: 'tz1irJKkXS2DBWkU1NnmFQx1c1L7pbGg4yhk',
-            time: '1593435096536',
-            value: 25.568,
-        },
-    ],
-    delegations: [],
 };
 
-const app = (state = initialState, action: Action) => {
+const app = (state = initialState, action: AppActions) => {
     switch (action.type) {
         case SET_KEYS:
             const {
@@ -55,6 +45,8 @@ const app = (state = initialState, action: Action) => {
             return {...state, sendStep: action.step};
         case SET_SEND_ADDRESS:
             return {...state, sendAddress: action.address};
+        case SET_TRANSACTIONS:
+            return {...state, transactions: action.transactions};
         default:
             return state;
     }

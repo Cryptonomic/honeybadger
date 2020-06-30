@@ -1,22 +1,26 @@
 import React, {useState} from 'react';
-import {useSelector} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 import {StyleSheet} from 'react-native';
 import {Container, Text, View, Button} from 'native-base';
+
+import {sendTransaction} from '../reducers/app/thunks';
 
 import CustomHeader from '../components/CustomHeader';
 import CustomIcon from '../components/CustomIcon';
 import {truncateHash} from '../utils/general';
+import {formatAmount} from '../utils/currency';
 import {colors} from '../theme';
 
 const SendReview = ({navigation}) => {
+    const dispatch = useDispatch();
     const publicKeyHash = useSelector((state) => state.app.publicKeyHash);
     const address = useSelector((state) => state.app.sendAddress);
-    const [amount, setAmount] = useState(20.089);
-    const [currency, setCurrency] = useState(50.0);
+    const [amount, setAmount] = useState(1000000);
+    const [currency, setCurrency] = useState(0);
     const [fee, setFee] = useState(0.02);
     const [feeCurrency, setFeeCurrency] = useState(0.029);
     const onSend = () => {
-        navigation.navigate('Account');
+        dispatch(sendTransaction());
     };
     return (
         <Container style={styles.container}>
@@ -35,7 +39,7 @@ const SendReview = ({navigation}) => {
                 <View style={styles.dividerLine} />
                 <Text style={[styles.title, styles.typo1]}>Amount</Text>
                 <View style={[styles.row, styles.amount]}>
-                    <Text style={styles.typo3}>{amount}</Text>
+                    <Text style={styles.typo3}>{formatAmount(amount)}</Text>
                     <CustomIcon name="XTZ" size={30} color="#1a1919" />
                 </View>
                 <View style={styles.currency}>

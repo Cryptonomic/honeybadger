@@ -6,12 +6,14 @@ import {Container, Text, Input, View, Button} from 'native-base';
 import CustomHeader from '../components/CustomHeader';
 import CustomIcon from '../components/CustomIcon';
 import {truncateHash} from '../utils/general';
+import {formatAmount} from '../utils/currency';
 import {colors} from '../theme';
 
 const SendAmount = ({navigation}) => {
     const address = useSelector((state) => state.app.sendAddress);
-    const [amount, setAmount] = useState('1,403,000.908');
-    const [currency, setCurrency] = useState('50');
+    const balance = useSelector((state) => state.app.balance);
+    const [amount, setAmount] = useState('1000000');
+    const [currency, setCurrency] = useState('0');
     const [fee, setFee] = useState(0.02);
     const title = `Send to ${truncateHash(address)}`;
 
@@ -37,7 +39,7 @@ const SendAmount = ({navigation}) => {
                     onChangeText={onChange}
                     keyboardType="numeric"
                 />
-                <Text style={styles.typo1}>{amount}</Text>
+                <Text style={styles.typo1}>{formatAmount(Number(amount))}</Text>
                 <CustomIcon name="XTZ" size={30} color="#1a1919" />
             </View>
             <View style={styles.currency}>
@@ -51,7 +53,9 @@ const SendAmount = ({navigation}) => {
                         <Text style={[styles.availableText, styles.typo4]}>
                             Available
                         </Text>
-                        <Text style={styles.typo4}>{amount}</Text>
+                        <Text style={styles.typo4}>
+                            {formatAmount(balance)}
+                        </Text>
                         <CustomIcon name="XTZ" size={16} color="#343434" />
                     </View>
                 </View>

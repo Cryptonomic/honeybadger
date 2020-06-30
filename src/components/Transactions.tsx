@@ -2,17 +2,19 @@ import React from 'react';
 import {useSelector} from 'react-redux';
 import {StyleSheet} from 'react-native';
 import {View, Text} from 'native-base';
+import {Transaction} from 'conseiljs';
 
 import TransactionsIllustration from '../../assets/transactions-illustration.svg';
-
 import {State} from '../reducers/types';
-import {Transaction} from '../reducers/app/types';
 import CustomIcon from './CustomIcon';
-
 import {truncateHash} from '../utils/general';
+import {formatAmount} from '../utils/currency';
 
 const Transactions = () => {
     const transactions = useSelector((state: State) => state.app.transactions);
+    const publicHashKey = useSelector(
+        (state: State) => state.app.publicKeyHash,
+    );
     return (
         <>
             {transactions.length === 0 && (
@@ -34,21 +36,33 @@ const Transactions = () => {
                     <View style={styles.listItem}>
                         <View style={styles.left}>
                             <CustomIcon
-                                name={t.to ? 'Back-Arrow' : 'Forward-Arrow'}
+                                name={
+                                    t.destination !== publicHashKey
+                                        ? 'Back-Arrow'
+                                        : 'Forward-Arrow'
+                                }
                                 size={14}
                                 color="#f5942a"
                             />
                         </View>
                         <View style={styles.body}>
                             <Text style={styles.typo3}>
-                                {t.to ? 'Send' : 'Receive'}
+                                {t.destination !== publicHashKey
+                                    ? 'Send'
+                                    : 'Receive'}
                             </Text>
                             <View style={styles.subtitle}>
                                 <Text style={styles.typo4}>
-                                    {t.to ? 'to' : 'from'}{' '}
+                                    {t.destination !== publicHashKey
+                                        ? 'to'
+                                        : 'from'}{' '}
                                 </Text>
                                 <Text style={styles.typo3}>
-                                    {truncateHash(t.to || t.from)}
+                                    {truncateHash(
+                                        t.destination !== publicHashKey
+                                            ? t.destination
+                                            : t.source,
+                                    )}
                                 </Text>
                             </View>
                         </View>
@@ -57,17 +71,23 @@ const Transactions = () => {
                                 <Text
                                     style={[
                                         styles.typo5,
-                                        t.to
+                                        t.destination !== publicHashKey
                                             ? styles.colorSend
                                             : styles.colorReceive,
-                                    ]}>{`${t.to ? '-' : '+'}${t.value}`}</Text>
+                                    ]}>{`${
+                                    t.destination !== publicHashKey ? '-' : '+'
+                                }${formatAmount(Number(t.amount))}`}</Text>
                                 <CustomIcon
                                     name="XTZ"
                                     size={14}
-                                    color={t.to ? '#e3787d' : '#259c90'}
+                                    color={
+                                        t.destination !== publicHashKey
+                                            ? '#e3787d'
+                                            : '#259c90'
+                                    }
                                 />
                             </View>
-                            <Text style={styles.typo6}>11:05 PM</Text>
+                            <Text style={styles.typo6}>{t.utc_time}</Text>
                         </View>
                     </View>
                 ))}

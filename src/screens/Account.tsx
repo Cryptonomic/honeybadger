@@ -5,7 +5,7 @@ import {Container, Button, Text, View, Header} from 'native-base';
 import * as Keychain from 'react-native-keychain';
 import {useSelector, useDispatch} from 'react-redux';
 
-import {getAccount} from '../reducers/app/thunks';
+import {syncAccount, sendTransaction} from '../reducers/app/thunks';
 
 import Transactions from '../components/Transactions';
 import Delegation from '../components/Delegation';
@@ -43,7 +43,7 @@ const Account = ({navigation}: AccountProps) => {
             try {
                 const wallet = await Keychain.getGenericPassword();
                 if (wallet) {
-                    dispatch(getAccount());
+                    dispatch(syncAccount());
                 } else {
                     navigation.replace('Welcome');
                 }

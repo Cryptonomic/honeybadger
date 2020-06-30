@@ -5,7 +5,7 @@ import ProgressCircle from 'react-native-progress-circle';
 import * as Keychain from 'react-native-keychain';
 import {useDispatch} from 'react-redux';
 
-import KeyStoreUtils from '../softsigner';
+import * as KeyStoreUtils from '../softsigner/KeyStoreUtils';
 import {setKeysAction} from '../reducers/app/actions';
 
 import Checkmark from '../../assets/checkmark.svg';

@@ -21,9 +21,11 @@ const errorsMsg = {
 
 const SendAddress = ({navigation}: SendAddressProps) => {
     const dispatch = useDispatch();
-    const [isValid, setIsValid] = useState(false);
+    const [isValid, setIsValid] = useState(true);
     const [isError, setIsError] = useState(false);
-    const [address, setAddress] = useState('');
+    const [address, setAddress] = useState(
+        'tz1NcwgWfjZcbaG1uqZnQb4jLTBCaxd6yh4Z',
+    );
     const [showCamera, setShowCamera] = useState(false);
     const onEnterAddress = (value: string) => {
         setAddress(value);
