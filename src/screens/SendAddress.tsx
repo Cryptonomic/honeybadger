@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {StyleSheet, Clipboard} from 'react-native';
 import {Container, Text, View, Input, Item, Button, Icon} from 'native-base';
 import {RNCamera} from 'react-native-camera';
@@ -12,7 +12,9 @@ import CustomHeader from '../components/CustomHeader';
 import {colors} from '../theme';
 import {truncateHash} from '../utils/general';
 
+import {State} from '../reducers/types';
 import {SendAddressProps} from './types';
+import {Transaction} from 'conseiljs';
 
 const errorsMsg = {
     start: 'Tezos Address start wtih tz',
@@ -21,11 +23,13 @@ const errorsMsg = {
 
 const SendAddress = ({navigation}: SendAddressProps) => {
     const dispatch = useDispatch();
-    const [isValid, setIsValid] = useState(true);
-    const [isError, setIsError] = useState(false);
-    const [address, setAddress] = useState(
-        'tz1NcwgWfjZcbaG1uqZnQb4jLTBCaxd6yh4Z',
+    const transactions = useSelector((state: State) => state.app.transactions);
+    const publicKeyHash = useSelector(
+        (state: State) => state.app.publicKeyHash,
     );
+    const [isValid, setIsValid] = useState(false);
+    const [isError, setIsError] = useState(false);
+    const [address, setAddress] = useState('');
     const [showCamera, setShowCamera] = useState(false);
     const onEnterAddress = (value: string) => {
         setAddress(value);
@@ -38,6 +42,7 @@ const SendAddress = ({navigation}: SendAddressProps) => {
         if (value.length >= 36) {
             dispatch(setSendAddress(value));
             setIsValid(true);
+            setIsError(false);
             return;
         }
 
@@ -46,16 +51,22 @@ const SendAddress = ({navigation}: SendAddressProps) => {
         }
     };
     const goNext = () => {
-        navigation.navigate('SendFirstTime');
+        const isSomeSendTransaction = transactions.find(
+            (t: Transaction) =>
+                t.source === publicKeyHash && Number(t.amount) > 0,
+        );
+        navigation.navigate(
+            isSomeSendTransaction ? 'SendAmount' : 'SendFirstTime',
+        );
     };
     const onPasteAddress = async () => {
         const copiedMessage = await Clipboard.getString();
-        setAddress(copiedMessage);
+        onEnterAddress(copiedMessage);
     };
     const onScanQrCode = () => setShowCamera(true);
     const onBarcodeRecognized = ({data}: {data: string}) => {
         if (data && data.length) {
-            setAddress(data);
+            onEnterAddress(data);
             setShowCamera(false);
         }
     };

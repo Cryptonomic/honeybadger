@@ -1,26 +1,38 @@
 import React, {useState} from 'react';
-import {useSelector} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 import {StyleSheet} from 'react-native';
 import {Container, Text, Input, View, Button} from 'native-base';
 
+import {setSendAmount} from '../reducers/app/actions';
 import CustomHeader from '../components/CustomHeader';
 import CustomIcon from '../components/CustomIcon';
 import {truncateHash} from '../utils/general';
 import {formatAmount} from '../utils/currency';
 import {colors} from '../theme';
 
-const SendAmount = ({navigation}) => {
-    const address = useSelector((state) => state.app.sendAddress);
-    const balance = useSelector((state) => state.app.balance);
-    const [amount, setAmount] = useState('1000000');
-    const [currency, setCurrency] = useState('0');
-    const [fee, setFee] = useState(0.02);
+import {State} from '../reducers/types';
+import {SendAmountProps} from './types';
+
+const SendAmount = ({navigation}: SendAmountProps) => {
+    const dispatch = useDispatch();
+    const address = useSelector((state: State) => state.app.sendAddress);
+    const balance = useSelector((state: State) => state.app.balance);
+    const [amount, setAmount] = useState('');
+    const [currency] = useState('0');
+    const [fee] = useState(0.02);
     const title = `Send to ${truncateHash(address)}`;
 
-    const onChange = (value) => {
+    const onChange = (value: string) => {
+        if (Number(value) * 1000000 >= balance) {
+            return;
+        }
         setAmount(value);
     };
     const goNext = () => {
+        if (!amount.length) {
+            return;
+        }
+        dispatch(setSendAmount(Number(amount) * 1000000));
         navigation.navigate('SendReview');
     };
     return (
@@ -39,7 +51,9 @@ const SendAmount = ({navigation}) => {
                     onChangeText={onChange}
                     keyboardType="numeric"
                 />
-                <Text style={styles.typo1}>{formatAmount(Number(amount))}</Text>
+                <Text style={styles.typo1}>
+                    {formatAmount(Number(amount) * 1000000)}
+                </Text>
                 <CustomIcon name="XTZ" size={30} color="#1a1919" />
             </View>
             <View style={styles.currency}>

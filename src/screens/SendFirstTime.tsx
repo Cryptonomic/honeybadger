@@ -5,7 +5,9 @@ import {Text, View, Button, Container, Header} from 'native-base';
 import FirstTimeAddress from '../../assets/first-time-address-illustration.svg';
 import {colors} from '../theme';
 
-const SendFirstTime = ({navigation}) => {
+import {SendFirstTimeProps} from './types';
+
+const SendFirstTime = ({navigation}: SendFirstTimeProps) => {
     const onPress = () => {
         navigation.navigate('SendAmount');
     };

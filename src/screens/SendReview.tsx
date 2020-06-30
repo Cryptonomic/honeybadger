@@ -11,14 +11,19 @@ import {truncateHash} from '../utils/general';
 import {formatAmount} from '../utils/currency';
 import {colors} from '../theme';
 
-const SendReview = ({navigation}) => {
+import {State} from '../reducers/types';
+import {SendReviewProps} from './types';
+
+const SendReview = ({navigation}: SendReviewProps) => {
     const dispatch = useDispatch();
-    const publicKeyHash = useSelector((state) => state.app.publicKeyHash);
-    const address = useSelector((state) => state.app.sendAddress);
-    const [amount, setAmount] = useState(1000000);
-    const [currency, setCurrency] = useState(0);
-    const [fee, setFee] = useState(0.02);
-    const [feeCurrency, setFeeCurrency] = useState(0.029);
+    const publicKeyHash = useSelector(
+        (state: State) => state.app.publicKeyHash,
+    );
+    const address = useSelector((state: State) => state.app.sendAddress);
+    const amount = useSelector((state: State) => state.app.sendAmount);
+    const [currency] = useState(0);
+    const [fee] = useState(0.02);
+    const [feeCurrency] = useState(0.029);
     const onSend = () => {
         dispatch(sendTransaction());
     };

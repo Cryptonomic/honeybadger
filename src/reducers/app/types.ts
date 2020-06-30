@@ -1,36 +1,30 @@
-import {Transaction} from 'conseiljs';
+import {Transaction, KeyStore} from 'conseiljs';
 import {
     SET_TRANSACTIONS,
     SET_BALANCE,
     SET_KEYS,
     SET_SEND_STEP,
     SET_SEND_ADDRESS,
+    SET_SEND_AMOUNT,
 } from './actions';
 
 export interface State {
     publicKey: string;
     secretKey: string;
     publicKeyHash: string;
-    storeType: string;
+    storeType: string | number;
     seed: string;
     balance: number;
     sendStep: number;
     sendAddress: string;
+    sendAmount: number;
     transactions: Array<Transaction>;
     delegations: Array<{}>;
 }
 
-export interface Keys {
-    publicKey: string;
-    secretKey: string;
-    publicKeyHash: string;
-    storeType: string;
-    seed: string;
-}
-
 export interface SetKeysAction {
     type: typeof SET_KEYS;
-    keys: Keys;
+    keys: KeyStore;
 }
 
 export interface SetBalanceAction {
@@ -47,9 +41,14 @@ export interface SetSendStepAction {
     step: number;
 }
 
-export interface SetSendAddress {
+export interface SetSendAddressAction {
     type: typeof SET_SEND_ADDRESS;
     address: string;
+}
+
+export interface SetSendAmountAction {
+    type: typeof SET_SEND_AMOUNT;
+    amount: number;
 }
 
 export type AppActions =
@@ -57,4 +56,5 @@ export type AppActions =
     | SetBalanceAction
     | SetKeysAction
     | SetSendStepAction
-    | SetSendAddress;
+    | SetSendAddressAction
+    | SetSendAmountAction;

@@ -5,7 +5,7 @@ import {Container, Button, Text, View, Header} from 'native-base';
 import * as Keychain from 'react-native-keychain';
 import {useSelector, useDispatch} from 'react-redux';
 
-import {syncAccount, sendTransaction} from '../reducers/app/thunks';
+import {syncAccount} from '../reducers/app/thunks';
 
 import Transactions from '../components/Transactions';
 import Delegation from '../components/Delegation';
@@ -231,6 +231,7 @@ const styles = StyleSheet.create({
         marginTop: 30,
     },
     tabs: {
+        marginTop: 5,
         width: '90%',
         flexDirection: 'row',
         justifyContent: 'space-between',

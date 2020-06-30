@@ -10,8 +10,7 @@ import {Dispatch} from 'redux';
 
 import {setBalanceAction, setTransactions} from './actions';
 import config from '../../config';
-import * as KeyStoreUtils from '../../softsigner/KeyStoreUtils';
-import {SoftSigner} from '../../softsigner/SoftSigner';
+import {KeyStoreUtils, SoftSigner} from '../../softsigner';
 
 import {State} from '../types';
 
@@ -127,7 +126,7 @@ export const getTransactions = async (accountHash: string) => {
             });
         })
         .then((transactions) =>
-            transactions.sort((a, b) => a.timestamp - b.timestamp),
+            transactions.sort((a, b) => b.timestamp - a.timestamp),
         );
 };
 

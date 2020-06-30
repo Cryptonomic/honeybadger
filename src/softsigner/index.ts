@@ -1,2 +1,4 @@
-// import * as KeyStoreUtils from './KeyStoreUtils';
-// import * as SoftSigner from './SoftSigner';
+import * as KeyStoreUtils from './KeyStoreUtils';
+import SoftSigner from './SoftSigner';
+
+export {KeyStoreUtils, SoftSigner};

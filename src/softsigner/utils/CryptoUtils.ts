@@ -1,7 +1,7 @@
+import * as wrapper from './Wrapper';
 import {Buffer} from 'buffer';
-const wrapper = require('./Wrapper');
 
-export async function generateKeys(seed) {
+export async function generateKeys(seed: Buffer) {
     const k = await wrapper.keys(seed);
     return {
         privateKey: Buffer.from(k.sk, 'base64'),
@@ -13,7 +13,7 @@ export async function signDetached(
     payload: Buffer,
     secretKey: Buffer,
 ): Promise<Buffer> {
-    const b = await wrapper.sign(payload, secretKey);
+    const b = Buffer.from(await wrapper.sign(payload, secretKey), 'base64');
     return Buffer.from(b);
 }
 

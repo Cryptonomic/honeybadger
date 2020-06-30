@@ -1,6 +1,6 @@
 import React from 'react';
 import {useSelector} from 'react-redux';
-import {StyleSheet} from 'react-native';
+import {StyleSheet, ScrollView} from 'react-native';
 import {View, Text} from 'native-base';
 import {Transaction} from 'conseiljs';
 
@@ -16,7 +16,7 @@ const Transactions = () => {
         (state: State) => state.app.publicKeyHash,
     );
     return (
-        <>
+        <ScrollView>
             {transactions.length === 0 && (
                 <View style={styles.container}>
                     <TransactionsIllustration />
@@ -32,66 +32,70 @@ const Transactions = () => {
                 </View>
             )}
             {transactions.length > 0 &&
-                transactions.map((t: Transaction) => (
-                    <View style={styles.listItem}>
-                        <View style={styles.left}>
-                            <CustomIcon
-                                name={
-                                    t.destination !== publicHashKey
-                                        ? 'Back-Arrow'
-                                        : 'Forward-Arrow'
-                                }
-                                size={14}
-                                color="#f5942a"
-                            />
-                        </View>
-                        <View style={styles.body}>
-                            <Text style={styles.typo3}>
-                                {t.destination !== publicHashKey
-                                    ? 'Send'
-                                    : 'Receive'}
-                            </Text>
-                            <View style={styles.subtitle}>
-                                <Text style={styles.typo4}>
-                                    {t.destination !== publicHashKey
-                                        ? 'to'
-                                        : 'from'}{' '}
-                                </Text>
-                                <Text style={styles.typo3}>
-                                    {truncateHash(
-                                        t.destination !== publicHashKey
-                                            ? t.destination
-                                            : t.source,
-                                    )}
-                                </Text>
-                            </View>
-                        </View>
-                        <View style={styles.right}>
-                            <View style={styles.amount}>
-                                <Text
-                                    style={[
-                                        styles.typo5,
-                                        t.destination !== publicHashKey
-                                            ? styles.colorSend
-                                            : styles.colorReceive,
-                                    ]}>{`${
-                                    t.destination !== publicHashKey ? '-' : '+'
-                                }${formatAmount(Number(t.amount))}`}</Text>
+                transactions
+                    .filter((t: Transaction) => t.amount)
+                    .map((t: Transaction) => (
+                        <View style={styles.listItem}>
+                            <View style={styles.left}>
                                 <CustomIcon
-                                    name="XTZ"
-                                    size={14}
-                                    color={
+                                    name={
                                         t.destination !== publicHashKey
-                                            ? '#e3787d'
-                                            : '#259c90'
+                                            ? 'Back-Arrow'
+                                            : 'Forward-Arrow'
                                     }
+                                    size={14}
+                                    color="#f5942a"
                                 />
                             </View>
-                            <Text style={styles.typo6}>{t.utc_time}</Text>
+                            <View style={styles.body}>
+                                <Text style={styles.typo3}>
+                                    {t.destination !== publicHashKey
+                                        ? 'Send'
+                                        : 'Receive'}
+                                </Text>
+                                <View style={styles.subtitle}>
+                                    <Text style={styles.typo4}>
+                                        {t.destination !== publicHashKey
+                                            ? 'to'
+                                            : 'from'}{' '}
+                                    </Text>
+                                    <Text style={styles.typo3}>
+                                        {truncateHash(
+                                            t.destination !== publicHashKey
+                                                ? t.destination
+                                                : t.source,
+                                        )}
+                                    </Text>
+                                </View>
+                            </View>
+                            <View style={styles.right}>
+                                <View style={styles.amount}>
+                                    <Text
+                                        style={[
+                                            styles.typo5,
+                                            t.destination !== publicHashKey
+                                                ? styles.colorSend
+                                                : styles.colorReceive,
+                                        ]}>{`${
+                                        t.destination !== publicHashKey
+                                            ? '-'
+                                            : '+'
+                                    }${formatAmount(Number(t.amount))}`}</Text>
+                                    <CustomIcon
+                                        name="XTZ"
+                                        size={14}
+                                        color={
+                                            t.destination !== publicHashKey
+                                                ? '#e3787d'
+                                                : '#259c90'
+                                        }
+                                    />
+                                </View>
+                                <Text style={styles.typo6}>{t.utc_time}</Text>
+                            </View>
                         </View>
-                    </View>
-                ))}
-        </>
+                    ))}
+        </ScrollView>
     );
 };
 

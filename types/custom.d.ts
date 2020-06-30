@@ -14,3 +14,5 @@ declare module '*.json' {
 }
 
 declare module 'react-native-vector-icons';
+
+declare module 'react-native-bip39';

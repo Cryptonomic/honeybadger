@@ -3,7 +3,7 @@ import {Signer, TezosMessageUtils} from 'conseiljs';
 import * as CryptoUtils from './utils/CryptoUtils';
 import {Buffer} from 'buffer';
 
-export class SoftSigner implements Signer {
+export default class SoftSigner implements Signer {
     readonly secretKey: Buffer;
 
     constructor(secretKey: Buffer) {
