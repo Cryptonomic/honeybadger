@@ -135,24 +135,24 @@ export const sendTransaction = () => async (
     getState: () => State,
 ) => {
     try {
-        const secretKey = getState().app.secretKey;
         const tezosUrl = 'https://tezos-dev.cryptonomic-infra.tech:443';
+        const address = getState().app.sendAddress;
+        const amount = getState().app.sendAmount;
+        const secretKey = getState().app.secretKey;
         const keyStore = await KeyStoreUtils.restoreIdentityFromSecretKey(
             secretKey,
         );
         const signer = new SoftSigner(
             TezosMessageUtils.writeKeyWithHint(keyStore.secretKey, 'edsk'),
         );
-        const res = await sendTransactionOperation(
+        await sendTransactionOperation(
             tezosUrl,
             signer,
             keyStore,
-            'tz1NcwgWfjZcbaG1uqZnQb4jLTBCaxd6yh4Z',
-            1000000,
+            address,
+            amount,
             2427,
         );
-
-        console.log('SEND_RES', res);
     } catch (e) {
         console.log('error-transaction', e);
     }
