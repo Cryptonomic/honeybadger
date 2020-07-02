@@ -7,3 +7,12 @@ declare module '*.png' {
     const value: any;
     export = value;
 }
+
+declare module '*.json' {
+    const value: any;
+    export = value;
+}
+
+declare module 'react-native-vector-icons';
+
+declare module 'react-native-bip39';

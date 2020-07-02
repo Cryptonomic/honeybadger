@@ -5,23 +5,32 @@ import {Container, Button, Text, View, Header} from 'native-base';
 import * as Keychain from 'react-native-keychain';
 import {useSelector, useDispatch} from 'react-redux';
 
-import {getAccount} from '../reducers/app/thunks';
+import {syncAccount} from '../reducers/app/thunks';
 
 import Transactions from '../components/Transactions';
 import Delegation from '../components/Delegation';
+import SecurityLevelButton from '../components/SecurityLevelButton';
 import Receive from '../../assets/receive.svg';
 import Send from '../../assets/send.svg';
 
 import CustomIcon from '../components/CustomIcon';
 import {truncateHash} from '../utils/general';
+import {formatAmount} from '../utils/currency';
 
-const Account = ({navigation}) => {
+import {State} from '../reducers/types';
+import {AccountProps} from './types';
+
+const Account = ({navigation}: AccountProps) => {
     const dispatch = useDispatch();
-    const publicKeyHash = useSelector((state) => state.app.publicKeyHash);
-    const balance = useSelector((state) => state.app.balance);
+    const publicKeyHash = useSelector(
+        (state: State) => state.app.publicKeyHash,
+    );
+    const balance = useSelector((state: State) => state.app.balance);
+    const transactions = useSelector((state: State) => state.app.transactions);
+    const delegations = useSelector((state: State) => state.app.delegations);
     const [tab, setTab] = useState(0);
 
-    const changeTab = (newTab) => {
+    const changeTab = (newTab: number) => {
         if (newTab === tab) {
             return;
         }
@@ -34,7 +43,10 @@ const Account = ({navigation}) => {
             try {
                 const wallet = await Keychain.getGenericPassword();
                 if (wallet) {
-                    dispatch(getAccount());
+                    dispatch(syncAccount());
+                    setTimeout(() => {
+                        load();
+                    }, 100000);
                 } else {
                     navigation.replace('Welcome');
                 }
@@ -45,14 +57,14 @@ const Account = ({navigation}) => {
         load();
     }, []);
 
-    const onPress = (value) => {
+    const onPress = (value: string) => {
         navigation.navigate(value);
     };
 
     return (
         <Container style={styles.container}>
-            <View style={styles.top}>
-                <Header transparent />
+            <Header transparent />
+            <View>
                 <View style={styles.account}>
                     <Text style={styles.typo1}>{`My account (${truncateHash(
                         publicKeyHash,
@@ -67,7 +79,9 @@ const Account = ({navigation}) => {
                 </View>
                 <View style={styles.amount}>
                     <View style={[styles.center, styles.row]}>
-                        <Text style={styles.typo2}>{balance}</Text>
+                        <Text style={styles.typo2}>
+                            {formatAmount(balance)}
+                        </Text>
                         <CustomIcon name="XTZ" size={30} color="#1a1919" />
                     </View>
                     <View style={styles.center}>
@@ -100,10 +114,20 @@ const Account = ({navigation}) => {
                 </View>
             </View>
             <View style={styles.bottom}>
+                {((transactions.length > 0 && tab === 0) ||
+                    (delegations.length > 0 && tab === 1)) && (
+                    <View style={styles.securityBtn}>
+                        <SecurityLevelButton />
+                    </View>
+                )}
                 <View style={styles.tabs}>
                     <View
-                        style={styles.tab}
-                        borderBottomColor={tab === 0 ? '#f1c20e' : '#e8e8e8'}>
+                        style={[
+                            styles.tab,
+                            tab === 0
+                                ? styles.tabBorderActive
+                                : styles.tabBorderInactive,
+                        ]}>
                         <Button
                             style={styles.center}
                             transparent
@@ -120,8 +144,12 @@ const Account = ({navigation}) => {
                         </Button>
                     </View>
                     <View
-                        style={styles.tab}
-                        borderBottomColor={tab === 1 ? '#f1c20e' : '#e8e8e8'}>
+                        style={[
+                            styles.tab,
+                            tab === 1
+                                ? styles.tabBorderActive
+                                : styles.tabBorderInactive,
+                        ]}>
                         <Button
                             style={styles.center}
                             transparent
@@ -151,12 +179,10 @@ const styles = StyleSheet.create({
     container: {
         backgroundColor: '#fcd104',
     },
-    top: {
-        height: '45%',
-    },
     bottom: {
+        marginTop: 25,
         backgroundColor: '#ffffff',
-        height: '100%',
+        flex: 1,
         borderTopLeftRadius: 26,
         borderTopRightRadius: 26,
         alignItems: 'center',
@@ -190,7 +216,7 @@ const styles = StyleSheet.create({
         marginTop: 20,
     },
     actions: {
-        marginTop: 60,
+        marginTop: 50,
         flexDirection: 'row',
         justifyContent: 'center',
     },
@@ -208,6 +234,7 @@ const styles = StyleSheet.create({
         marginTop: 30,
     },
     tabs: {
+        marginTop: 5,
         width: '90%',
         flexDirection: 'row',
         justifyContent: 'space-between',
@@ -220,13 +247,23 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     tabContainer: {
-        marginTop: 50,
+        width: '90%',
     },
     tabActive: {
         color: 'rgba(0, 0, 0, 0.92)',
     },
     tabInactive: {
         color: 'rgb(125, 124, 124)',
+    },
+    tabBorderActive: {
+        borderBottomColor: '#f1c20e',
+    },
+    tabBorderInactive: {
+        borderBottomColor: '#e8e8e8',
+    },
+    securityBtn: {
+        marginVertical: 20,
+        width: '90%',
     },
     center: {
         alignItems: 'center',

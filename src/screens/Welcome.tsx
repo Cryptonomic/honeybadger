@@ -11,7 +11,9 @@ import Logo from '../../assets/galleon-logo.svg';
 import Cryptonomic from '../../assets/cryptonomic-icon.svg';
 import Wave from '../../assets/splash-wave-shadow.svg';
 
-const Welcome = ({navigation}) => {
+import {WelcomeProps} from './types';
+
+const Welcome = ({navigation}: WelcomeProps) => {
     const dispatch = useDispatch();
     useEffect(() => {
         async function load() {
@@ -36,17 +38,19 @@ const Welcome = ({navigation}) => {
             <View style={styles.top}>
                 <Logo style={styles.logo} />
             </View>
-            <View style={styles.item}>
-                <View style={styles.text}>
-                    <Text style={styles.typo1}>Product of</Text>
-                    <Cryptonomic style={styles.logoCrytponomic} />
-                    <Text style={styles.typo2}>Cryptonomic</Text>
+            <View style={styles.bottom}>
+                <View style={styles.item}>
+                    <View style={styles.text}>
+                        <Text style={styles.typo1}>Product of</Text>
+                        <Cryptonomic style={styles.logoCrytponomic} />
+                        <Text style={styles.typo2}>Cryptonomic</Text>
+                    </View>
                 </View>
-            </View>
-            <View style={styles.item}>
-                <Button style={styles.btn} onPress={getStarted}>
-                    <Text style={styles.typo3}>Get Started</Text>
-                </Button>
+                <View style={styles.item}>
+                    <Button style={styles.btn} onPress={getStarted}>
+                        <Text style={styles.typo3}>Get Started</Text>
+                    </Button>
+                </View>
             </View>
         </Container>
     );
@@ -57,9 +61,16 @@ const styles = StyleSheet.create({
         backgroundColor: '#fcd104',
     },
     top: {
-        height: '65%',
-        paddingTop: 100,
+        height: '50%',
         alignItems: 'center',
+        justifyContent: 'center',
+    },
+    bottom: {
+        justifyContent: 'center',
+        flex: 1,
+    },
+    logo: {
+        marginBottom: 100,
     },
     item: {
         marginTop: 25,
@@ -78,9 +89,6 @@ const styles = StyleSheet.create({
     },
     logoCrytponomic: {
         marginHorizontal: 5,
-    },
-    logo: {
-        marginBottom: 100,
     },
     wave: {
         position: 'absolute',

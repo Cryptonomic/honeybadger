@@ -4,10 +4,18 @@ import {Button, Text, View} from 'native-base';
 
 import CustomIcon from '../CustomIcon';
 
-const CustomButton = ({label, icon, size = 35, color = '#000000'}) => {
+import {CustomButtonProps} from './types';
+
+const CustomButton = ({
+    label,
+    icon,
+    size = 35,
+    color = '#000000',
+    onPress,
+}: CustomButtonProps) => {
     return (
         <View style={styles.container}>
-            <Button style={styles.button}>
+            <Button style={styles.button} onPress={onPress}>
                 <CustomIcon name={icon} size={size} color={color} />
             </Button>
             <Text style={styles.text}>{label}</Text>
