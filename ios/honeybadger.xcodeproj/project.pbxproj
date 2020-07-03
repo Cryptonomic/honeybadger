@@ -14,7 +14,6 @@
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		15BECE46487A44A18AD853AA /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0E1BAE4447C04534867BC4E4 /* SimpleLineIcons.ttf */; };
 		23652536014C45B3A3566576 /* AntDesign.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 791CE9A9A4284478AB1030A5 /* AntDesign.ttf */; };
-		27E2E5BC24AE3F0E005D29D0 /* main.jsbundle in Resources */ = {isa = PBXBuildFile; fileRef = 27E2E5BB24AE3F0E005D29D0 /* main.jsbundle */; };
 		2862B32E7FE5413BA2860D7C /* Entypo.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 68C01E5B57544DB3830406C5 /* Entypo.ttf */; };
 		2D02E4BC1E0B4A80006451C7 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		2D02E4BD1E0B4A84006451C7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
