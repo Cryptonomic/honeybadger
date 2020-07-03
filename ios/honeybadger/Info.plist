@@ -85,5 +85,7 @@
 		<string>Zocial.ttf</string>
 		<string>Galleon-Mobile.ttf</string>
 	</array>
+	<key>UIStatusBarStyle</key>
+	<string>UIStatusBarStyleLightContent</string>
 </dict>
 </plist>
