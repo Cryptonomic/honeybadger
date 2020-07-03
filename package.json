@@ -8,7 +8,8 @@
     "start": "react-native link && react-native start",
     "test": "jest",
     "lint": "eslint .",
-    "postinstall": "rn-nodeify --install buffer,process,stream,events,assert,crypto,vm --hack --yarn"
+    "postinstall": "rn-nodeify --install buffer,process,stream,events,assert,crypto,vm --hack --yarn",
+    "build:ios": "react-native bundle --entry-file='index.ts' --bundle-output='./ios/honeybadger/main.jsbundle' --dev=false --platform='ios' --assets-dest='./ios'"
   },
   "dependencies": {
     "@ledgerhq/react-native-hid": "^5.15.0",
