@@ -27,6 +27,7 @@ const Terms = ({navigation}: WelcomeProps) => {
             }
         }
         load();
+        // TODO: review how T2 does this; if that doesn't work, it may be necessary to load the URL content into an object and render that
     }, []);
 
     const getStarted = () => navigation.replace('Loading');
