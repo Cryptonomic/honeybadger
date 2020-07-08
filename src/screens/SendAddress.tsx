@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {StyleSheet, Clipboard} from 'react-native';
+import {StyleSheet, Clipboard, ReturnKeyTypeOptions} from 'react-native';
 import {Container, Text, View, Input, Item, Button, Icon} from 'native-base';
 import {RNCamera} from 'react-native-camera';
 
@@ -12,9 +12,8 @@ import CustomHeader from '../components/CustomHeader';
 import {colors} from '../theme';
 import {truncateHash} from '../utils/general';
 
-import {State} from '../reducers/types';
+import {State, Operation} from '../reducers/types';
 import {SendAddressProps} from './types';
-import {Transaction} from 'conseiljs';
 
 const errorsMsg = {
     start: 'Tezos Address start wtih tz',
@@ -52,7 +51,7 @@ const SendAddress = ({navigation}: SendAddressProps) => {
     };
     const goNext = () => {
         const isSomeSendTransaction = transactions.find(
-            (t: Transaction) =>
+            (t: Operation) =>
                 t.source === publicKeyHash && Number(t.amount) > 0,
         );
         navigation.navigate(
@@ -94,9 +93,8 @@ const SendAddress = ({navigation}: SendAddressProps) => {
                     <CustomHeader
                         title="Send"
                         onBack={() => navigation.goBack()}
-                        onClose={() => navigation.navigate('Account')}
                     />
-                    <Text style={styles.title}>Enter Recepient Address</Text>
+                    <Text style={styles.title}>Enter Recipient Address</Text>
                     <View style={styles.address}>
                         <Item regular style={styles.item}>
                             <Input
@@ -104,6 +102,10 @@ const SendAddress = ({navigation}: SendAddressProps) => {
                                 style={styles.input}
                                 onChangeText={onEnterAddress}
                                 value={address}
+                                autoCompleteType="off"
+                                autoCorrect={false}
+                                autoCapitalize="none"
+                                returnKeyType="next"
                             />
                         </Item>
                     </View>
@@ -159,7 +161,7 @@ const SendAddress = ({navigation}: SendAddressProps) => {
                                 </View>
                                 <View>
                                     <Text style={styles.typo1}>
-                                        Recepient Address
+                                        Recipient Address
                                     </Text>
                                     <Text>{truncateHash(address)}</Text>
                                 </View>
