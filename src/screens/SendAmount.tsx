@@ -19,30 +19,38 @@ const SendAmount = ({navigation}: SendAmountProps) => {
     const balance = useSelector((state: State) => state.app.balance);
     const [amount, setAmount] = useState('');
     const [currency] = useState('0');
-    const [fee] = useState(0.02);
-    const title = `Send to ${truncateHash(address)}`;
+    const [fee] = useState(0.002427);
+    const title = `Sending to ${truncateHash(address)}`;
 
     const onChange = (value: string) => {
-        if (Number(value) * 1000000 >= balance) {
-            return;
-        }
+        if (value.length === 1 && value.charAt(0) === '.') { setAmount('0.'); return; }
+
+        if (isNaN(Number(value))) { return; }
+
+        if (Number(value) * 1000000 >= balance) { return; }
+
         setAmount(value);
     };
+
     const goNext = () => {
-        if (!amount.length) {
-            return;
-        }
-        dispatch(setSendAmount(Number(amount) * 1000000));
+        if (!amount.length) { return; }
+
+        if (amount.indexOf('.') > -1 && amount.split('.')[1].length > 3) { return; }
+
+        if (Number(amount) === 0) { return; }
+
+        dispatch(setSendAmount(Number(amount) * 1000000)); // TODO: const
         navigation.navigate('SendReview');
     };
+
     return (
         <Container style={styles.container}>
             <CustomHeader
-                title={title}
+                title="Enter Amount"
                 onBack={() => navigation.goBack()}
                 onClose={() => navigation.navigate('Account')}
             />
-            <Text style={styles.title}>Enter Amount</Text>
+            <Text style={styles.title}>{title}</Text>
             <View style={styles.amount}>
                 <Input
                     autoFocus
@@ -56,13 +64,13 @@ const SendAmount = ({navigation}: SendAmountProps) => {
                 </Text>
                 <CustomIcon name="XTZ" size={30} color="#1a1919" />
             </View>
-            <View style={styles.currency}>
+            {/*<View style={styles.currency}>
                 <Text style={styles.typo2}>$</Text>
                 <Text style={styles.typo2}>{currency}</Text>
-            </View>
+            </View>*/}
             <View style={styles.details}>
                 <View style={styles.row}>
-                    <Text style={[styles.useMax, styles.typo3]}>Use Max</Text>
+                    {/*<Text style={[styles.useMax, styles.typo3]}>Use Max</Text>*/}
                     <View style={[styles.row, styles.available]}>
                         <Text style={[styles.availableText, styles.typo4]}>
                             Available
@@ -73,9 +81,12 @@ const SendAmount = ({navigation}: SendAmountProps) => {
                         <CustomIcon name="XTZ" size={16} color="#343434" />
                     </View>
                 </View>
-                <Text style={[styles.fee, styles.typo5]}>
-                    {`Transactions fee $${fee}`}
-                </Text>
+                <View style={{flexDirection: 'row'}}>
+                    <Text style={[styles.fee, styles.typo5]}>
+                        {`Transactions fee ${fee}`}
+                    </Text>
+                    <CustomIcon name="XTZ" size={16} color="#7d7c7c" />
+                </View>
                 <Button style={styles.button} onPress={goNext}>
                     <Text style={styles.typo6}>Next</Text>
                 </Button>
