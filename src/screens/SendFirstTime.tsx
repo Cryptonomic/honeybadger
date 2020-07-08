@@ -1,10 +1,10 @@
 import React from 'react';
 import {StyleSheet} from 'react-native';
-import {Text, View, Button, Container, Header} from 'native-base';
+import {Text, View, Button, Container} from 'native-base';
 
 import FirstTimeAddress from '../../assets/first-time-address-illustration.svg';
+import CustomHeader from '../components/CustomHeader';
 import {colors} from '../theme';
-
 import {SendFirstTimeProps} from './types';
 
 const SendFirstTime = ({navigation}: SendFirstTimeProps) => {
@@ -13,19 +13,18 @@ const SendFirstTime = ({navigation}: SendFirstTimeProps) => {
     };
     return (
         <Container style={styles.container}>
-            <Header transparent />
+            <CustomHeader
+                title=" "
+                onBack={() => navigation.goBack()}
+                onClose={() => navigation.navigate('Account')}
+            />
             <View style={styles.content}>
                 <FirstTimeAddress style={styles.picture} />
-                <Text style={styles.title}>
-                    It’s a first time you are sending to this address.
-                </Text>
                 <Text style={styles.body}>
-                    We recommend sending a small amount first (a tracer
-                    transaction) to ensure that this is the right address.
+                    This is the first time you are sending to this address. We recommend sending a small amount first (a tracer transaction) to ensure that this is the right address.
                 </Text>
                 <Text style={styles.info}>
-                    In cryptocurrencies there is no way to recover funds once
-                    they are sent.
+                    Remember, when using cryptocurrencies it is impossible to recover funds once they are sent.
                 </Text>
                 <Button style={styles.button} onPress={onPress}>
                     <Text style={styles.buttonText}>Got It!</Text>
@@ -47,10 +46,10 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     picture: {
-        marginTop: 81,
+        marginTop: 40,
     },
     title: {
-        marginTop: 45,
+        marginTop: 24,
         width: 330,
         fontFamily: 'Roboto-Medium',
         fontSize: 24,
