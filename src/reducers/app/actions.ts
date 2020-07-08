@@ -1,4 +1,4 @@
-import { KeyStore} from 'conseiljs';
+import {KeyStore} from 'conseiljs';
 import {
     SetTransactionsAction,
     SetBalanceAction,
@@ -6,6 +6,7 @@ import {
     SetSendStepAction,
     SetSendAddressAction,
     SetSendAmountAction,
+    SetTermsDateAction,
 } from './types';
 import {Operation} from '../types';
 
@@ -15,6 +16,7 @@ export const SET_SEND_STEP = 'SET_SEND_STEP';
 export const SET_SEND_ADDRESS = 'SET_SEND_ADDRESS';
 export const SET_TRANSACTIONS = 'SET_TRANSACTIONS';
 export const SET_SEND_AMOUNT = 'SET_SEND_AMOUNT';
+export const SET_TERMS_DATE = 'SET_TERMS_DATE';
 
 export const setKeysAction = (keys: KeyStore): SetKeysAction => ({
     type: SET_KEYS,
@@ -46,4 +48,9 @@ export const setTransactions = (
 ): SetTransactionsAction => ({
     type: SET_TRANSACTIONS,
     transactions,
+});
+
+export const setTermsDate = (date: string): SetTermsDateAction => ({
+    type: SET_TERMS_DATE,
+    date,
 });

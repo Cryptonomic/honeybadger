@@ -244,6 +244,10 @@ PODS:
     - React
   - react-native-pdf (6.2.0):
     - React
+  - react-native-progress-bar-android (1.0.3):
+    - React
+  - react-native-progress-view (1.0.3):
+    - React
   - react-native-randombytes (3.5.3):
     - React
   - react-native-safe-area-context (3.0.7):
@@ -374,6 +378,8 @@ DEPENDENCIES:
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - react-native-camera (from `../node_modules/react-native-camera`)
   - react-native-pdf (from `../node_modules/react-native-pdf`)
+  - "react-native-progress-bar-android (from `../node_modules/@react-native-community/progress-bar-android`)"
+  - "react-native-progress-view (from `../node_modules/@react-native-community/progress-view`)"
   - react-native-randombytes (from `../node_modules/react-native-randombytes`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - react-native-sodium (from `../node_modules/react-native-sodium`)
@@ -451,6 +457,10 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-camera"
   react-native-pdf:
     :path: "../node_modules/react-native-pdf"
+  react-native-progress-bar-android:
+    :path: "../node_modules/@react-native-community/progress-bar-android"
+  react-native-progress-view:
+    :path: "../node_modules/@react-native-community/progress-view"
   react-native-randombytes:
     :path: "../node_modules/react-native-randombytes"
   react-native-safe-area-context:
@@ -531,6 +541,8 @@ SPEC CHECKSUMS:
   React-jsinspector: 512e560d0e985d0e8c479a54a4e5c147a9c83493
   react-native-camera: 679479bfe0f59103aca704e8dc39b0cedf5e2f65
   react-native-pdf: 909cd849e6a806731b2135263189fea39494b55e
+  react-native-progress-bar-android: d1b109b86c699d36f6a7099dab1a117dc1d66d3c
+  react-native-progress-view: c3aea3f38ec17ded9712f071cbdba5c8a9e47daf
   react-native-randombytes: 991545e6eaaf700b4ee384c291ef3d572e0b2ca8
   react-native-safe-area-context: c39fc20a20cd66ebf1d56c6f8b8711142fbfee98
   react-native-sodium: 2d13b6118d7f575ffd9abd9527472c6706d8b4d1

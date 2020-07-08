@@ -3,16 +3,18 @@ import {StyleSheet} from 'react-native';
 import {Container, Text, View} from 'native-base';
 import ProgressCircle from 'react-native-progress-circle';
 import * as Keychain from 'react-native-keychain';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 
 import {KeyStoreUtils} from '../softsigner';
 import {setKeysAction} from '../reducers/app/actions';
 
 import Checkmark from '../../assets/checkmark.svg';
 
+import {State} from '../reducers/types';
 import {LoadingProps} from './types';
 
 const Loading = ({navigation}: LoadingProps) => {
+    const termsDate = useSelector((state: State) => state.app.termsDate);
     const [ready, setReady] = useState(false);
     const [progress, setProgress] = useState(0);
     const dispatch = useDispatch();
@@ -24,7 +26,7 @@ const Loading = ({navigation}: LoadingProps) => {
                 await Keychain.resetGenericPassword();
                 await Keychain.setGenericPassword(
                     'newwallet',
-                    JSON.stringify(keys),
+                    JSON.stringify({...keys, termsDate}),
                 );
                 dispatch(setKeysAction(keys));
                 setTimeout(() => {
@@ -35,7 +37,7 @@ const Loading = ({navigation}: LoadingProps) => {
             }
         }
         save();
-    }, [dispatch]);
+    }, [dispatch, termsDate]);
 
     useEffect(() => {
         if (ready) {
