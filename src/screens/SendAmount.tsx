@@ -25,7 +25,7 @@ const SendAmount = ({navigation}: SendAmountProps) => {
     const onChange = (value: string) => {
         if (value.length === 1 && value.charAt(0) === '.') { setAmount('0.'); return; }
 
-        if (amount.indexOf('.') > -1 && amount.split('.')[1].length > 3) { return; }
+        if (value.indexOf('.') > -1 && value.split('.')[1].length > 3) { return; }
 
         if (isNaN(Number(value))) { return; }
 
