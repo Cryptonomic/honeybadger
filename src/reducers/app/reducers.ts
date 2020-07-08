@@ -7,6 +7,7 @@ import {
     SET_SEND_ADDRESS,
     SET_TRANSACTIONS,
     SET_SEND_AMOUNT,
+    SET_TERMS_DATE,
 } from './actions';
 
 const initialState = {
@@ -21,6 +22,7 @@ const initialState = {
     sendStep: 1,
     sendAddress: '',
     sendAmount: 0,
+    termsDate: '',
 };
 
 const app = (state = initialState, action: AppActions) => {
@@ -51,6 +53,8 @@ const app = (state = initialState, action: AppActions) => {
             return {...state, sendAmount: action.amount};
         case SET_TRANSACTIONS:
             return {...state, transactions: action.transactions};
+        case SET_TERMS_DATE:
+            return {...state, termsDate: action.date};
         default:
             return state;
     }
