@@ -41,7 +41,7 @@ const Welcome = ({navigation}: WelcomeProps) => {
             <View style={styles.bottom}>
                 <View style={styles.item}>
                     <View style={styles.text}>
-                        <Text style={styles.typo1}>Product of</Text>
+                        <Text style={styles.typo1}>A product of</Text>
                         <Cryptonomic style={styles.logoCrytponomic} />
                         <Text style={styles.typo2}>Cryptonomic</Text>
                     </View>
