@@ -30,7 +30,7 @@ const Welcome = ({navigation}: WelcomeProps) => {
         load();
     }, []);
 
-    const getStarted = () => navigation.replace('Terms');
+    const getStarted = () => navigation.replace('Loading');
 
     return (
         <Container>

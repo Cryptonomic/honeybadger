@@ -68,12 +68,21 @@ const Account = ({navigation}: AccountProps) => {
         navigation.navigate(value);
     };
 
-    const onOptionSelect = (value: string) => {
+    const onSettingsSelect = (item) => {
         setOpenSettings(false);
-        navigation.navigate(value);
+        navigation.navigate(item.title);
     };
 
-    const menuItems = ['Settings'];
+    const onLogout = (item) => {
+        setOpenSettings(false);
+        Keychain.resetGenericPassword();
+        navigation.navigate('Welcome');
+    };
+
+    const menuItems = [
+        {title: 'Settings', action: onSettingsSelect},
+        {title: 'Logout', action: onLogout},
+    ];
 
     return (
         <Container style={styles.container}>
@@ -86,7 +95,6 @@ const Account = ({navigation}: AccountProps) => {
                     <Menu
                         opened={openSettings}
                         onBackdropPress={() => setOpenSettings(false)}
-                        onSelect={(value) => onOptionSelect(value)}
                         style={styles.menu}>
                         <MenuTrigger
                             customStyles={{
@@ -105,11 +113,12 @@ const Account = ({navigation}: AccountProps) => {
                             }}
                         />
                         <MenuOptions optionsContainerStyle={styles.menuOptions}>
-                            {menuItems.map((value, index) => (
+                            {menuItems.map((item, index) => (
                                 <MenuOption
-                                    value={value}
-                                    text={value}
-                                    key={value}
+                                    onSelect={() => item.action(item)}
+                                    value={item.title}
+                                    text={item.title}
+                                    key={item.title}
                                     customStyles={{
                                         optionWrapper:
                                             index === menuItems.length - 1
@@ -246,10 +255,10 @@ const styles = StyleSheet.create({
         position: 'absolute',
     },
     menuOption: {
-        paddingVertical: 15,
+        paddingVertical: 20,
     },
     menuLastItem: {
-        borderBottomColor: 'red',
+        borderBottomColor: '#e6e4e4',
         borderBottomWidth: 1,
     },
     menuBtn: {
