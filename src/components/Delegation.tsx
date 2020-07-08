@@ -9,7 +9,7 @@ const Delegation = () => {
         <View style={styles.container}>
             <DelegationIllustration />
             <Text style={[styles.title, styles.typo1]}>
-                Grow your Tezos Stash
+                Grow your Tezos stash
             </Text>
             <Text style={[styles.subtitle, styles.typo2]}>
                 Delegate XTZ to earn returns.
