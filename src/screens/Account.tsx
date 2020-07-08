@@ -66,9 +66,9 @@ const Account = ({navigation}: AccountProps) => {
             <Header transparent />
             <View>
                 <View style={styles.account}>
-                    <Text style={styles.typo1}>{`My account (${truncateHash(
+                    {/*<Text style={styles.typo1}>{`My account (${truncateHash(
                         publicKeyHash,
-                    )})`}</Text>
+                    )})`}</Text>*/}
                     <Button style={styles.menu} transparent>
                         <View style={styles.icon}>
                             <View style={styles.dot} />
@@ -84,9 +84,9 @@ const Account = ({navigation}: AccountProps) => {
                         </Text>
                         <CustomIcon name="XTZ" size={30} color="#1a1919" />
                     </View>
-                    <View style={styles.center}>
+                    {/*<View style={styles.center}>
                         <Text style={styles.typo3}>$0.00</Text>
-                    </View>
+                    </View>*/}
                 </View>
                 <View style={styles.actions}>
                     <View style={styles.center}>
@@ -114,12 +114,12 @@ const Account = ({navigation}: AccountProps) => {
                 </View>
             </View>
             <View style={styles.bottom}>
-                {((transactions.length > 0 && tab === 0) ||
+                {/*((transactions.length > 0 && tab === 0) ||
                     (delegations.length > 0 && tab === 1)) && (
                     <View style={styles.securityBtn}>
                         <SecurityLevelButton />
                     </View>
-                )}
+                )*/}
                 <View style={styles.tabs}>
                     <View
                         style={[
