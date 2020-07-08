@@ -1,4 +1,4 @@
-import {Transaction, KeyStore} from 'conseiljs';
+import { KeyStore} from 'conseiljs';
 import {
     SetTransactionsAction,
     SetBalanceAction,
@@ -7,6 +7,7 @@ import {
     SetSendAddressAction,
     SetSendAmountAction,
 } from './types';
+import {Operation} from '../types';
 
 export const SET_KEYS = 'SET_KEYS';
 export const SET_BALANCE = 'SET_BALANCE';
@@ -41,7 +42,7 @@ export const setSendAmount = (amount: number): SetSendAmountAction => ({
 });
 
 export const setTransactions = (
-    transactions: Transaction[],
+    transactions: Operation[],
 ): SetTransactionsAction => ({
     type: SET_TRANSACTIONS,
     transactions,
