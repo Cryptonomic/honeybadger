@@ -37,7 +37,6 @@ const Receive = ({navigation}: ReceiveProps) => {
             <CustomHeader
                 title="Receive"
                 onBack={() => navigation.goBack()}
-                onClose={() => navigation.goBack()}
             />
             <View style={styles.main}>
                 <Text style={styles.title}>
