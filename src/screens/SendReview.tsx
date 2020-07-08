@@ -63,12 +63,11 @@ const SendReview = ({navigation}: SendReviewProps) => {
                 </Text>
                 <View style={[styles.fee, styles.row]}>
                     {/*<Text style={styles.typo5}>
-                        {`Transaction Fee $${fee}`}
+                        {`Operation Fee $${fee}`}
                     </Text>*/}
                     <View style={[styles.row, styles.feeCurrency]}>
-                        <Text>{`(${feeCurrency}`}</Text>
+                        <Text>{`Operation Fee ${feeCurrency}`}</Text>
                         <CustomIcon name="XTZ" size={14} />
-                        <Text>{')'}</Text>
                     </View>
                 </View>
                 <Button style={styles.button} onPress={onSend}>

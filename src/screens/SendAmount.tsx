@@ -25,6 +25,8 @@ const SendAmount = ({navigation}: SendAmountProps) => {
     const onChange = (value: string) => {
         if (value.length === 1 && value.charAt(0) === '.') { setAmount('0.'); return; }
 
+        if (amount.indexOf('.') > -1 && amount.split('.')[1].length > 3) { return; }
+
         if (isNaN(Number(value))) { return; }
 
         if (Number(value) * 1000000 >= balance) { return; }
@@ -34,8 +36,6 @@ const SendAmount = ({navigation}: SendAmountProps) => {
 
     const goNext = () => {
         if (!amount.length) { return; }
-
-        if (amount.indexOf('.') > -1 && amount.split('.')[1].length > 3) { return; }
 
         if (Number(amount) === 0) { return; }
 
@@ -83,7 +83,7 @@ const SendAmount = ({navigation}: SendAmountProps) => {
                 </View>
                 <View style={[styles.row, styles.available]}>
                     <Text style={[styles.fee, styles.typo5]}>
-                        {`Transactions fee ${fee}`}
+                        {`Operation fee ${fee}`}
                     </Text>
                     <CustomIcon name="XTZ" size={16} color="#7d7c7c" />
                 </View>
