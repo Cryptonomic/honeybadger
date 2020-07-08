@@ -14,3 +14,4 @@ export type AccountProps = NavigationProps;
 export type SendAmountProps = NavigationProps;
 export type SendFirstTimeProps = NavigationProps;
 export type SendReviewProps = NavigationProps;
+export type SettingsProps = NavigationProps;
