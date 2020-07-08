@@ -4,16 +4,15 @@ import {StyleSheet} from 'react-native';
 import {Container, Text, Button, View, Header} from 'native-base';
 import * as Keychain from 'react-native-keychain';
 import {useDispatch} from 'react-redux';
+import Pdf from 'react-native-pdf';
 
 import {setKeysAction} from '../reducers/app/actions';
 
-import Logo from '../../assets/galleon-logo.svg';
-import Cryptonomic from '../../assets/cryptonomic-icon.svg';
-import Wave from '../../assets/splash-wave-shadow.svg';
-
 import {WelcomeProps} from './types';
 
-const Welcome = ({navigation}: WelcomeProps) => {
+const source = { uri: 'https://github.com/Cryptonomic/Deployments/raw/master/Terms_of_Service.pdf', cache: true };
+
+const Terms = ({navigation}: WelcomeProps) => {
     const dispatch = useDispatch();
     useEffect(() => {
         async function load() {
@@ -30,26 +29,26 @@ const Welcome = ({navigation}: WelcomeProps) => {
         load();
     }, []);
 
-    const getStarted = () => navigation.replace('Terms');
+    const getStarted = () => navigation.replace('Loading');
 
     return (
         <Container>
             <Header style={styles.header} />
-            <Wave style={styles.wave} />
-            <View style={styles.top}>
-                <Logo style={styles.logo} />
-            </View>
             <View style={styles.bottom}>
                 <View style={styles.item}>
-                    <View style={styles.text}>
-                        <Text style={styles.typo1}>A product of</Text>
-                        <Cryptonomic style={styles.logoCrytponomic} />
-                        <Text style={styles.typo2}>Cryptonomic</Text>
-                    </View>
+                <Pdf
+                    source={source}
+                    onLoadComplete={(numberOfPages, filePath)=>{
+                        console.log(`number of pages: ${numberOfPages}`);
+                    }}
+                    style={styles.pdf}/>
                 </View>
                 <View style={styles.item}>
                     <Button style={styles.btn} onPress={getStarted}>
-                        <Text style={styles.typo3}>Get Started</Text>
+                        <Text style={styles.typo3}>Cancel</Text>
+                    </Button>
+                    <Button style={styles.btn} onPress={getStarted}>
+                        <Text style={styles.typo3}>Continue</Text>
                     </Button>
                 </View>
             </View>
@@ -88,14 +87,6 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
     },
-    logoCrytponomic: {
-        marginHorizontal: 5,
-    },
-    wave: {
-        position: 'absolute',
-        width: '100%',
-        height: '70%',
-    },
     typo1: {
         fontFamily: 'Roboto-Light',
         fontSize: 16,
@@ -116,6 +107,11 @@ const styles = StyleSheet.create({
         fontWeight: '500',
         letterSpacing: 0.85,
     },
+    pdf: {
+        flex:1,
+        width: '100%',
+        height: '70%',
+    }
 });
 
-export default Welcome;
+export default Terms;
