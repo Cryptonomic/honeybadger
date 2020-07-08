@@ -2,10 +2,10 @@ import React from 'react';
 import {useSelector} from 'react-redux';
 import {StyleSheet, ScrollView} from 'react-native';
 import {View, Text} from 'native-base';
-import {Transaction} from 'conseiljs';
+import moment from 'moment';
 
 import TransactionsIllustration from '../../assets/transactions-illustration.svg';
-import {State} from '../reducers/types';
+import {State ,Operation} from '../reducers/types';
 import CustomIcon from './CustomIcon';
 import {truncateHash} from '../utils/general';
 import {formatAmount} from '../utils/currency';
@@ -33,32 +33,26 @@ const Transactions = () => {
             )}
             {transactions.length > 0 &&
                 transactions
-                    .filter((t: Transaction) => t.amount)
-                    .map((t: Transaction) => (
+                    .filter((t: Operation) => t.amount)
+                    .map((t: Operation) => (
                         <View style={styles.listItem}>
                             <View style={styles.left}>
                                 <CustomIcon
-                                    name={
-                                        t.destination !== publicHashKey
-                                            ? 'Back-Arrow'
-                                            : 'Forward-Arrow'
-                                    }
+                                    name={t.destination !== publicHashKey ? 'Back-Arrow' : 'Forward-Arrow'}
                                     size={14}
                                     color="#f5942a"
                                 />
                             </View>
                             <View style={styles.body}>
-                                <Text style={styles.typo3}>
-                                    {t.destination !== publicHashKey
-                                        ? 'Send'
-                                        : 'Receive'}
-                                </Text>
-                                <View style={styles.subtitle}>
-                                    <Text style={styles.typo4}>
-                                        {t.destination !== publicHashKey
-                                            ? 'to'
-                                            : 'from'}{' '}
+                                <View style={{flexDirection: 'row'}}>
+                                    <Text style={styles.typo3}>
+                                        {t.destination !== publicHashKey ? 'Send' : 'Receive'}
                                     </Text>
+                                    <Text style={styles.typo4}>
+                                        {' '}{t.destination !== publicHashKey ? 'to' : 'from'}
+                                    </Text>
+                                </View>
+                                <View style={styles.subtitle}>
                                     <Text style={styles.typo3}>
                                         {truncateHash(
                                             t.destination !== publicHashKey
@@ -91,7 +85,9 @@ const Transactions = () => {
                                         }
                                     />
                                 </View>
-                                <Text style={styles.typo6}>{t.utc_time}</Text>
+                                <Text style={styles.typo6}>
+                                    {moment.utc(new Date(t.timestamp)).local().format("MMM D, HH:mm")}
+                                </Text>
                             </View>
                         </View>
                     ))}

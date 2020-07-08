@@ -1,4 +1,4 @@
-import {Transaction, KeyStore} from 'conseiljs';
+import {KeyStore} from 'conseiljs';
 import {
     SET_TRANSACTIONS,
     SET_BALANCE,
@@ -7,6 +7,7 @@ import {
     SET_SEND_ADDRESS,
     SET_SEND_AMOUNT,
 } from './actions';
+import {Operation} from '../types';
 
 export interface State {
     publicKey: string;
@@ -18,7 +19,7 @@ export interface State {
     sendStep: number;
     sendAddress: string;
     sendAmount: number;
-    transactions: Array<Transaction>;
+    transactions: Array<Operation>;
     delegations: Array<{}>;
 }
 
@@ -33,7 +34,7 @@ export interface SetBalanceAction {
 }
 export interface SetTransactionsAction {
     type: typeof SET_TRANSACTIONS;
-    transactions: Transaction[];
+    transactions: Operation[];
 }
 
 export interface SetSendStepAction {

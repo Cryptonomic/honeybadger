@@ -41,6 +41,7 @@ export const getTransactions = async (accountHash: string) => {
     const network = config[0].network;
 
     let origin = ConseilQueryBuilder.blankQuery();
+    origin = ConseilQueryBuilder.addFields(origin, 'timestamp', 'source', 'destination', 'amount');
     origin = ConseilQueryBuilder.addPredicate(
         origin,
         'kind',
@@ -76,6 +77,7 @@ export const getTransactions = async (accountHash: string) => {
     origin = ConseilQueryBuilder.setLimit(origin, 1000);
 
     let target = ConseilQueryBuilder.blankQuery();
+    origin = ConseilQueryBuilder.addFields(origin, 'timestamp', 'source', 'destination', 'amount');
     target = ConseilQueryBuilder.addPredicate(
         target,
         'kind',
@@ -151,7 +153,7 @@ export const sendTransaction = () => async (
             keyStore,
             address,
             amount,
-            2427,
+            2427 // TODO
         );
     } catch (e) {
         console.log('error-transaction', e);
