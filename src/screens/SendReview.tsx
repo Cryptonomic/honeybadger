@@ -22,8 +22,8 @@ const SendReview = ({navigation}: SendReviewProps) => {
     const address = useSelector((state: State) => state.app.sendAddress);
     const amount = useSelector((state: State) => state.app.sendAmount);
     const [currency] = useState(0);
-    const [fee] = useState(0.02);
-    const [feeCurrency] = useState(0.029);
+    const [fee] = useState(0.02); // TODO
+    const [feeCurrency] = useState(0.002427); // TODO
     const onSend = () => {
         dispatch(sendTransaction());
         navigation.replace('Account');
@@ -48,24 +48,23 @@ const SendReview = ({navigation}: SendReviewProps) => {
                     <Text style={styles.typo3}>{formatAmount(amount)}</Text>
                     <CustomIcon name="XTZ" size={30} color="#1a1919" />
                 </View>
-                <View style={styles.currency}>
+                {/*<View style={styles.currency}>
                     <Text style={styles.typo4}>$</Text>
                     <Text style={styles.typo4}>{currency}</Text>
-                </View>
+                </View>*/}
                 <View style={styles.dividerLine} />
                 <View style={[styles.dividerArrow1, styles.arrow]} />
                 <View style={[styles.dividerArrow2, styles.arrow]} />
-                <Text style={[styles.title, styles.typo1, styles.recepient]}>
-                    To Recepient
+                <Text style={[styles.title, styles.typo1, styles.recipient]}>
+                    To Recipient
                 </Text>
                 <Text style={[styles.address, styles.typo2]}>
                     {truncateHash(address)}
                 </Text>
                 <View style={[styles.fee, styles.row]}>
-                    <Text
-                        style={
-                            styles.typo5
-                        }>{`+ Transaction Fee $${fee}`}</Text>
+                    {/*<Text style={styles.typo5}>
+                        {`Transaction Fee $${fee}`}
+                    </Text>*/}
                     <View style={[styles.row, styles.feeCurrency]}>
                         <Text>{`(${feeCurrency}`}</Text>
                         <CustomIcon name="XTZ" size={14} />
@@ -140,7 +139,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
-    recepient: {
+    recipient: {
         marginTop: 23,
     },
     fee: {
