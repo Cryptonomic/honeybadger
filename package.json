@@ -20,6 +20,7 @@
     "conseiljs": "5.0.2-beta.2",
     "conseiljs-ledgersigner": "5.0.2-beta.1",
     "events": "^3.1.0",
+    "moment": "2.27.0",
     "native-base": "^2.13.12",
     "process": "^0.11.0",
     "react": "16.13.1",
@@ -32,6 +33,7 @@
     "react-native-keychain": "^6.1.1",
     "react-native-level-fs": "^3.0.0",
     "react-native-os": "^1.2.6",
+    "react-native-pdf": "6.2.0",
     "react-native-progress-circle": "^2.1.0",
     "react-native-qrcode-svg": "^6.0.6",
     "react-native-randombytes": "^3.0.0",
@@ -49,6 +51,7 @@
     "readable-stream": "^3.6.0",
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0",
+    "rn-fetch-blob": "0.12.0",
     "rn-nodeify": "^10.2.0",
     "stream-browserify": "^3.0.0",
     "vm-browserify": "1.1.2"
