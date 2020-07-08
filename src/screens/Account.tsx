@@ -4,6 +4,12 @@ import {StyleSheet} from 'react-native';
 import {Container, Button, Text, View, Header} from 'native-base';
 import * as Keychain from 'react-native-keychain';
 import {useSelector, useDispatch} from 'react-redux';
+import {
+    Menu,
+    MenuOptions,
+    MenuOption,
+    MenuTrigger,
+} from 'react-native-popup-menu';
 
 import {syncAccount} from '../reducers/app/thunks';
 
@@ -29,6 +35,7 @@ const Account = ({navigation}: AccountProps) => {
     const transactions = useSelector((state: State) => state.app.transactions);
     const delegations = useSelector((state: State) => state.app.delegations);
     const [tab, setTab] = useState(0);
+    const [openSettings, setOpenSettings] = useState(false);
 
     const changeTab = (newTab: number) => {
         if (newTab === tab) {
@@ -61,6 +68,22 @@ const Account = ({navigation}: AccountProps) => {
         navigation.navigate(value);
     };
 
+    const onSettingsSelect = (item) => {
+        setOpenSettings(false);
+        navigation.navigate(item.title);
+    };
+
+    const onLogout = (item) => {
+        setOpenSettings(false);
+        Keychain.resetGenericPassword();
+        navigation.navigate('Welcome');
+    };
+
+    const menuItems = [
+        {title: 'Settings', action: onSettingsSelect},
+        {title: 'Logout', action: onLogout},
+    ];
+
     return (
         <Container style={styles.container}>
             <Header transparent />
@@ -69,13 +92,47 @@ const Account = ({navigation}: AccountProps) => {
                     {/*<Text style={styles.typo1}>{`My account (${truncateHash(
                         publicKeyHash,
                     )})`}</Text>*/}
-                    <Button style={styles.menu} transparent>
-                        <View style={styles.icon}>
-                            <View style={styles.dot} />
-                            <View style={styles.dot} />
-                            <View style={styles.dot} />
-                        </View>
-                    </Button>
+                    <Menu
+                        opened={openSettings}
+                        onBackdropPress={() => setOpenSettings(false)}
+                        style={styles.menu}>
+                        <MenuTrigger
+                            customStyles={{
+                                TriggerTouchableComponent: () => (
+                                    <Button
+                                        style={styles.menuBtn}
+                                        transparent
+                                        onPress={() => setOpenSettings(true)}>
+                                        <View style={styles.icon}>
+                                            <View style={styles.dot} />
+                                            <View style={styles.dot} />
+                                            <View style={styles.dot} />
+                                        </View>
+                                    </Button>
+                                ),
+                            }}
+                        />
+                        <MenuOptions optionsContainerStyle={styles.menuOptions}>
+                            {menuItems.map((item, index) => (
+                                <MenuOption
+                                    onSelect={() => item.action(item)}
+                                    value={item.title}
+                                    text={item.title}
+                                    key={item.title}
+                                    customStyles={{
+                                        optionWrapper:
+                                            index === menuItems.length - 1
+                                                ? styles.menuOption
+                                                : [
+                                                      styles.menuOption,
+                                                      styles.menuLastItem,
+                                                  ],
+                                        optionText: styles.typo5,
+                                    }}
+                                />
+                            ))}
+                        </MenuOptions>
+                    </Menu>
                 </View>
                 <View style={styles.amount}>
                     <View style={[styles.center, styles.row]}>
@@ -188,12 +245,26 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     menu: {
-        width: 24,
+        marginRight: 25,
+    },
+    menuOptions: {
+        width: 200,
+        borderRadius: 11,
+        padding: 15,
+        right: 20,
+        position: 'absolute',
+    },
+    menuOption: {
+        paddingVertical: 20,
+    },
+    menuLastItem: {
+        borderBottomColor: '#e6e4e4',
+        borderBottomWidth: 1,
+    },
+    menuBtn: {
         alignItems: 'center',
         justifyContent: 'center',
         borderRadius: 0,
-        position: 'absolute',
-        right: 15,
     },
     icon: {
         alignItems: 'center',
@@ -203,13 +274,14 @@ const styles = StyleSheet.create({
         width: 5,
         height: 5,
         borderRadius: 5,
-        backgroundColor: '#595252',
+        backgroundColor: '#000000',
         margin: 2,
     },
     account: {
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'center',
+        height: 24,
+        justifyContent: 'flex-end',
         position: 'relative',
     },
     amount: {
@@ -296,6 +368,25 @@ const styles = StyleSheet.create({
         fontSize: 14,
         fontWeight: 'normal',
     },
+    typo5: {
+        fontFamily: 'Roboto-Light',
+        fontWeight: '300',
+        fontSize: 16,
+        letterSpacing: 0.67,
+    },
 });
 
 export default Account;
+
+/*
+
+
+width: 63px;
+height: 19px;
+color: rgb(13, 13, 13);
+font-size: 16px;
+font-family: Roboto-Light;
+font-weight: 300;
+letter-spacing: 0.67px;
+
+*/

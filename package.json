@@ -34,6 +34,7 @@
     "react-native-level-fs": "^3.0.0",
     "react-native-os": "^1.2.6",
     "react-native-pdf": "6.2.0",
+    "react-native-popup-menu": "^0.15.9",
     "react-native-progress-circle": "^2.1.0",
     "react-native-qrcode-svg": "^6.0.6",
     "react-native-randombytes": "^3.0.0",
