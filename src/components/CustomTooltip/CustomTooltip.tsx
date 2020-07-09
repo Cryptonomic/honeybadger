@@ -6,6 +6,7 @@ interface CustomTooltipProps {
     isVisible: boolean;
     content: ReactElement;
     positions?: Record<'top' | 'right' | 'bottom' | 'left', number>;
+    placement?: 'top' | 'bottom' | 'left' | 'right' | 'center';
     arrowStyles?: Record<string, string | number>;
     contentStyles?: Record<string, string | number>;
     onClose: () => void;
@@ -15,6 +16,7 @@ const CustomTooltip: FunctionComponent<CustomTooltipProps> = ({
     isVisible,
     content,
     positions,
+    placement,
     arrowStyles,
     contentStyles,
     onClose,
@@ -44,7 +46,7 @@ const CustomTooltip: FunctionComponent<CustomTooltipProps> = ({
             contentStyle={contentStyles || styles.content}
             showChildInTooltip={false}
             content={content}
-            placement="bottom"
+            placement={placement || 'bottom'}
             displayInsets={display}
             onClose={onClose}>
             {children}

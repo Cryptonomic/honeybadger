@@ -34,10 +34,7 @@ const Receive = ({navigation}: ReceiveProps) => {
     };
     return (
         <Container style={styles.container}>
-            <CustomHeader
-                title="Receive"
-                onBack={() => navigation.goBack()}
-            />
+            <CustomHeader title="Receive" onBack={() => navigation.goBack()} />
             <View style={styles.main}>
                 <Text style={styles.title}>
                     Share your account address to receive XTZ or Tezos tokens

@@ -15,22 +15,61 @@ const Settings = ({navigation}: SettingsProps) => {
         {
             title: 'App',
             items: [
-                {name: `Version: ${DeviceInfo.getVersion()}, build ${DeviceInfo.getBuildNumber()}`},
+                {
+                    name: `Version: ${DeviceInfo.getVersion()}, build ${DeviceInfo.getBuildNumber()}`,
+                },
                 {name: `Network: ${config[0].displayNetwork}`},
+            ],
+        },
+        {
+            title: 'Security',
+            items: [
+                {
+                    name: 'Seed Phrase',
+                    action: () => navigation.navigate('SeedPhrase'),
+                },
             ],
         },
         {
             title: 'Help',
             items: [
-                {name: 'FAQ', action: () => { Linking.openURL('https://cryptonomic.zendesk.com/hc/en-us/sections/360007678431-FAQ'); }},// TODO
-                {name: 'Support', action: () => { Linking.openURL('https://cryptonomic.tech/support.html'); }}, // TODO
+                {
+                    name: 'FAQ',
+                    action: () => {
+                        Linking.openURL(
+                            'https://cryptonomic.zendesk.com/hc/en-us/sections/360007678431-FAQ',
+                        );
+                    },
+                }, // TODO
+                {
+                    name: 'Support',
+                    action: () => {
+                        Linking.openURL(
+                            'https://cryptonomic.tech/support.html',
+                        );
+                    },
+                }, // TODO
             ],
         },
         {
             title: 'Legal',
             items: [
-                {name: 'Terms and Conditions', action: () => { Linking.openURL('https://github.com/Cryptonomic/Deployments/raw/master/Terms_of_Service.pdf'); }}, // TODO
-                {name: 'Privacy Policy', action: () => { Linking.openURL('https://github.com/Cryptonomic/Deployments/raw/master/Privacy_Policy.pdf'); }}, // TODO
+                {
+                    name: 'Terms and Conditions',
+                    action: () => {
+                        Linking.openURL(
+                            'https://github.com/Cryptonomic/Deployments/raw/master/Terms_of_Service.pdf',
+                        );
+                    },
+                }, // TODO
+                {
+                    name: 'Privacy Policy',
+                    action: () => {
+                        Linking.openURL(
+                            'https://github.com/Cryptonomic/Deployments/raw/master/Privacy_Policy.pdf',
+                        );
+                    },
+                }, // TODO
             ],
         },
     ];
@@ -55,7 +94,11 @@ const Settings = ({navigation}: SettingsProps) => {
                                         </Text>
                                     </View>
                                     {action && (
-                                        <CustomIcon name="Caret-Left" size={15} color="#909090" />
+                                        <CustomIcon
+                                            name="Caret-Left"
+                                            size={15}
+                                            color="#909090"
+                                        />
                                     )}
                                 </>
                             );
