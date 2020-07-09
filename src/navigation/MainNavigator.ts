@@ -9,7 +9,8 @@ import SendAddressScreen from '../screens/SendAddress';
 import SendAmountScreen from '../screens/SendAmount';
 import SendReviewScreen from '../screens/SendReview';
 import SendFirstTimeScreen from '../screens/SendFirstTime';
-import SettingsScreeen from '../screens/Settings';
+import SettingsScreen from '../screens/Settings';
+import SeedPhraseScreen from '../screens/SeedPhrase';
 
 const MainNavigator = createStackNavigator(
     {
@@ -22,7 +23,8 @@ const MainNavigator = createStackNavigator(
         SendAmount: SendAmountScreen,
         SendReview: SendReviewScreen,
         SendFirstTime: SendFirstTimeScreen,
-        Settings: SettingsScreeen,
+        Settings: SettingsScreen,
+        SeedPhrase: SeedPhraseScreen,
     },
     {
         headerMode: 'none',
