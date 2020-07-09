@@ -68,12 +68,12 @@ const Account = ({navigation}: AccountProps) => {
         navigation.navigate(value);
     };
 
-    const onSettingsSelect = (item) => {
+    const onSettingsSelect = (item: any) => {
         setOpenSettings(false);
         navigation.navigate(item.title);
     };
 
-    const onLogout = (item) => {
+    const onLogout = (item: any) => {
         setOpenSettings(false);
         Keychain.resetGenericPassword();
         navigation.navigate('Welcome');
@@ -81,7 +81,7 @@ const Account = ({navigation}: AccountProps) => {
 
     const menuItems = [
         {title: 'Settings', action: onSettingsSelect},
-        {title: 'Logout', action: onLogout},
+        //{title: 'Clear Data', action: onLogout}
     ];
 
     return (
@@ -265,6 +265,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         borderRadius: 0,
+        width: 50,
+        height: 50
     },
     icon: {
         alignItems: 'center',

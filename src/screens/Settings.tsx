@@ -1,34 +1,36 @@
 import React from 'react';
-import {StyleSheet} from 'react-native';
+import {StyleSheet, Linking} from 'react-native';
 import {Text, View, Button, Container} from 'native-base';
+import DeviceInfo from 'react-native-device-info';
 
 import CustomHeader from '../components/CustomHeader';
 import CustomIcon from '../components/CustomIcon';
 import {colors} from '../theme';
-import {SettingsProps} from './types';
 import config from '../config';
+
+import {SettingsProps} from './types';
 
 const Settings = ({navigation}: SettingsProps) => {
     const list = [
         {
             title: 'App',
             items: [
-                {name: `Version: ${config[0].version}`},
+                {name: `Version: ${DeviceInfo.getVersion()}, build ${DeviceInfo.getBuildNumber()}`},
                 {name: `Network: ${config[0].displayNetwork}`},
             ],
         },
         {
             title: 'Help',
             items: [
-                {name: 'FAQ', action: () => {}},
-                {name: 'Support', action: () => {}},
+                {name: 'FAQ', action: () => { Linking.openURL('https://cryptonomic.zendesk.com/hc/en-us/sections/360007678431-FAQ'); }},// TODO
+                {name: 'Support', action: () => { Linking.openURL('https://cryptonomic.tech/support.html'); }}, // TODO
             ],
         },
         {
             title: 'Legal',
             items: [
-                {name: 'Terms and Conditions', action: () => {}},
-                {name: 'Privacy Policy', action: () => {}},
+                {name: 'Terms and Conditions', action: () => { Linking.openURL('https://github.com/Cryptonomic/Deployments/raw/master/Terms_of_Service.pdf'); }}, // TODO
+                {name: 'Privacy Policy', action: () => { Linking.openURL('https://github.com/Cryptonomic/Deployments/raw/master/Privacy_Policy.pdf'); }}, // TODO
             ],
         },
     ];
@@ -53,11 +55,7 @@ const Settings = ({navigation}: SettingsProps) => {
                                         </Text>
                                     </View>
                                     {action && (
-                                        <CustomIcon
-                                            name="Caret-Left"
-                                            size={15}
-                                            color="#909090"
-                                        />
+                                        <CustomIcon name="Caret-Left" size={15} color="#909090" />
                                     )}
                                 </>
                             );

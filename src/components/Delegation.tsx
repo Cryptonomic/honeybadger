@@ -14,9 +14,12 @@ const Delegation = () => {
             <Text style={[styles.subtitle, styles.typo2]}>
                 Delegate XTZ to earn returns.
             </Text>
-            <Button style={styles.btn}>
+            {/*<Button style={styles.btn}>
                 <Text style={styles.typo3}>Delegate Now</Text>
-            </Button>
+            </Button>*/}
+            <Text style={[styles.subtitle, styles.typo2]}>
+                Coming soon
+            </Text>
         </View>
     );
 };

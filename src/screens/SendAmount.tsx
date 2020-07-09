@@ -81,7 +81,7 @@ const SendAmount = ({navigation}: SendAmountProps) => {
                         <CustomIcon name="XTZ" size={16} color="#343434" />
                     </View>
                 </View>
-                <View style={{flexDirection: 'row', justifyContent: 'flex-end'}}>
+                <View style={{flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center'}}>
                     <Text style={[styles.fee, styles.typo5]}>
                         {`Operation fee ${fee}`}
                     </Text>

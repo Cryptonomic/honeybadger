@@ -22,9 +22,9 @@ const Transactions = () => {
                     <TransactionsIllustration />
                     <View style={styles.text}>
                         <Text style={styles.typo1}>
-                            You don’t have any transactions.{' '}
+                            You don’t have any transactions yet.{' '}
                         </Text>
-                        <Text style={[styles.typo1, styles.typo2]}>
+                        <Text style={[styles.typo1]}>
                             Fund your account{' '}
                         </Text>
                         <Text style={styles.typo1}>to get started.</Text>
