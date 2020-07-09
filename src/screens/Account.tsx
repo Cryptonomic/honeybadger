@@ -68,6 +68,8 @@ const Account = ({navigation}: AccountProps) => {
         navigation.navigate(value);
     };
 
+    const onDelegate = () => navigation.navigate('DelegateAddress');
+
     const onSettingsSelect = (item: any) => {
         setOpenSettings(false);
         navigation.navigate(item.title);
@@ -225,7 +227,7 @@ const Account = ({navigation}: AccountProps) => {
                 </View>
                 <View style={styles.tabContainer}>
                     {tab === 0 && <Transactions />}
-                    {tab === 1 && <Delegation />}
+                    {tab === 1 && <Delegation onDelegate={onDelegate} />}
                 </View>
             </View>
         </Container>
@@ -266,7 +268,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         borderRadius: 0,
         width: 50,
-        height: 50
+        height: 50,
     },
     icon: {
         alignItems: 'center',

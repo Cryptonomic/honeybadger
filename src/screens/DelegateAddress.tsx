@@ -1,5 +1,5 @@
 import React from 'react';
-import {useDispatch, useSelector} from 'react-redux';
+import {useDispatch} from 'react-redux';
 import {StyleSheet} from 'react-native';
 import {Container} from 'native-base';
 
@@ -8,28 +8,17 @@ import {setSendAddress} from '../reducers/app/actions';
 import EnterAddress from '../components/EnterAddress';
 import {colors} from '../theme';
 
-import {State, Operation} from '../reducers/types';
-import {SendAddressProps} from './types';
+import {DelegateAddressProps} from './types';
 
 const errorMessages = {
     start: 'Tezos Address start wtih tz',
     short: 'This address is too short. Tezos Addresses are 42 characters long.',
 };
 
-const SendAddress = ({navigation}: SendAddressProps) => {
+const DelegateAddress = ({navigation}: DelegateAddressProps) => {
     const dispatch = useDispatch();
-    const transactions = useSelector((state: State) => state.app.transactions);
-    const publicKeyHash = useSelector(
-        (state: State) => state.app.publicKeyHash,
-    );
     const goNext = () => {
-        const isSomeSendTransaction = transactions.find(
-            (t: Operation) =>
-                t.source === publicKeyHash && Number(t.amount) > 0,
-        );
-        navigation.navigate(
-            isSomeSendTransaction ? 'SendAmount' : 'SendFirstTime',
-        );
+        navigation.navigate('DelegateReview');
     };
     const onValidAddress = (value: string) => {
         dispatch(setSendAddress(value));
@@ -38,9 +27,9 @@ const SendAddress = ({navigation}: SendAddressProps) => {
     return (
         <Container style={styles.container}>
             <EnterAddress
-                headerTitle="Send"
-                addressTitle="Enter Recipient Address"
-                nextTitle="Recipient Address"
+                headerTitle="Delegate"
+                addressTitle="Enter Baker Address"
+                nextTitle="Baker Address"
                 errorMessages={errorMessages}
                 goBack={() => navigation.goBack()}
                 goNext={goNext}
@@ -56,4 +45,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default SendAddress;
+export default DelegateAddress;

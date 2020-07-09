@@ -8,10 +8,10 @@ import CustomTooltip from '../components/CustomTooltip';
 import CustomIcon from '../components/CustomIcon';
 import {colors} from '../theme';
 
-import {KeysProps} from './types';
+import {SeedPhraseProps} from './types';
 import {State} from '../reducers/types';
 
-const SeedPhrase = ({navigation}: KeysProps) => {
+const SeedPhrase = ({navigation}: SeedPhraseProps) => {
     const seed = useSelector((state: State) => state.app.seed);
     const [copied, setCopied] = useState(false);
     const arr = seed.split(' ');

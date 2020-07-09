@@ -17,6 +17,7 @@ export const SET_SEND_ADDRESS = 'SET_SEND_ADDRESS';
 export const SET_TRANSACTIONS = 'SET_TRANSACTIONS';
 export const SET_SEND_AMOUNT = 'SET_SEND_AMOUNT';
 export const SET_TERMS_DATE = 'SET_TERMS_DATE';
+export const SET_DELEGATE_ADDRESS = 'SET_DELEGATE_ADDRESS';
 
 export const setKeysAction = (keys: KeyStore): SetKeysAction => ({
     type: SET_KEYS,
@@ -48,6 +49,11 @@ export const setTransactions = (
 ): SetTransactionsAction => ({
     type: SET_TRANSACTIONS,
     transactions,
+});
+
+export const setDelegateAddress = (address: string) => ({
+    type: SET_DELEGATE_ADDRESS,
+    address,
 });
 
 export const setTermsDate = (date: string): SetTermsDateAction => ({

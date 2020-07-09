@@ -4,7 +4,11 @@ import {View, Text, Button} from 'native-base';
 
 import DelegationIllustration from '../../assets/delegation-illustration.svg';
 
-const Delegation = () => {
+interface DelegationProps {
+    onDelegate: () => void;
+}
+
+const Delegation = ({onDelegate}: DelegationProps) => {
     return (
         <View style={styles.container}>
             <DelegationIllustration />
@@ -14,12 +18,10 @@ const Delegation = () => {
             <Text style={[styles.subtitle, styles.typo2]}>
                 Delegate XTZ to earn returns.
             </Text>
-            {/*<Button style={styles.btn}>
+            <Button style={styles.btn} onPress={onDelegate}>
                 <Text style={styles.typo3}>Delegate Now</Text>
-            </Button>*/}
-            <Text style={[styles.subtitle, styles.typo2]}>
-                Coming soon
-            </Text>
+            </Button>
+            {/* <Text style={[styles.subtitle, styles.typo2]}>Coming soon</Text> */}
         </View>
     );
 };

@@ -7,6 +7,7 @@ import {
     SET_SEND_ADDRESS,
     SET_SEND_AMOUNT,
     SET_TERMS_DATE,
+    SET_DELEGATE_ADDRESS,
 } from './actions';
 import {Operation} from '../types';
 
@@ -59,6 +60,11 @@ export interface SetTermsDateAction {
     date: string;
 }
 
+export interface SetDelegateAddress {
+    type: typeof SET_DELEGATE_ADDRESS;
+    address: string;
+}
+
 export type AppActions =
     | SetTransactionsAction
     | SetBalanceAction
@@ -66,4 +72,5 @@ export type AppActions =
     | SetSendStepAction
     | SetSendAddressAction
     | SetSendAmountAction
-    | SetTermsDateAction;
+    | SetTermsDateAction
+    | SetDelegateAddress;

@@ -1,4 +1,4 @@
-interface NavigationProps {
+export interface NavigationProps {
     navigation: {
         goBack: () => void;
         navigate: (target: string) => void;
@@ -15,4 +15,5 @@ export type SendAmountProps = NavigationProps;
 export type SendFirstTimeProps = NavigationProps;
 export type SendReviewProps = NavigationProps;
 export type SettingsProps = NavigationProps;
-export type KeysProps = NavigationProps;
+export type SeedPhraseProps = NavigationProps;
+export type DelegateAddressProps = NavigationProps;

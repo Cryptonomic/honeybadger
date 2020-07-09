@@ -11,6 +11,7 @@ import SendReviewScreen from '../screens/SendReview';
 import SendFirstTimeScreen from '../screens/SendFirstTime';
 import SettingsScreen from '../screens/Settings';
 import SeedPhraseScreen from '../screens/SeedPhrase';
+import DelegateAddressScreen from '../screens/DelegateAddress';
 
 const MainNavigator = createStackNavigator(
     {
@@ -25,6 +26,7 @@ const MainNavigator = createStackNavigator(
         SendFirstTime: SendFirstTimeScreen,
         Settings: SettingsScreen,
         SeedPhrase: SeedPhraseScreen,
+        DelegateAddress: DelegateAddressScreen,
     },
     {
         headerMode: 'none',
