@@ -3,6 +3,7 @@ import React, {useState, useEffect} from 'react';
 import {StyleSheet} from 'react-native';
 import {Container, Button, Text, View, Header} from 'native-base';
 import * as Keychain from 'react-native-keychain';
+import Modal from 'react-native-modal';
 import {useSelector, useDispatch} from 'react-redux';
 import {
     Menu,
@@ -37,6 +38,10 @@ const Account = ({navigation}: AccountProps) => {
     const [tab, setTab] = useState(0);
     const [openSettings, setOpenSettings] = useState(false);
 
+    const [isModalVisible, setModalVisible] = useState(false);
+    const [modalWasShown, setModalWasShown] = useState(false);
+    const [modalNext, setModalNext] = useState('');
+
     const changeTab = (newTab: number) => {
         if (newTab === tab) {
             return;
@@ -51,9 +56,7 @@ const Account = ({navigation}: AccountProps) => {
                 const wallet = await Keychain.getGenericPassword();
                 if (wallet) {
                     dispatch(syncAccount());
-                    setTimeout(() => {
-                        load();
-                    }, 100000);
+                    setTimeout(() => { load(); }, 60000);
                 } else {
                     navigation.replace('Welcome');
                 }
@@ -65,12 +68,25 @@ const Account = ({navigation}: AccountProps) => {
     }, []);
 
     const onPress = (value: string) => {
-        navigation.navigate(value);
+        if ((value === 'SendAddress' || value === Receive) && !modalWasShown){
+            setModalNext(value);
+            toggleModal();
+        } else {
+            navigation.navigate(value);
+        }
     };
 
     const onSettingsSelect = (item: any) => {
         setOpenSettings(false);
         navigation.navigate(item.title);
+    };
+
+    const toggleModal = () => {
+      setModalVisible(!isModalVisible);
+      setModalWasShown(true);
+      if (modalNext) {
+        navigation.navigate(modalNext);
+      }
     };
 
     const onLogout = (item: any) => {
@@ -228,11 +244,39 @@ const Account = ({navigation}: AccountProps) => {
                     {tab === 1 && <Delegation />}
                 </View>
             </View>
+
+            <Modal isVisible={isModalVisible}>
+                <View style={styles.warningModal}>
+                    <Text style={{marginBottom: 5}}>
+                        We only recommend storing and transferring small amounts of tez with this mobile wallet. You might want to wait for hardware wallet support for larger amounts.
+                    </Text>
+                    <Button onPress={toggleModal} style={styles.warningModalButton}>
+                        <Text>OK</Text>
+                    </Button>
+                </View>
+            </Modal>
         </Container>
     );
 };
 
 const styles = StyleSheet.create({
+    warningModal: {
+        borderRadius: 26,
+        height: 155,
+        padding: 15,
+        backgroundColor: '#ffffff',
+        alignItems: 'center',
+    },
+    warningModalButton: {
+        width: 160,
+        height: 50,
+        borderColor: '#4b4b4b',
+        borderWidth: 1,
+        borderRadius: 25,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#4b4b4b',
+    },
     container: {
         backgroundColor: '#fcd104',
     },
