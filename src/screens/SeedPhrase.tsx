@@ -26,38 +26,53 @@ const SeedPhrase = ({navigation}: KeysProps) => {
     return (
         <Container style={styles.container}>
             <CustomHeader
-                title="Seed Phrase"
+                title="Back up Recovery Phrase"
                 onBack={() => navigation.goBack()}
             />
             <View style={styles.content}>
                 <View style={styles.title}>
-                    <Text style={styles.titleText}>
-                        Write down your seed phrase on a piece of paper and keep
-                        it in a safe place. You will need your seed phrase to
-                        recover your account.
+                    <Text style={styles.typo1}>
+                        Carefully write down your recovery phrase and keep it in
+                        a safe place.
+                    </Text>
+                    <Text style={[styles.subtitle, styles.typo2]}>
+                        You will need your recovery phrase to access your funds
+                        in case your phone is lost or stolen. If anyone else
+                        gets access to your recovery phrase they will be able to
+                        steal your funds.
                     </Text>
                 </View>
+                <View style={styles.dividerHorizontal} />
                 <View style={styles.seed}>
-                    {cols.map((col, colIndex) => (
-                        <View style={styles.column}>
-                            {col.map((value, rowIndex) => (
-                                <View style={styles.row}>
-                                    <View style={styles.seedNumberWrapper}>
-                                        <Text style={styles.seedNumber}>{`${
-                                            (colIndex
-                                                ? half + 1
-                                                : colIndex + 1) + rowIndex
-                                        }.`}</Text>
-                                    </View>
-                                    <View>
-                                        <Text style={styles.seedText}>
-                                            {value}
-                                        </Text>
-                                    </View>
+                    <View style={styles.column}>
+                        {cols[0].map((value, index) => (
+                            <View style={styles.row}>
+                                <View style={styles.seedNumberWrapper}>
+                                    <Text style={styles.seedNumber}>{`${
+                                        index + 1
+                                    }`}</Text>
                                 </View>
-                            ))}
-                        </View>
-                    ))}
+                                <View>
+                                    <Text style={styles.seedText}>{value}</Text>
+                                </View>
+                            </View>
+                        ))}
+                    </View>
+                    <View style={styles.dividerVertical} />
+                    <View style={styles.column}>
+                        {cols[1].map((value, index) => (
+                            <View style={styles.row}>
+                                <View style={styles.seedNumberWrapper}>
+                                    <Text style={styles.seedNumber}>{`${
+                                        half + 1 + index
+                                    }`}</Text>
+                                </View>
+                                <View>
+                                    <Text style={styles.seedText}>{value}</Text>
+                                </View>
+                            </View>
+                        ))}
+                    </View>
                 </View>
                 <View style={styles.action}>
                     <CustomTooltip
@@ -102,32 +117,39 @@ const styles = StyleSheet.create({
         paddingHorizontal: 40,
     },
     title: {
-        marginTop: 50,
+        marginTop: 25,
     },
-    titleText: {
-        fontFamily: 'Roboto-Light',
-        fontSize: 18,
-        fontWeight: '300',
-        lineHeight: 24,
+    subtitle: {
+        marginTop: 15,
     },
     seed: {
         flexDirection: 'row',
-        marginTop: 75,
+        marginTop: 25,
+    },
+    dividerHorizontal: {
+        width: '100%',
+        height: 1,
+        backgroundColor: '#979797',
+        marginTop: 23,
+    },
+    dividerVertical: {
+        width: 1,
+        height: '100%',
+        backgroundColor: '#979797',
     },
     seedText: {
-        fontFamily: 'Roboto-Medium',
-        fontWeight: '500',
+        fontFamily: 'Roboto-Regular',
         fontSize: 18,
-        color: '#0d0d0d',
-        letterSpacing: 0.75,
-        marginLeft: 20,
+        color: 'rgba(0, 0, 0, .92)',
+        lineHeight: 34,
+        marginLeft: 5,
     },
     seedNumber: {
-        fontFamily: 'Roboto-Medium',
-        fontWeight: '500',
-        fontSize: 18,
-        color: 'rgb(75, 75, 75)',
-        letterSpacing: 0.75,
+        fontFamily: 'Roboto-Light',
+        fontWeight: '300',
+        fontSize: 16,
+        color: 'rgba(0, 0, 0, .92)',
+        lineHeight: 34,
     },
     seedNumberWrapper: {
         width: 30,
@@ -139,11 +161,11 @@ const styles = StyleSheet.create({
         width: '50%',
     },
     row: {
-        width: '80%',
+        width: 100,
         flexDirection: 'row',
     },
     action: {
-        marginTop: 150,
+        marginTop: 40,
         alignItems: 'center',
     },
     btn: {
@@ -172,6 +194,18 @@ const styles = StyleSheet.create({
     },
     tooltipText: {
         marginLeft: 5,
+    },
+    typo1: {
+        fontFamily: 'Roboto-Medium',
+        fontSize: 18,
+        fontWeight: '500',
+        lineHeight: 26,
+    },
+    typo2: {
+        fontFamily: 'Roboto-Light',
+        fontSize: 16,
+        fontWeight: '300',
+        lineHeight: 22,
     },
 });
 

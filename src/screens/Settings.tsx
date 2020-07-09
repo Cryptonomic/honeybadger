@@ -25,7 +25,7 @@ const Settings = ({navigation}: SettingsProps) => {
             title: 'Security',
             items: [
                 {
-                    name: 'Seed Phrase',
+                    name: 'Back up Recovery Phrase',
                     action: () => navigation.navigate('SeedPhrase'),
                 },
             ],
