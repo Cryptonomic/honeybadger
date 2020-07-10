@@ -9,4 +9,5 @@ export interface Operation {
     source: string;
     destination: string;
     amount?: number;
+    opGroupHash: string;
 }

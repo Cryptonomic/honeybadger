@@ -1,6 +1,6 @@
 import React from 'react';
 import {useSelector} from 'react-redux';
-import {StyleSheet, ScrollView} from 'react-native';
+import {Linking, StyleSheet, ScrollView, TouchableOpacity} from 'react-native'; // TODO: update to rn 0.63+ and use Pressable
 import {View, Text} from 'native-base';
 import moment from 'moment';
 
@@ -9,12 +9,16 @@ import {State ,Operation} from '../reducers/types';
 import CustomIcon from './CustomIcon';
 import {truncateHash} from '../utils/general';
 import {formatAmount} from '../utils/currency';
+import config from '../config';
 
 const Transactions = () => {
     const transactions = useSelector((state: State) => state.app.transactions);
-    const publicHashKey = useSelector(
-        (state: State) => state.app.publicKeyHash,
-    );
+    const publicHashKey = useSelector((state: State) => state.app.publicKeyHash);
+
+    const onTransactionPress = (opGroupHash: string) => {
+        Linking.openURL(`${config[0].explorerUrl}/${opGroupHash}`);
+    };
+
     return (
         <ScrollView>
             {transactions.length === 0 && (
@@ -35,61 +39,63 @@ const Transactions = () => {
                 transactions
                     .filter((t: Operation) => t.amount)
                     .map((t: Operation) => (
-                        <View style={styles.listItem}>
-                            <View style={styles.left}>
-                                <CustomIcon
-                                    name={t.destination !== publicHashKey ? 'Back-Arrow' : 'Forward-Arrow'}
-                                    size={14}
-                                    color="#f5942a"
-                                />
-                            </View>
-                            <View style={styles.body}>
-                                <View style={{flexDirection: 'row'}}>
-                                    <Text style={styles.typo3}>
-                                        {t.destination !== publicHashKey ? 'Send' : 'Receive'}
-                                    </Text>
-                                    <Text style={styles.typo4}>
-                                        {' '}{t.destination !== publicHashKey ? 'to' : 'from'}
-                                    </Text>
-                                </View>
-                                <View style={styles.subtitle}>
-                                    <Text style={styles.typo3}>
-                                        {truncateHash(
-                                            t.destination !== publicHashKey
-                                                ? t.destination
-                                                : t.source,
-                                        )}
-                                    </Text>
-                                </View>
-                            </View>
-                            <View style={styles.right}>
-                                <View style={styles.amount}>
-                                    <Text
-                                        style={[
-                                            styles.typo5,
-                                            t.destination !== publicHashKey
-                                                ? styles.colorSend
-                                                : styles.colorReceive,
-                                        ]}>{`${
-                                        t.destination !== publicHashKey
-                                            ? '-'
-                                            : '+'
-                                    }${formatAmount(Number(t.amount))}`}</Text>
+                        <TouchableOpacity onPress={() => onTransactionPress(t.opGroupHash)}>
+                            <View style={styles.listItem}>
+                                <View style={styles.left}>
                                     <CustomIcon
-                                        name="XTZ"
+                                        name={t.destination !== publicHashKey ? 'Back-Arrow' : 'Forward-Arrow'}
                                         size={14}
-                                        color={
-                                            t.destination !== publicHashKey
-                                                ? '#e3787d'
-                                                : '#259c90'
-                                        }
+                                        color="#f5942a"
                                     />
                                 </View>
-                                <Text style={styles.typo6}>
-                                    {moment.utc(new Date(t.timestamp)).local().format("MMM D, HH:mm")}
-                                </Text>
+                                <View style={styles.body}>
+                                    <View style={{flexDirection: 'row'}}>
+                                        <Text style={styles.typo3}>
+                                            {t.destination !== publicHashKey ? 'Sent' : 'Received'}
+                                        </Text>
+                                        <Text style={styles.typo4}>
+                                            {' '}{t.destination !== publicHashKey ? 'to' : 'from'}
+                                        </Text>
+                                    </View>
+                                    <View style={styles.subtitle}>
+                                        <Text style={styles.typo3}>
+                                            {truncateHash(
+                                                t.destination !== publicHashKey
+                                                    ? t.destination
+                                                    : t.source,
+                                            )}
+                                        </Text>
+                                    </View>
+                                </View>
+                                <View style={styles.right}>
+                                    <View style={styles.amount}>
+                                        <Text
+                                            style={[
+                                                styles.typo5,
+                                                t.destination !== publicHashKey
+                                                    ? styles.colorSend
+                                                    : styles.colorReceive,
+                                            ]}>{`${
+                                            t.destination !== publicHashKey
+                                                ? '-'
+                                                : '+'
+                                        }${formatAmount(Number(t.amount))}`}</Text>
+                                        <CustomIcon
+                                            name="XTZ"
+                                            size={14}
+                                            color={
+                                                t.destination !== publicHashKey
+                                                    ? '#e3787d'
+                                                    : '#259c90'
+                                            }
+                                        />
+                                    </View>
+                                    <Text style={styles.typo6}>
+                                        {moment.utc(new Date(t.timestamp)).local().format("MMM D, HH:mm")}
+                                    </Text>
+                                </View>
                             </View>
-                        </View>
+                        </TouchableOpacity>
                     ))}
         </ScrollView>
     );
