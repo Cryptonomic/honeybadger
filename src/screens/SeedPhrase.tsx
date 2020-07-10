@@ -26,14 +26,13 @@ const SeedPhrase = ({navigation}: KeysProps) => {
     return (
         <Container style={styles.container}>
             <CustomHeader
-                title="Back up Recovery Phrase"
+                title="Account Mnemonic"
                 onBack={() => navigation.goBack()}
             />
             <View style={styles.content}>
                 <View style={styles.title}>
                     <Text style={styles.typo1}>
-                        Carefully write down your recovery phrase and keep it in
-                        a safe place.
+                        Carefully write down your recovery phrase and keep it in a safe place.
                     </Text>
                     <Text style={[styles.subtitle, styles.typo2]}>
                         You will need your recovery phrase to access your funds
