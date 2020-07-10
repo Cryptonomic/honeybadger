@@ -25,7 +25,7 @@ export const syncAccount = () => async (
 
         try {
             const balance = await TezosNodeReader.getSpendableBalanceForAccount(
-                config[0].tezosNode,
+                config[0].tezosUrl,
                 publicKeyHash,
             );
             dispatch(setBalanceAction(balance));
@@ -34,7 +34,7 @@ export const syncAccount = () => async (
         try {
             if (!getState().app.revealed) {
                 const isRevealed = await TezosNodeReader.isManagerKeyRevealedForAccount(
-                    config[0].url,
+                    config[0].tezosUrl,
                     publicKeyHash,
                 );
                 dispatch(setRevealedAction(isRevealed));
@@ -176,7 +176,7 @@ export const sendTransaction = () => async (
     getState: () => State,
 ) => {
     try {
-        const tezosUrl = config[0].nodeUrl; // TODO: getState().config
+        const tezosUrl = config[0].tezosUrl; // TODO: getState().config
         const address = getState().app.sendAddress; // TODO do not use state, use parameters
         const amount = getState().app.sendAmount; // TODO do not use state, use parameters
         const secretKey = getState().app.secretKey;
@@ -206,7 +206,7 @@ export const sendDelegation = () => async (
     getState: () => State,
 ) => {
     try {
-        const tezosUrl = config[0].url; // TODO: getState().config
+        const tezosUrl = config[0].tezosUrl; // TODO: getState().config
         const address = getState().app.delegateAddress; // TODO do not use state, use parameters
         const secretKey = getState().app.secretKey;
         const isRevealed = getState().app.revealed;
