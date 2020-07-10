@@ -25,7 +25,7 @@ export const syncAccount = () => async (
 
         try {
             const balance = await TezosNodeReader.getSpendableBalanceForAccount(
-                config[0].nodeUrl,
+                config[0].tezosNode,
                 publicKeyHash,
             );
             dispatch(setBalanceAction(balance));
@@ -34,7 +34,7 @@ export const syncAccount = () => async (
         try {
             if (!getState().app.revealed) {
                 const isRevealed = await TezosNodeReader.isManagerKeyRevealedForAccount(
-                    config[0].nodeUrl,
+                    config[0].url,
                     publicKeyHash,
                 );
                 dispatch(setRevealedAction(isRevealed));
@@ -206,6 +206,24 @@ export const sendDelegation = () => async (
     getState: () => State,
 ) => {
     try {
+        const tezosUrl = config[0].url; // TODO: getState().config
+        const address = getState().app.delegateAddress; // TODO do not use state, use parameters
+        const secretKey = getState().app.secretKey;
+        const isRevealed = getState().app.revealed;
+        const keyStore = await KeyStoreUtils.restoreIdentityFromSecretKey(
+            secretKey,
+        );
+        const signer = new SoftSigner(
+            TezosMessageUtils.writeKeyWithHint(keyStore.secretKey, 'edsk'),
+        );
+
+        await TezosNodeWriter.sendDelegationOperation(
+            tezosUrl,
+            signer,
+            keyStore,
+            address,
+            isRevealed ? 1423 : 1423 + 1300,
+        );
     } catch (e) {
         console.log('error-delegation', e);
     }
