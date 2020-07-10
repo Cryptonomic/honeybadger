@@ -170,8 +170,6 @@ const styles = StyleSheet.create({
     btn: {
         width: 256,
         height: 50,
-        borderWidth: 1,
-        borderColor: 'green',
         borderRadius: 25,
         justifyContent: 'center',
         alignItems: 'center',
