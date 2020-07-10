@@ -8,6 +8,7 @@ import {
     SET_TRANSACTIONS,
     SET_SEND_AMOUNT,
     SET_TERMS_DATE,
+    SET_REVEALED,
 } from './actions';
 
 const initialState = {
@@ -17,6 +18,7 @@ const initialState = {
     storeType: '',
     seed: '',
     balance: 0,
+    revealed: false,
     transactions: [],
     delegations: [],
     sendStep: 1,
@@ -45,6 +47,8 @@ const app = (state = initialState, action: AppActions) => {
             };
         case SET_BALANCE:
             return {...state, balance: action.balance};
+        case SET_REVEALED:
+            return {...state, revealed: action.revealed};
         case SET_SEND_STEP:
             return {...state, sendStep: action.step};
         case SET_SEND_ADDRESS:

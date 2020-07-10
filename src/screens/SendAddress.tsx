@@ -48,6 +48,8 @@ const SendAddress = ({navigation}: SendAddressProps) => {
         if (value.length < 36) {
             setIsValid(false);
         }
+
+        // TODO: if TezosNodeReader.isImplicitAndEmpty show a warning
     };
     const goNext = () => {
         const isSomeSendTransaction = transactions.find(

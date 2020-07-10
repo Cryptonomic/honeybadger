@@ -4,30 +4,32 @@ import {StyleSheet} from 'react-native';
 import {Container, Text, View, Button} from 'native-base';
 
 import {sendTransaction} from '../reducers/app/thunks';
-
 import CustomHeader from '../components/CustomHeader';
 import CustomIcon from '../components/CustomIcon';
 import {truncateHash} from '../utils/general';
 import {formatAmount} from '../utils/currency';
 import {colors} from '../theme';
-
 import {State} from '../reducers/types';
+
 import {SendReviewProps} from './types';
 
 const SendReview = ({navigation}: SendReviewProps) => {
     const dispatch = useDispatch();
-    const publicKeyHash = useSelector(
-        (state: State) => state.app.publicKeyHash,
-    );
+    const publicKeyHash = useSelector((state: State) => state.app.publicKeyHash);
     const address = useSelector((state: State) => state.app.sendAddress);
     const amount = useSelector((state: State) => state.app.sendAmount);
+    const isRevealed = useSelector((state: State) => state.app.revealed);
     const [currency] = useState(0);
     const [fee] = useState(0.02); // TODO
-    const [feeCurrency] = useState(0.002427); // TODO
+    const [feeCurrency] = useState(0.001423); // TODO
+
     const onSend = () => {
         dispatch(sendTransaction());
         navigation.replace('Account');
     };
+
+    // TODO: if TezosNodeReader.isImplicitAndEmpty show a note on burn
+
     return (
         <Container style={styles.container}>
             <CustomHeader
@@ -66,7 +68,7 @@ const SendReview = ({navigation}: SendReviewProps) => {
                         {`Operation Fee $${fee}`}
                     </Text>*/}
                     <View style={[styles.row, styles.feeCurrency]}>
-                        <Text>{`Operation Fee ${feeCurrency}`}</Text>
+                        <Text>{`Operation Fee ${isRevealed ? feeCurrency : (feeCurrency + 0.001300).toFixed(3) /* TODO */}`}</Text>
                         <CustomIcon name="XTZ" size={14} />
                     </View>
                 </View>
