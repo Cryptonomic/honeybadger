@@ -9,6 +9,7 @@ import {
     SET_TERMS_DATE,
     SET_DELEGATE_ADDRESS,
     SET_REVEALED,
+    SET_DELEGATION,
 } from './actions';
 import {Operation} from '../types';
 
@@ -24,7 +25,7 @@ export interface State {
     sendAddress: string;
     sendAmount: number;
     transactions: Array<Operation>;
-    delegations: Array<{}>;
+    delegation: string;
     termsDate: string;
     delegateAddress: string;
 }
@@ -69,9 +70,14 @@ export interface SetTermsDateAction {
     date: string;
 }
 
-export interface SetDelegateAddress {
+export interface SetDelegateAddressAction {
     type: typeof SET_DELEGATE_ADDRESS;
     address: string;
+}
+
+export interface SetDelegationAction {
+    type: typeof SET_DELEGATION;
+    delegation: string;
 }
 
 export type AppActions =
@@ -83,4 +89,5 @@ export type AppActions =
     | SetSendAddressAction
     | SetSendAmountAction
     | SetTermsDateAction
-    | SetDelegateAddress;
+    | SetDelegateAddressAction
+    | SetDelegationAction;

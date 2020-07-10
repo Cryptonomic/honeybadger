@@ -2,6 +2,7 @@ import {
     ConseilQueryBuilder,
     ConseilOperator,
     ConseilSortDirection,
+    ConseilDataClient,
     TezosConseilClient,
     TezosNodeReader,
     TezosNodeWriter,
@@ -14,7 +15,12 @@ import {KeyStoreUtils, SoftSigner} from '../../softsigner';
 
 import {State} from '../types';
 
-import {setBalanceAction, setRevealedAction, setTransactions} from './actions';
+import {
+    setBalanceAction,
+    setRevealedAction,
+    setTransactions,
+    setDelegation,
+} from './actions';
 
 export const syncAccount = () => async (
     dispatch: Dispatch,
@@ -46,6 +52,11 @@ export const syncAccount = () => async (
             const transactions = await getTransactions(publicKeyHash);
             dispatch(setTransactions(transactions));
         } catch (transactionError) {}
+
+        try {
+            const delegation = await getDelegation(publicKeyHash);
+            dispatch(setDelegation(delegation?.[0].delegate_value));
+        } catch (e) {}
 
         // TODO: tokens
     } catch (e) {}
@@ -223,6 +234,42 @@ export const sendDelegation = () => async (
             keyStore,
             address,
             isRevealed ? 1423 : 1423 + 1300,
+        );
+    } catch (e) {
+        console.log('error-delegation', e);
+    }
+};
+
+export const getDelegation = async (accountHash: string) => {
+    try {
+        const platform = 'tezos';
+        const network = 'carthagenet';
+        const entity = 'accounts';
+        const conseilServer = {
+            url: config[0].url,
+            apiKey: config[0].apiKey,
+            network,
+        };
+        let accountQuery = ConseilQueryBuilder.blankQuery();
+        accountQuery = ConseilQueryBuilder.addFields(
+            accountQuery,
+            'delegate_value',
+        );
+        accountQuery = ConseilQueryBuilder.addPredicate(
+            accountQuery,
+            'account_id',
+            ConseilOperator.EQ,
+            [accountHash],
+            false,
+        );
+        accountQuery = ConseilQueryBuilder.setLimit(accountQuery, 1);
+
+        return await ConseilDataClient.executeEntityQuery(
+            conseilServer,
+            platform,
+            network,
+            entity,
+            accountQuery,
         );
     } catch (e) {
         console.log('error-delegation', e);

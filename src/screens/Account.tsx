@@ -34,7 +34,7 @@ const Account = ({navigation}: AccountProps) => {
     );
     const balance = useSelector((state: State) => state.app.balance);
     const transactions = useSelector((state: State) => state.app.transactions);
-    const delegations = useSelector((state: State) => state.app.delegations);
+    const delegation = useSelector((state: State) => state.app.delegation);
     const [tab, setTab] = useState(0);
     const [openSettings, setOpenSettings] = useState(false);
 
