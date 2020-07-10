@@ -7,11 +7,9 @@
     "test": "jest",
     "lint": "eslint .",
     "postinstall": "rn-nodeify --install buffer,process,stream,events,assert,crypto,vm --hack --yarn",
-
     "ios:run": "react-native run-ios --simulator='iPhone 11'",
     "ios:log": "react-native log-ios",
     "ios:build": "react-native bundle --entry-file='index.ts' --bundle-output='./ios/honeybadger/main.jsbundle' --dev=false --platform='ios' --assets-dest='./ios'",
-
     "android:run": "react-native run-android"
   },
   "dependencies": {

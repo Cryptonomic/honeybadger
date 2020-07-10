@@ -32,7 +32,7 @@
 	<key>NSCameraUsageDescription</key>
 	<string>Camera access is required to scan address QR codes.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string/>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Camera access is required to scan address QR codes.</string>
 	<key>UIAppFonts</key>
