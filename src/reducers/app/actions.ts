@@ -2,6 +2,7 @@ import {KeyStore} from 'conseiljs';
 import {
     SetTransactionsAction,
     SetBalanceAction,
+    SetRevealedAction,
     SetKeysAction,
     SetSendStepAction,
     SetSendAddressAction,
@@ -12,6 +13,7 @@ import {Operation} from '../types';
 
 export const SET_KEYS = 'SET_KEYS';
 export const SET_BALANCE = 'SET_BALANCE';
+export const SET_REVEALED = 'SET_REVEALED';
 export const SET_SEND_STEP = 'SET_SEND_STEP';
 export const SET_SEND_ADDRESS = 'SET_SEND_ADDRESS';
 export const SET_TRANSACTIONS = 'SET_TRANSACTIONS';
@@ -29,6 +31,11 @@ export const setBalanceAction = (balance: number): SetBalanceAction => ({
     balance,
 });
 
+export const setRevealedAction = (revealed: boolean): SetRevealedAction => ({
+    type: SET_REVEALED,
+    revealed,
+});
+
 export const setSendStepAction = (step: number): SetSendStepAction => ({
     type: SET_SEND_STEP,
     step,
@@ -44,9 +51,7 @@ export const setSendAmount = (amount: number): SetSendAmountAction => ({
     amount,
 });
 
-export const setTransactions = (
-    transactions: Operation[],
-): SetTransactionsAction => ({
+export const setTransactions = (transactions: Operation[]): SetTransactionsAction => ({
     type: SET_TRANSACTIONS,
     transactions,
 });

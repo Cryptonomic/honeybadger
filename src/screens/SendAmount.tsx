@@ -19,7 +19,7 @@ const SendAmount = ({navigation}: SendAmountProps) => {
     const balance = useSelector((state: State) => state.app.balance);
     const [amount, setAmount] = useState('');
     const [currency] = useState('0');
-    const [fee] = useState(0.002427);
+    const [fee] = useState(0.001423);
     const title = `Sending to ${truncateHash(address)}`;
 
     const onChange = (value: string) => {

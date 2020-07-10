@@ -3,13 +3,16 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "android": "react-native run-android",
-    "ios": "react-native run-ios",
     "start": "react-native link && react-native start",
     "test": "jest",
     "lint": "eslint .",
     "postinstall": "rn-nodeify --install buffer,process,stream,events,assert,crypto,vm --hack --yarn",
-    "build:ios": "react-native bundle --entry-file='index.ts' --bundle-output='./ios/honeybadger/main.jsbundle' --dev=false --platform='ios' --assets-dest='./ios'"
+
+    "ios:run": "react-native run-ios --simulator='iPhone 11'",
+    "ios:log": "react-native log-ios",
+    "ios:build": "react-native bundle --entry-file='index.ts' --bundle-output='./ios/honeybadger/main.jsbundle' --dev=false --platform='ios' --assets-dest='./ios'",
+
+    "android:run": "react-native run-android"
   },
   "dependencies": {
     "@ledgerhq/react-native-hid": "^5.15.0",
@@ -35,6 +38,7 @@
     "react-native-gesture-handler": "^1.6.1",
     "react-native-keychain": "^6.1.1",
     "react-native-level-fs": "^3.0.0",
+    "react-native-modal": "11.5.6",
     "react-native-os": "^1.2.6",
     "react-native-pdf": "6.2.0",
     "react-native-popup-menu": "^0.15.9",

@@ -49,6 +49,8 @@ const EnterAddress = ({
         if (value.length < 36) {
             setIsValid(false);
         }
+
+        // TODO: if TezosNodeReader.isImplicitAndEmpty show a warning
     };
     const onPasteAddress = async () => {
         const copiedMessage = await Clipboard.getString();

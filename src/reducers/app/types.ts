@@ -8,6 +8,7 @@ import {
     SET_SEND_AMOUNT,
     SET_TERMS_DATE,
     SET_DELEGATE_ADDRESS,
+    SET_REVEALED,
 } from './actions';
 import {Operation} from '../types';
 
@@ -18,6 +19,7 @@ export interface State {
     storeType: string | number;
     seed: string;
     balance: number;
+    revealed: boolean;
     sendStep: number;
     sendAddress: string;
     sendAmount: number;
@@ -35,6 +37,12 @@ export interface SetBalanceAction {
     type: typeof SET_BALANCE;
     balance: number;
 }
+
+export interface SetRevealedAction {
+    type: typeof SET_REVEALED;
+    revealed: boolean;
+}
+
 export interface SetTransactionsAction {
     type: typeof SET_TRANSACTIONS;
     transactions: Operation[];
@@ -68,6 +76,7 @@ export interface SetDelegateAddress {
 export type AppActions =
     | SetTransactionsAction
     | SetBalanceAction
+    | SetRevealedAction
     | SetKeysAction
     | SetSendStepAction
     | SetSendAddressAction
