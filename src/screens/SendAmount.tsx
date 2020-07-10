@@ -23,21 +23,34 @@ const SendAmount = ({navigation}: SendAmountProps) => {
     const title = `Sending to ${truncateHash(address)}`;
 
     const onChange = (value: string) => {
-        if (value.length === 1 && value.charAt(0) === '.') { setAmount('0.'); return; }
+        if (value.length === 1 && value.charAt(0) === '.') {
+            setAmount('0.');
+            return;
+        }
 
-        if (value.indexOf('.') > -1 && value.split('.')[1].length > 3) { return; }
+        if (value.indexOf('.') > -1 && value.split('.')[1].length > 3) {
+            return;
+        }
 
-        if (isNaN(Number(value))) { return; }
+        if (isNaN(Number(value))) {
+            return;
+        }
 
-        if (Number(value) * 1000000 >= balance) { return; }
+        if (Number(value) * 1000000 >= balance) {
+            return;
+        }
 
         setAmount(value);
     };
 
     const goNext = () => {
-        if (!amount.length) { return; }
+        if (!amount.length) {
+            return;
+        }
 
-        if (Number(amount) === 0) { return; }
+        if (Number(amount) === 0) {
+            return;
+        }
 
         dispatch(setSendAmount(Number(amount) * 1000000)); // TODO: const
         navigation.navigate('SendReview');
@@ -81,7 +94,12 @@ const SendAmount = ({navigation}: SendAmountProps) => {
                         <CustomIcon name="XTZ" size={16} color="#343434" />
                     </View>
                 </View>
-                <View style={{flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center'}}>
+                <View
+                    style={{
+                        flexDirection: 'row',
+                        justifyContent: 'flex-end',
+                        alignItems: 'center',
+                    }}>
                     <Text style={[styles.fee, styles.typo5]}>
                         {`Operation fee ${fee}`}
                     </Text>

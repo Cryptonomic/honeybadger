@@ -26,6 +26,7 @@ export interface State {
     transactions: Array<Operation>;
     delegations: Array<{}>;
     termsDate: string;
+    delegateAddress: string;
 }
 
 export interface SetKeysAction {

@@ -17,3 +17,4 @@ export type SendReviewProps = NavigationProps;
 export type SettingsProps = NavigationProps;
 export type SeedPhraseProps = NavigationProps;
 export type DelegateAddressProps = NavigationProps;
+export type DelegateReviewProps = NavigationProps;

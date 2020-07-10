@@ -56,7 +56,9 @@ const Account = ({navigation}: AccountProps) => {
                 const wallet = await Keychain.getGenericPassword();
                 if (wallet) {
                     dispatch(syncAccount());
-                    setTimeout(() => { load(); }, 60000);
+                    setTimeout(() => {
+                        load();
+                    }, 60000);
                 } else {
                     navigation.replace('Welcome');
                 }
@@ -68,7 +70,7 @@ const Account = ({navigation}: AccountProps) => {
     }, []);
 
     const onPress = (value: string) => {
-        if ((value === 'SendAddress' || value === Receive) && !modalWasShown){
+        if ((value === 'SendAddress' || value === Receive) && !modalWasShown) {
             setModalNext(value);
             toggleModal();
         } else {
@@ -84,11 +86,11 @@ const Account = ({navigation}: AccountProps) => {
     };
 
     const toggleModal = () => {
-      setModalVisible(!isModalVisible);
-      setModalWasShown(true);
-      if (modalNext) {
-        navigation.navigate(modalNext);
-      }
+        setModalVisible(!isModalVisible);
+        setModalWasShown(true);
+        if (modalNext) {
+            navigation.navigate(modalNext);
+        }
     };
 
     const onLogout = (item: any) => {
@@ -250,9 +252,13 @@ const Account = ({navigation}: AccountProps) => {
             <Modal isVisible={isModalVisible}>
                 <View style={styles.warningModal}>
                     <Text style={{marginBottom: 5}}>
-                        We only recommend storing and transferring small amounts of tez with this mobile wallet. You might want to wait for hardware wallet support for larger amounts.
+                        We only recommend storing and transferring small amounts
+                        of tez with this mobile wallet. You might want to wait
+                        for hardware wallet support for larger amounts.
                     </Text>
-                    <Button onPress={toggleModal} style={styles.warningModalButton}>
+                    <Button
+                        onPress={toggleModal}
+                        style={styles.warningModalButton}>
                         <Text>OK</Text>
                     </Button>
                 </View>
