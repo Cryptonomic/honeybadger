@@ -72,6 +72,7 @@ const EnterAddress = ({
             {showCamera && (
                 <>
                     <RNCamera
+                        captureAudio={false}
                         style={styles.camera}
                         onBarCodeRead={onBarcodeRecognized}>
                         <CustomHeader
