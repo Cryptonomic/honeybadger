@@ -33,8 +33,6 @@ const Account = ({navigation}: AccountProps) => {
         (state: State) => state.app.publicKeyHash,
     );
     const balance = useSelector((state: State) => state.app.balance);
-    const transactions = useSelector((state: State) => state.app.transactions);
-    const delegation = useSelector((state: State) => state.app.delegation);
     const [tab, setTab] = useState(0);
     const [openSettings, setOpenSettings] = useState(false);
 

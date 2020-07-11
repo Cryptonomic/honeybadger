@@ -6,8 +6,10 @@ export interface State {
 
 export interface Operation {
     timestamp: number;
+    kind: string; // TODO: enum
     source: string;
     destination: string;
     amount?: number;
     opGroupHash: string;
+    delegate?: string;
 }

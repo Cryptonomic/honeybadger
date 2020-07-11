@@ -5,7 +5,7 @@ import {View, Text} from 'native-base';
 import moment from 'moment';
 
 import TransactionsIllustration from '../../assets/transactions-illustration.svg';
-import {State ,Operation} from '../reducers/types';
+import {State, Operation} from '../reducers/types';
 import CustomIcon from './CustomIcon';
 import {truncateHash} from '../utils/general';
 import {formatAmount} from '../utils/currency';
@@ -19,9 +19,47 @@ const Transactions = () => {
         Linking.openURL(`${config[0].explorerUrl}/${opGroupHash}`);
     };
 
+    const displayTransactions = transactions.map(t => {
+        const opGroupHash = t.opGroupHash;
+        let iconName = '';
+        let action = '';
+        let preposition = ''
+        let amount = '';
+        let amountDirection = 0;
+        let address = '';
+        const date = moment.utc(new Date(t.timestamp)).local().format("MMM D, HH:mm");
+
+        if (t.kind === 'transaction') {
+            if (t.destination === publicHashKey) {
+                iconName = 'Forward-Arrow';
+                action = 'Received'
+                preposition = 'from';
+                address = truncateHash(t.source);
+                amount = formatAmount(Number(t.amount));
+                amountDirection = 1;
+            } else if (t.source === publicHashKey) {
+                iconName = 'Back-Arrow';
+                action = 'Sent'
+                preposition = 'to';
+                address = truncateHash(t.destination);
+                amount = formatAmount(Number(t.amount));
+                amountDirection = -1;
+            }
+        } else if (t.kind === 'delegation') {
+            iconName = 'Back-Arrow'; // TODO
+            action = 'Delegated'
+            preposition = 'to';
+            address = truncateHash(t.delegate) || '';
+            amount = '';
+            amountDirection = 0;
+        }
+
+        return {opGroupHash, iconName, action, preposition, amountDirection, amount, address, date};
+    });
+
     return (
         <ScrollView>
-            {transactions.length === 0 && (
+            {displayTransactions.length === 0 && (
                 <View style={styles.container}>
                     <TransactionsIllustration />
                     <View style={styles.text}>
@@ -35,63 +73,43 @@ const Transactions = () => {
                     </View>
                 </View>
             )}
-            {transactions.length > 0 &&
-                transactions
-                    .filter((t: Operation) => t.amount)
-                    .map((t: Operation) => (
+            {displayTransactions.length > 0 &&
+                displayTransactions
+                    .map((t: any) => (
                         <TouchableOpacity onPress={() => onTransactionPress(t.opGroupHash)}>
                             <View style={styles.listItem}>
                                 <View style={styles.left}>
-                                    <CustomIcon
-                                        name={t.destination !== publicHashKey ? 'Back-Arrow' : 'Forward-Arrow'}
-                                        size={14}
-                                        color="#f5942a"
-                                    />
+                                    <CustomIcon name={t.iconName} size={14} color="#f5942a" />
                                 </View>
                                 <View style={styles.body}>
                                     <View style={{flexDirection: 'row'}}>
                                         <Text style={styles.typo3}>
-                                            {t.destination !== publicHashKey ? 'Sent' : 'Received'}
+                                            {t.action}
                                         </Text>
                                         <Text style={styles.typo4}>
-                                            {' '}{t.destination !== publicHashKey ? 'to' : 'from'}
+                                            {' '}{t.preposition}
                                         </Text>
                                     </View>
                                     <View style={styles.subtitle}>
                                         <Text style={styles.typo3}>
-                                            {truncateHash(
-                                                t.destination !== publicHashKey
-                                                    ? t.destination
-                                                    : t.source,
-                                            )}
+                                            {t.address}
                                         </Text>
                                     </View>
                                 </View>
                                 <View style={styles.right}>
+                                    {t.amountDirection !== 0 && (
                                     <View style={styles.amount}>
-                                        <Text
-                                            style={[
-                                                styles.typo5,
-                                                t.destination !== publicHashKey
-                                                    ? styles.colorSend
-                                                    : styles.colorReceive,
-                                            ]}>{`${
-                                            t.destination !== publicHashKey
-                                                ? '-'
-                                                : '+'
-                                        }${formatAmount(Number(t.amount))}`}</Text>
+                                        <Text style={[styles.typo5, t.amountDirection < 0 ? styles.colorSend : styles.colorReceive]}>
+                                                {`${t.amountDirection < 0 ? '-' : '+'}${t.amount}`}
+                                        </Text>
                                         <CustomIcon
                                             name="XTZ"
                                             size={14}
-                                            color={
-                                                t.destination !== publicHashKey
-                                                    ? '#e3787d'
-                                                    : '#259c90'
-                                            }
-                                        />
+                                            color={ t.amountDirection < 0 ? '#e3787d' : '#259c90'} />
                                     </View>
+                                    )}
                                     <Text style={styles.typo6}>
-                                        {moment.utc(new Date(t.timestamp)).local().format("MMM D, HH:mm")}
+                                        {t.date}
                                     </Text>
                                 </View>
                             </View>

@@ -10,6 +10,7 @@ import {
     SetTermsDateAction,
     SetDelegateAddressAction,
     SetDelegationAction,
+    SetDelegationExpectedDate
 } from './types';
 import {Operation} from '../types';
 
@@ -23,6 +24,7 @@ export const SET_SEND_AMOUNT = 'SET_SEND_AMOUNT';
 export const SET_TERMS_DATE = 'SET_TERMS_DATE';
 export const SET_DELEGATE_ADDRESS = 'SET_DELEGATE_ADDRESS';
 export const SET_DELEGATION = 'SET_DELEGATION';
+export const SET_EXPECTEDDELEGATEDATE = 'SET_EXPECTEDDELEGATEDATE';
 
 export const setKeysAction = (keys: KeyStore): SetKeysAction => ({
     type: SET_KEYS,
@@ -54,9 +56,7 @@ export const setSendAmount = (amount: number): SetSendAmountAction => ({
     amount,
 });
 
-export const setTransactions = (
-    transactions: Operation[],
-): SetTransactionsAction => ({
+export const setTransactions = (transactions: Operation[]): SetTransactionsAction => ({
     type: SET_TRANSACTIONS,
     transactions,
 });
@@ -76,4 +76,9 @@ export const setTermsDate = (date: string): SetTermsDateAction => ({
 export const setDelegation = (delegation: string): SetDelegationAction => ({
     type: SET_DELEGATION,
     delegation,
+});
+
+export const setDelegateExpectedDate = (date: Date): SetDelegationExpectedDate => ({
+    type: SET_EXPECTEDDELEGATEDATE,
+    date
 });

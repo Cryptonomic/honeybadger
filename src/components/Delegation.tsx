@@ -2,11 +2,12 @@ import React from 'react';
 import {StyleSheet} from 'react-native';
 import {View, Text, Button} from 'native-base';
 import {useSelector} from 'react-redux';
+import moment from 'moment';
 
 import DelegationIllustration from '../../assets/delegation-illustration.svg';
-
+import CustomIcon from '../components/CustomIcon';
+import {formatAmount} from '../utils/currency';
 import {truncateHash} from '../utils/general';
-
 import {State} from '../reducers/types';
 
 interface DelegationProps {
@@ -15,6 +16,9 @@ interface DelegationProps {
 
 const Delegation = ({onDelegate}: DelegationProps) => {
     const delegation = useSelector((state: State) => state.app.delegation);
+    const balance = useSelector((state: State) => state.app.balance);
+    const expectedPaymentDate = useSelector((state: State) => state.app.expectedPaymentDate);
+
     return (
         <View style={styles.container}>
             {!delegation && (
@@ -29,23 +33,24 @@ const Delegation = ({onDelegate}: DelegationProps) => {
                     <Button style={styles.btn} onPress={onDelegate}>
                         <Text style={styles.typo3}>Delegate Now</Text>
                     </Button>
-                    {/* <Text style={[styles.subtitle, styles.typo2]}>Coming soon</Text> */}
                 </>
             )}
             {delegation && (
                 <>
                     <View style={styles.delegationHeader}>
                         <View style={styles.dot} />
-                        <Text style={styles.typo4}>Currenlty Delegating</Text>
+                        <Text style={styles.typo4}>Currently Delegating</Text>
                     </View>
                     {/* <Text style={styles.typo5}>First payout in 35 days</Text> */}
                     <View style={styles.delegationPaper}>
                         <View style={styles.row}>
                             <Text style={styles.typo6}>Amount</Text>
-                            <Text
-                                style={[styles.paperTextMargin, styles.typo7]}>
-                                0
-                            </Text>
+                            <View style={{alignItems: 'center', flexDirection: 'row'}}>
+                                <Text style={[styles.paperTextMargin, styles.typo7]}>
+                                    {formatAmount(balance)}
+                                </Text>
+                                <CustomIcon name="XTZ" size={16} color="#343434" style={{marginTop: 10}} />
+                            </View>
                         </View>
                         <View style={styles.divider} />
                         <View style={styles.row}>
@@ -58,7 +63,7 @@ const Delegation = ({onDelegate}: DelegationProps) => {
                     </View>
                     <View style={styles.delegationDate}>
                         <Text style={styles.typo6}>
-                            Delegating since April 4th, 2020
+                            Next payment expected on {moment.utc(new Date(expectedPaymentDate)).local().format("MMM D, HH:mm")}
                         </Text>
                     </View>
                 </>

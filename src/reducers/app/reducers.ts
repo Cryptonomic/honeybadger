@@ -11,6 +11,7 @@ import {
     SET_DELEGATE_ADDRESS,
     SET_REVEALED,
     SET_DELEGATION,
+    SET_EXPECTEDDELEGATEDATE
 } from './actions';
 
 const initialState = {
@@ -28,6 +29,7 @@ const initialState = {
     sendAmount: 0,
     termsDate: '',
     delegateAddress: '',
+    expectedPaymentDate: null
 };
 
 const app = (state = initialState, action: AppActions) => {
@@ -66,6 +68,8 @@ const app = (state = initialState, action: AppActions) => {
             return {...state, delegateAddress: action.address};
         case SET_DELEGATION:
             return {...state, delegation: action.delegation};
+        case SET_EXPECTEDDELEGATEDATE:
+            return {...state, expectedPaymentDate: action.date};
         default:
             return state;
     }
