@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {StyleSheet, Clipboard} from 'react-native';
+import {StyleSheet, Clipboard, ScrollView} from 'react-native';
 import {View, Text, Container, Button} from 'native-base';
 import {useSelector} from 'react-redux';
 
@@ -32,16 +32,14 @@ const SeedPhrase = ({navigation}: SeedPhraseProps) => {
             <View style={styles.content}>
                 <View style={styles.title}>
                     <Text style={styles.typo1}>
-                        Carefully write down your recovery phrase and keep it in a safe place.
+                        Write down your recovery phrase and keep it safe.
                     </Text>
                     <Text style={[styles.subtitle, styles.typo2]}>
-                        You will need your recovery phrase to access your funds
-                        in case your phone is lost or stolen. If anyone else
-                        gets access to your recovery phrase they will be able to
-                        steal your funds.
+                        You will need it to access your funds in case your phone is lost or stolen. If anyone else gets access to your recovery phrase they will be able to steal your funds.
                     </Text>
                 </View>
                 <View style={styles.dividerHorizontal} />
+                <ScrollView contentContainerStyle={{flexGrow: 1}}>
                 <View style={styles.seed}>
                     <View style={styles.column}>
                         {cols[0].map((value, index) => (
@@ -73,32 +71,7 @@ const SeedPhrase = ({navigation}: SeedPhraseProps) => {
                         ))}
                     </View>
                 </View>
-                <View style={styles.action}>
-                    <CustomTooltip
-                        isVisible={copied}
-                        placement="center"
-                        positions={{top: 0, right: 0, bottom: 0, left: 0}}
-                        content={
-                            <View style={styles.tooltipContent}>
-                                <CustomIcon name="Checkmark" size={16} />
-                                <Text style={styles.tooltipText}>
-                                    Copied to the clipboard
-                                </Text>
-                            </View>
-                        }
-                        onClose={() => setCopied(false)}>
-                        <Button
-                            transparent
-                            style={styles.btn}
-                            onPress={onCopyToClipboard}>
-                            <View>
-                                <Text style={styles.btnText}>
-                                    Copy Seed Phrase
-                                </Text>
-                            </View>
-                        </Button>
-                    </CustomTooltip>
-                </View>
+                </ScrollView>
             </View>
         </Container>
     );
