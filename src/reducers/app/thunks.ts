@@ -142,10 +142,10 @@ export const getLastDelegation = async (accountHash: string) => {
 
     const head = await TezosConseilClient.getBlockHead({url: conseilUrl, apiKey, network}, network);
 
-    
     const offset = Number(head['meta_cycle']) - Number(delegation[0]['cycle']);
-    const expected = ((offset >= 7 + 5 ? (4 * 4096) : (12 - offset) * 4096) + (4096 - Number(head['meta_cycle_position'])) + 1) * 60 * 1000;
-    console.log(`offset: ${offset}, ${expected}, ${Number(head['meta_cycle'])}, ${Number(delegation[0]['cycle'])}`)
+    const expected = ((offset >= 7 + 5 ? 0 : (12 - offset) * 4096) + (4096 - Number(head['meta_cycle_position'])) + 1) * 60 * 1000;
+
+    //TODO: if current delegate is blank, the payout continue since the time it was cleared for 5 cycles
 
     return {delegate: delegation[0]['delegate'], expectedPaymentDate: new Date(Date.now() + expected) };
 }
