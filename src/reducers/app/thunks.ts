@@ -12,7 +12,7 @@ import {Dispatch} from 'redux';
 import config from '../../config';
 import {KeyStoreUtils, SoftSigner} from '../../softsigner';
 
-import constants from '../utils/constants.json';
+import constants from '../../utils/constants.json';
 import {State} from '../types';
 
 import {
