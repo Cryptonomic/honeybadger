@@ -14,7 +14,6 @@ import config from '../config';
 const Transactions = () => {
     const transactions = useSelector((state: State) => state.app.transactions);
     const publicHashKey = useSelector((state: State) => state.app.publicKeyHash);
-    console.log('TRANS', transactions)
 
     const onTransactionPress = (opGroupHash: string) => {
         Linking.openURL(`${config[0].explorerUrl}/${opGroupHash}`);

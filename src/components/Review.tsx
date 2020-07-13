@@ -21,7 +21,7 @@ const Review: FunctionComponent<ReviewProps> = ({
     from,
     toTitle,
     to,
-    info,
+    info = '',
     children,
     onSend,
 }) => {
@@ -53,7 +53,7 @@ const Review: FunctionComponent<ReviewProps> = ({
             <Text style={[styles.address, styles.typo2]}>
                 {truncateHash(to)}
             </Text>
-            {info && (
+            {info.length > 0 && (
                 <View style={styles.info}>
                     <Text style={styles.infoText}>{info}</Text>
                 </View>
