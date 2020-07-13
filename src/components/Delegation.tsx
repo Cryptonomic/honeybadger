@@ -23,6 +23,7 @@ const Delegation = ({onDelegate}: DelegationProps) => {
 
     return (
         <View style={styles.container}>
+            {/* TODO: need something for not currently delegating, but delegation cancellation is < 5 cycles old */}
             {delegation.length === 0 && (
                 <>
                     <DelegationIllustration />

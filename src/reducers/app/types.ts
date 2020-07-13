@@ -15,19 +15,23 @@ import {
 import {Operation} from '../types';
 
 export interface State {
-    publicKey: string;
+    publicKey: string; // TODO: store a KeyStore object
     secretKey: string;
     publicKeyHash: string;
     storeType: string | number;
     seed: string;
-    balance: number;
-    revealed: boolean;
-    sendStep: number;
+
+    termsDate: string;
+    //delegationNoticeDate: string; // TODO: don't show delegation notice more than once
+
+    balance: number; // TODO: transient state
+    revealed: boolean; // TODO: transient state
+    delegation: string;
+    transactions: Array<Operation>;
+
+    sendStep: number; // TODO: view state
     sendAddress: string;
     sendAmount: number;
-    transactions: Array<Operation>;
-    delegation: string;
-    termsDate: string;
     delegateAddress: string;
     expectedPaymentDate: Date;
 }

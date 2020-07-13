@@ -30,8 +30,14 @@ export const syncAccount = () => async (
         const publicKeyHash = getState().app.publicKeyHash;
 
         try {
-            const {balance, delegate} = await getAccountInfo(publicKeyHash);
+            let {balance, delegate} = await getAccountInfo(publicKeyHash);
             dispatch(setBalanceAction(balance));
+
+            if (delegate.length > 0) { // TODO: query once per session
+                const bakerDetails = await getBakerDetails(delegate);
+                if (bakerDetails.name.length > 0) { delegate = bakerDetails.name; }
+            }
+
             dispatch(setDelegation(delegate));
 
             const {expectedPaymentDate} = await getLastDelegation(publicKeyHash);

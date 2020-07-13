@@ -60,7 +60,7 @@ const DelegateAddress = ({navigation}: DelegateAddressProps) => {
     }
     const modal = [
         {
-            title: 'Stake and keep control of your funds',
+            title: 'Staked funds remain in your control',
             subtitle: 'Bakers do not have access to delegated balances.',
             btn: 'Next',
         },
