@@ -68,7 +68,7 @@ const Account = ({navigation}: AccountProps) => {
     }, []);
 
     const onPress = (value: string) => {
-        if ((value === 'SendAddress' || value === Receive) && !modalWasShown) {
+        if ((value === 'SendAddress' || value === 'Receive') && !modalWasShown) {
             setModalNext(value);
             toggleModal();
         } else {

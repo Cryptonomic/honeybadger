@@ -23,6 +23,7 @@ export interface State {
 
     termsDate: string;
     //delegationNoticeDate: string; // TODO: don't show delegation notice more than once
+    //betaNoticeDate: string; // TODO: send/receive small amounts notice
 
     balance: number; // TODO: transient state
     revealed: boolean; // TODO: transient state
