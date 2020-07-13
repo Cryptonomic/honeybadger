@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {Linking, StyleSheet, TouchableOpacity} from 'react-native';
+import {Linking, StyleSheet, TouchableOpacity, Image} from 'react-native';
 import {Container, Text, View, Button} from 'native-base';
 import Modal from 'react-native-modal';
 
@@ -28,6 +28,7 @@ const DelegateAddress = ({navigation}: DelegateAddressProps) => {
 
     const [bakerName, setBakerName] = useState('');
     const [bakerFee, setBakerFee] = useState(0);
+    const [bakerLogoUrl, setBakerLogoUrl] = useState('');
 
     const dispatch = useDispatch();
 
@@ -41,6 +42,7 @@ const DelegateAddress = ({navigation}: DelegateAddressProps) => {
         const bakerDetails = await getBakerDetails(value);
         setBakerName(bakerDetails.name);
         setBakerFee(bakerDetails.fee);
+        setBakerLogoUrl(bakerDetails.logoUrl);
     };
 
     const goNextModalPage = () => {
@@ -98,11 +100,18 @@ const DelegateAddress = ({navigation}: DelegateAddressProps) => {
                 onValidAddress={onValidAddress}>
                     {bakerName.length > 0 && (
                         <View style={styles.bakerDetails}>
-                            <View style={styles.bakerRow}>
-                                <Text>{bakerName}</Text>
-                            </View>
-                            <View style={styles.bakerRow}>
-                                <Text>Fee {(bakerFee * 100).toFixed(2)}%</Text>
+                            <View style={{flexDirection: 'row', alignSelf: 'flex-start',}}>
+                                {bakerLogoUrl.length > 0 && (
+                                <Image source={{uri: bakerLogoUrl}} style={{width: 50, height: 50, margin: 10, justifyContent: 'center'}} />
+                                )}
+                                <View style={{justifyContent: 'center'}}>
+                                    <View style={styles.bakerRow}>
+                                        <Text>{bakerName}</Text>
+                                    </View>
+                                    <View style={styles.bakerRow}>
+                                        <Text>Fee {(bakerFee * 100).toFixed(2)}%</Text>
+                                    </View>
+                                </View>
                             </View>
                             <View style={{alignSelf: 'flex-end'}}>
                                 <TouchableOpacity onPress={() => Linking.openURL('https://baking-bad.org/')} style={{flexDirection: 'row'}}>

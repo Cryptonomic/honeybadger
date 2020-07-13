@@ -228,7 +228,7 @@ export const cancelDelegation = () => async (dispatch: Dispatch, getState: () =>
     }
 }
 
-export const getBakerDetails = async (address: string): Promise<{name: string, fee: number}> => { // TODO: needs return type
+export const getBakerDetails = async (address: string): Promise<{name: string, fee: number, logoUrl: string}> => { // TODO: needs return type
     try {
         const response = await fetch(`https://api.baking-bad.org/v2/bakers/${address}`);
         const responseJSON = await response.json();
@@ -255,9 +255,9 @@ export const getBakerDetails = async (address: string): Promise<{name: string, f
         stakingCapacity
         */
 
-        return {name: responseJSON.name, fee: responseJSON.fee};
+        return {name: responseJSON.name, fee: responseJSON.fee, logoUrl: responseJSON.logo || ''};
     } catch (e) {
         console.log('getBakerDetails', e);
     }
-    return {name: '', fee: 0};
+    return {name: '', fee: 0, logoUrl: ''};
 };
