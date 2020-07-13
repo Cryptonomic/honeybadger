@@ -21,7 +21,7 @@ const Delegation = ({onDelegate}: DelegationProps) => {
 
     return (
         <View style={styles.container}>
-            {!delegation && (
+            {delegation.length === 0 && (
                 <>
                     <DelegationIllustration />
                     <Text style={[styles.title, styles.typo1]}>
@@ -35,7 +35,7 @@ const Delegation = ({onDelegate}: DelegationProps) => {
                     </Button>
                 </>
             )}
-            {delegation && (
+            {delegation.length > 0 && (
                 <>
                     <View style={styles.delegationHeader}>
                         <View style={styles.dot} />
@@ -55,8 +55,7 @@ const Delegation = ({onDelegate}: DelegationProps) => {
                         <View style={styles.divider} />
                         <View style={styles.row}>
                             <Text style={styles.typo6}>Baker Service</Text>
-                            <Text
-                                style={[styles.paperTextMargin, styles.typo7]}>
+                            <Text style={[styles.paperTextMargin, styles.typo7]}>
                                 {truncateHash(delegation)}
                             </Text>
                         </View>
