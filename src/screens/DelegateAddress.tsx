@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {StyleSheet} from 'react-native';
 import {Container, Text, View, Button} from 'native-base';
 import Modal from 'react-native-modal';
@@ -11,6 +11,7 @@ import EnterAddress from '../components/EnterAddress';
 import {colors} from '../theme';
 
 import {DelegateAddressProps} from './types';
+import {State} from '../reducers/types';
 import CustomIcon from '../components/CustomIcon';
 
 const errorMessages = {
@@ -19,6 +20,7 @@ const errorMessages = {
 };
 
 const DelegateAddress = ({navigation}: DelegateAddressProps) => {
+    const delegation = useSelector((state: State) => state.app.delegation);
     const [isModal, setIsModal] = useState(false);
     const [modalPage, setModalPage] = useState(0);
     const dispatch = useDispatch();
@@ -49,8 +51,20 @@ const DelegateAddress = ({navigation}: DelegateAddressProps) => {
             btn: 'GotIt!',
         },
     ];
+    let headerTitle = 'Delegate';
+    let addressTitle = 'Enter Baker Address';
+    let nextTitle = 'Baker Address';
+
+    if (delegation.length > 0) {
+        headerTitle = 'Change Baker Service';
+        addressTitle = 'Enter New Baker Address';
+        nextTitle = 'Change Baker Address';
+    }
 
     useEffect(() => {
+        if (delegation.length > 0) {
+            return;
+        }
         setTimeout(() => {
             setIsModal(true);
         }, 500);
@@ -59,9 +73,9 @@ const DelegateAddress = ({navigation}: DelegateAddressProps) => {
     return (
         <Container style={styles.container}>
             <EnterAddress
-                headerTitle="Delegate"
-                addressTitle="Enter Baker Address"
-                nextTitle="Baker Address"
+                headerTitle={headerTitle}
+                addressTitle={addressTitle}
+                nextTitle={nextTitle}
                 errorMessages={errorMessages}
                 goBack={() => navigation.goBack()}
                 goNext={goNext}

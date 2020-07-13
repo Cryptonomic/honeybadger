@@ -12,6 +12,7 @@ interface ReviewProps {
     from: string;
     toTitle: string;
     to: string;
+    info?: string;
     onSend: () => void;
 }
 
@@ -20,6 +21,7 @@ const Review: FunctionComponent<ReviewProps> = ({
     from,
     toTitle,
     to,
+    info,
     children,
     onSend,
 }) => {
@@ -51,6 +53,11 @@ const Review: FunctionComponent<ReviewProps> = ({
             <Text style={[styles.address, styles.typo2]}>
                 {truncateHash(to)}
             </Text>
+            {info && (
+                <View style={styles.info}>
+                    <Text style={styles.infoText}>{info}</Text>
+                </View>
+            )}
             <View style={[styles.fee, styles.row]}>
                 {/*<Text style={styles.typo5}>
                         {`Operation Fee $${fee}`}
@@ -132,7 +139,7 @@ const styles = StyleSheet.create({
         marginTop: 23,
     },
     fee: {
-        marginTop: 58,
+        marginTop: 5,
     },
     feeCurrency: {
         marginLeft: 2,
@@ -145,6 +152,16 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         borderRadius: 30.5,
         backgroundColor: '#4b4b4b',
+    },
+    info: {
+        marginVertical: 20,
+        paddingVertical: 20,
+        borderTopWidth: 1,
+        borderBottomWidth: 1,
+        borderColor: '#979797',
+    },
+    infoText: {
+        textAlign: 'center',
     },
     typo1: {
         fontFamily: 'Roboto-Regular',

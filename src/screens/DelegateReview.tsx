@@ -18,11 +18,18 @@ const DelegateReview = ({navigation}: DelegateReviewProps) => {
         (state: State) => state.app.publicKeyHash,
     );
     const address = useSelector((state: State) => state.app.delegateAddress);
+    const delegation = useSelector((state: State) => state.app.delegation);
+    let info = '';
 
     const onSend = () => {
         dispatch(sendDelegation());
         navigation.replace('Account');
     };
+
+    if (delegation.length > 0) {
+        info =
+            'It will take about 35 days for you to stop earning returns from your current baker and start earning returns from your new baker.';
+    }
 
     return (
         <Container style={styles.container}>
@@ -36,6 +43,7 @@ const DelegateReview = ({navigation}: DelegateReviewProps) => {
                 from={publicKeyHash}
                 toTitle="To Baker’s Service"
                 to={address}
+                info={info}
                 onSend={onSend}>
                 <View style={styles.icon}>
                     <LinkIcon />

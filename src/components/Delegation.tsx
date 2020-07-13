@@ -17,7 +17,9 @@ interface DelegationProps {
 const Delegation = ({onDelegate}: DelegationProps) => {
     const delegation = useSelector((state: State) => state.app.delegation);
     const balance = useSelector((state: State) => state.app.balance);
-    const expectedPaymentDate = useSelector((state: State) => state.app.expectedPaymentDate);
+    const expectedPaymentDate = useSelector(
+        (state: State) => state.app.expectedPaymentDate,
+    );
 
     return (
         <View style={styles.container}>
@@ -40,29 +42,51 @@ const Delegation = ({onDelegate}: DelegationProps) => {
                     <View style={styles.delegationHeader}>
                         <View style={styles.dot} />
                         <Text style={styles.typo4}>Currently Delegating</Text>
+                        <Button transparent style={styles.edit} onPress={onDelegate}>
+                            {/* TODO: Add icon */}
+                            <View><Text>e</Text></View>
+                        </Button>
                     </View>
                     {/* <Text style={styles.typo5}>First payout in 35 days</Text> */}
                     <View style={styles.delegationPaper}>
                         <View style={styles.row}>
                             <Text style={styles.typo6}>Amount</Text>
-                            <View style={{alignItems: 'center', flexDirection: 'row'}}>
-                                <Text style={[styles.paperTextMargin, styles.typo7]}>
+                            <View
+                                style={{
+                                    alignItems: 'center',
+                                    flexDirection: 'row',
+                                }}>
+                                <Text
+                                    style={[
+                                        styles.paperTextMargin,
+                                        styles.typo7,
+                                    ]}>
                                     {formatAmount(balance)}
                                 </Text>
-                                <CustomIcon name="XTZ" size={16} color="#343434" style={{marginTop: 10}} />
+                                <CustomIcon
+                                    name="XTZ"
+                                    size={16}
+                                    color="#343434"
+                                    style={{marginTop: 10}}
+                                />
                             </View>
                         </View>
                         <View style={styles.divider} />
                         <View style={styles.row}>
                             <Text style={styles.typo6}>Baker Service</Text>
-                            <Text style={[styles.paperTextMargin, styles.typo7]}>
+                            <Text
+                                style={[styles.paperTextMargin, styles.typo7]}>
                                 {truncateHash(delegation)}
                             </Text>
                         </View>
                     </View>
                     <View style={styles.delegationDate}>
                         <Text style={styles.typo6}>
-                            Next payment expected on {moment.utc(new Date(expectedPaymentDate)).local().format("MMM D, HH:mm")}
+                            Next payment expected on{' '}
+                            {moment
+                                .utc(new Date(expectedPaymentDate))
+                                .local()
+                                .format('MMM D, HH:mm')}
                         </Text>
                     </View>
                 </>
@@ -85,6 +109,8 @@ const styles = StyleSheet.create({
     delegationHeader: {
         flexDirection: 'row',
         alignItems: 'center',
+        justifyContent: 'center',
+        width: '100%',
     },
     delegationPaper: {
         marginTop: 25,
@@ -124,6 +150,17 @@ const styles = StyleSheet.create({
         height: 50,
         borderRadius: 25,
         backgroundColor: '#4b4b4b',
+        justifyContent: 'center',
+    },
+    edit: {
+        width: 40,
+        height: 40,
+        borderColor: '#dbe7fc',
+        borderWidth: 1,
+        borderRadius: 20,
+        position: 'absolute',
+        right: 0,
+        alignItems: 'center',
         justifyContent: 'center',
     },
     typo1: {
