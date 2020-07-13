@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, FunctionComponent} from 'react';
 import {StyleSheet, Clipboard} from 'react-native';
 import {Text, View, Input, Item, Button, Icon} from 'native-base';
 import {RNCamera} from 'react-native-camera';
@@ -18,15 +18,16 @@ interface EnterAddressProps {
     onValidAddress: (value: string) => void;
 }
 
-const EnterAddress = ({
+const EnterAddress: FunctionComponent<EnterAddressProps> = ({
     headerTitle,
     addressTitle,
     nextTitle,
     errorMessages,
+    children,
     goBack,
     goNext,
     onValidAddress,
-}: EnterAddressProps) => {
+}) => {
     const [isValid, setIsValid] = useState(false);
     const [isError, setIsError] = useState(false);
     const [address, setAddress] = useState('');
@@ -101,6 +102,7 @@ const EnterAddress = ({
                             />
                         </Item>
                     </View>
+                    {children}
                     {isError && (
                         <View style={styles.error}>
                             <View style={styles.errorTitle}>

@@ -5,6 +5,7 @@ import {Container, Text, View, Button} from 'native-base';
 import Modal from 'react-native-modal';
 
 import {setDelegateAddress} from '../reducers/app/actions';
+import {cancelDelegation} from '../reducers/app/thunks';
 import DelegateFirstIllustration from '../../assets/vault-illustration.svg';
 import DelegateSecondIllustration from '../../assets/wallet-illustration.svg';
 import EnterAddress from '../components/EnterAddress';
@@ -22,6 +23,7 @@ const errorMessages = {
 const DelegateAddress = ({navigation}: DelegateAddressProps) => {
     const delegation = useSelector((state: State) => state.app.delegation);
     const [isModal, setIsModal] = useState(false);
+    const [isUndelegateModal, setIsUndelegateModal] = useState(false);
     const [modalPage, setModalPage] = useState(0);
     const dispatch = useDispatch();
     const goNext = () => {
@@ -38,6 +40,12 @@ const DelegateAddress = ({navigation}: DelegateAddressProps) => {
 
         setModalPage(1);
     };
+    const onUndelegateConfirmation = () => setIsUndelegateModal(true);
+    const onCancelUndelegate = () => setIsUndelegateModal(false);
+    const onUndlegate = () => {
+        setIsUndelegateModal(false);
+        dispatch(cancelDelegation());
+    }
     const modal = [
         {
             title: 'When you delegate, your funds stay in your control.',
@@ -79,8 +87,37 @@ const DelegateAddress = ({navigation}: DelegateAddressProps) => {
                 errorMessages={errorMessages}
                 goBack={() => navigation.goBack()}
                 goNext={goNext}
-                onValidAddress={onValidAddress}
-            />
+                onValidAddress={onValidAddress}>
+                {delegation.length && (
+                    <View style={styles.undelegate}>
+                        <Text
+                            style={styles.undelegateText}
+                            onPress={onUndelegateConfirmation}>
+                            Undelegate
+                        </Text>
+                    </View>
+                )}
+            </EnterAddress>
+            <Modal isVisible={isUndelegateModal} style={styles.modal}>
+                <View style={styles.undelegateModalContent}>
+                    <Text style={styles.typo1}>Undelegate Confirmation</Text>
+                    <View style={styles.undelegateActions}>
+                        <Button transparent style={styles.btn} onPress={onCancelUndelegate}>
+                            <View>
+                                <Text style={[styles.btnEndText, styles.btnNext]}>Cancel</Text>
+                            </View>
+                        </Button>
+                        <Button
+                            transparent
+                            style={[styles.btn, styles.btnEnd]}
+                            onPress={onUndlegate}>
+                            <View>
+                                <Text style={styles.btnEndText}>Undelegate</Text>
+                            </View>
+                        </Button>
+                    </View>
+                </View>
+            </Modal>
             <Modal
                 isVisible={isModal}
                 style={styles.modal}
@@ -216,6 +253,34 @@ const styles = StyleSheet.create({
         fontSize: 17,
         fontWeight: '500',
         letterSpacing: 0.85,
+    },
+    undelegate: {
+        marginTop: 30,
+        alignItems: 'center',
+    },
+    undelegateText: {
+        textDecorationLine: 'underline',
+        fontFamily: 'Roboto-Regular',
+        fontSize: 14,
+    },
+    undelegateModalContent: {
+        backgroundColor: '#ffffff',
+        height: '35%',
+        marginTop: 'auto',
+        borderTopLeftRadius: 26,
+        borderTopRightRadius: 26,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    undelegateActions: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginTop: 75,
+        width: '100%',
+        paddingHorizontal: 30,
+    },
+    undelegateCancelText: {
+        color: '#4b4b4b'
     },
     typo1: {
         fontFamily: 'Roboto-Medium',

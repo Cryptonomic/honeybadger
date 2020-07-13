@@ -203,3 +203,27 @@ export const sendDelegation = () => async (
         console.log('error-delegation', e);
     }
 };
+
+export const cancelDelegation = () => async (dispatch: Dispatch, getState: () => State) => {
+    try {
+        const tezosUrl = config[0].nodeUrl; // TODO: getState().config
+        const secretKey = getState().app.secretKey;
+        const isRevealed = getState().app.revealed;
+        const keyStore = await KeyStoreUtils.restoreIdentityFromSecretKey(
+            secretKey,
+        );
+        const signer = new SoftSigner(
+            TezosMessageUtils.writeKeyWithHint(keyStore.secretKey, 'edsk'),
+        );
+
+        await TezosNodeWriter.sendDelegationOperation(
+            tezosUrl,
+            signer,
+            keyStore,
+            undefined,
+            isRevealed ? 1423 : 1423 + 1300,
+        );
+    } catch(e) {
+        console.log('error-cancel-delegation');
+    }
+}

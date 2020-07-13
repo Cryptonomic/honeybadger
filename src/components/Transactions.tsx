@@ -14,6 +14,7 @@ import config from '../config';
 const Transactions = () => {
     const transactions = useSelector((state: State) => state.app.transactions);
     const publicHashKey = useSelector((state: State) => state.app.publicKeyHash);
+    console.log('TRANS', transactions)
 
     const onTransactionPress = (opGroupHash: string) => {
         Linking.openURL(`${config[0].explorerUrl}/${opGroupHash}`);
@@ -47,8 +48,8 @@ const Transactions = () => {
             }
         } else if (t.kind === 'delegation') {
             iconName = 'Back-Arrow'; // TODO
-            action = 'Delegated'
-            preposition = 'to';
+            action = t.delegate ? 'Delegated' : 'Delegation Canceled'
+            preposition = t.delegate ? 'to' : '';
             address = truncateHash(t.delegate) || '';
             amount = '';
             amountDirection = 0;
@@ -90,11 +91,11 @@ const Transactions = () => {
                                             {' '}{t.preposition}
                                         </Text>
                                     </View>
-                                    <View style={styles.subtitle}>
+                                    {t.preposition.length > 0 && <View style={styles.subtitle}>
                                         <Text style={styles.typo3}>
                                             {t.address}
                                         </Text>
-                                    </View>
+                                    </View>}
                                 </View>
                                 <View style={styles.right}>
                                     {t.amountDirection !== 0 && (
