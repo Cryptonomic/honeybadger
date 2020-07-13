@@ -88,7 +88,7 @@ const DelegateAddress = ({navigation}: DelegateAddressProps) => {
                 goBack={() => navigation.goBack()}
                 goNext={goNext}
                 onValidAddress={onValidAddress}>
-                {delegation.length && (
+                {delegation.length > 0 && (
                     <View style={styles.undelegate}>
                         <Text
                             style={styles.undelegateText}
