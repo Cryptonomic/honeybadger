@@ -12,6 +12,7 @@ import {Dispatch} from 'redux';
 import config from '../../config';
 import {KeyStoreUtils, SoftSigner} from '../../softsigner';
 
+import constants from '../utils/constants.json';
 import {State} from '../types';
 
 import {
@@ -175,7 +176,7 @@ export const sendTransaction = () => async (
             keyStore,
             address,
             amount,
-            isRevealed ? 1423 : 1423 + 1300, // TODO
+            isRevealed ? constants.fees.simpleTransaction : constants.fees.simpleTransaction + constants.fees.reveal,
         );
     } catch (e) {
         console.log('error-transaction', e);
@@ -203,7 +204,7 @@ export const sendDelegation = () => async (
             signer,
             keyStore,
             address,
-            isRevealed ? 1164 : 1164 + 1300,
+            isRevealed ? constants.fees.delegation : constants.fees.delegation + constants.fees.reveal,
         );
     } catch (e) {
         console.log('error-delegation', e);
@@ -222,7 +223,7 @@ export const cancelDelegation = () => async (dispatch: Dispatch, getState: () =>
             TezosMessageUtils.writeKeyWithHint(keyStore.secretKey, 'edsk'),
         );
 
-        await TezosNodeWriter.sendDelegationOperation(tezosUrl, signer, keyStore, undefined, 1164);
+        await TezosNodeWriter.sendDelegationOperation(tezosUrl, signer, keyStore, undefined, constants.fees.clearDelegation);
     } catch(e) {
         console.log('error-cancel-delegation');
     }

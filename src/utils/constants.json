@@ -1,8 +1,9 @@
 {
     "fees": {
         "delegation": 1163,
-        "simpleTransaction": 1420,
-        "reveal": 1300
+        "clearDelegation": 1238,
+        "simpleTransaction": 1421,
+        "reveal": 1301
     },
     "errors": {
         "implicitAddressValidation": {

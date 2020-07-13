@@ -109,7 +109,7 @@ const DelegateAddress = ({navigation}: DelegateAddressProps) => {
                                         <Text>{bakerName}</Text>
                                     </View>
                                     <View style={styles.bakerRow}>
-                                        <Text>Fee {(bakerFee * 100).toFixed(2)}%</Text>
+                                        <Text>Fee: {(bakerFee * 100).toFixed(2)}%</Text>
                                     </View>
                                 </View>
                             </View>
