@@ -3,15 +3,19 @@ import {useSelector} from 'react-redux';
 import {StyleSheet} from 'react-native';
 import {Text, View, Button} from 'native-base';
 
+import {formatAmount, utezToTez} from '../utils/currency';
 import CustomIcon from '../components/CustomIcon';
 import {truncateHash} from '../utils/general';
 import {State} from '../reducers/types';
+import constants from '../utils/constants.json';
 
 interface ReviewProps {
     fromTitle: string;
     from: string;
     toTitle: string;
     to: string;
+    fee: number;
+    actionTitle: string;
     info?: string;
     onSend: () => void;
 }
@@ -21,14 +25,16 @@ const Review: FunctionComponent<ReviewProps> = ({
     from,
     toTitle,
     to,
+    fee,
+    actionTitle,
     info = '',
     children,
     onSend,
 }) => {
     const isRevealed = useSelector((state: State) => state.app.revealed);
-    const [currency] = useState(0);
-    const [fee] = useState(0.02); // TODO
-    const [feeCurrency] = useState(0.001423); // TODO
+    //const [currency] = useState(0);
+    //const [fee] = useState(0.02); // TODO
+    //const [feeCurrency] = useState(0.001423); // TODO
 
     // TODO: if TezosNodeReader.isImplicitAndEmpty show a note on burn
 
@@ -63,16 +69,13 @@ const Review: FunctionComponent<ReviewProps> = ({
                         {`Operation Fee $${fee}`}
                     </Text>*/}
                 <View style={[styles.row, styles.feeCurrency]}>
-                    <Text>{`Operation Fee ${
-                        isRevealed
-                            ? feeCurrency
-                            : (feeCurrency + 0.0013).toFixed(3) /* TODO */
+                    <Text>{`Operation Fee ${isRevealed ? formatAmount(fee) : (utezToTez(fee) + utezToTez(constants.fees.reveal)).toFixed(3) /* TODO */
                     }`}</Text>
                     <CustomIcon name="XTZ" size={14} />
                 </View>
             </View>
             <Button style={styles.button} onPress={onSend}>
-                <Text>Tap to Send</Text>
+                <Text>{actionTitle}</Text>
             </Button>
         </View>
     );

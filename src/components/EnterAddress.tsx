@@ -12,7 +12,7 @@ interface EnterAddressProps {
     headerTitle: string;
     addressTitle: string;
     nextTitle: string;
-    errorMessages: Record<'start' | 'short', string>;
+    errorMessages: Record<'start' | 'length', string>;
     goBack: () => void;
     goNext: () => void;
     onValidAddress: (value: string) => void;
@@ -30,37 +30,43 @@ const EnterAddress: FunctionComponent<EnterAddressProps> = ({
 }) => {
     const [isValid, setIsValid] = useState(false);
     const [isError, setIsError] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
     const [address, setAddress] = useState('');
     const [showCamera, setShowCamera] = useState(false);
-    const onEnterAddress = (value: string) => {
+
+    const onAddressTextChange = (value: string) => {
         setAddress(value);
 
         if (value.length >= 2 && !value.includes('tz', 0)) {
             setIsError(true);
+            setErrorMessage(errorMessages['start']);
             return;
         }
 
-        if (value.length >= 36) {
+        if (value.length === 36) {
             onValidAddress(value);
             setIsValid(true);
             setIsError(false);
+            setErrorMessage('');
             return;
         }
 
-        if (value.length < 36) {
+        if (value.length < 36 || value.length > 36) {
             setIsValid(false);
+            setIsError(true);
+            setErrorMessage(errorMessages['length']);
         }
 
         // TODO: if TezosNodeReader.isImplicitAndEmpty show a warning
     };
     const onPasteAddress = async () => {
         const copiedMessage = await Clipboard.getString();
-        onEnterAddress(copiedMessage);
+        onAddressTextChange(copiedMessage);
     };
     const onScanQrCode = () => setShowCamera(true);
     const onBarcodeRecognized = ({data}: {data: string}) => {
         if (data && data.length) {
-            onEnterAddress(data);
+            onAddressTextChange(data);
             setShowCamera(false);
         }
     };
@@ -93,7 +99,7 @@ const EnterAddress: FunctionComponent<EnterAddressProps> = ({
                             <Input
                                 placeholder="e.g tz1…"
                                 style={styles.input}
-                                onChangeText={onEnterAddress}
+                                onChangeText={onAddressTextChange}
                                 value={address}
                                 autoCompleteType="off"
                                 autoCorrect={false}
@@ -117,7 +123,7 @@ const EnterAddress: FunctionComponent<EnterAddressProps> = ({
                             </View>
                             <View style={styles.errorText}>
                                 <Text style={styles.typo4}>
-                                    {errorMessages.start}
+                                    {errorMessage}
                                 </Text>
                             </View>
                         </View>

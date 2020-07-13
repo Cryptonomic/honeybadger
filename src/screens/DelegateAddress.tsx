@@ -1,11 +1,11 @@
 import React, {useState, useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {StyleSheet} from 'react-native';
+import {Linking, StyleSheet, TouchableOpacity} from 'react-native';
 import {Container, Text, View, Button} from 'native-base';
 import Modal from 'react-native-modal';
 
 import {setDelegateAddress} from '../reducers/app/actions';
-import {cancelDelegation} from '../reducers/app/thunks';
+import {cancelDelegation, getBakerDetails} from '../reducers/app/thunks';
 import DelegateFirstIllustration from '../../assets/vault-illustration.svg';
 import DelegateSecondIllustration from '../../assets/wallet-illustration.svg';
 import EnterAddress from '../components/EnterAddress';
@@ -16,8 +16,8 @@ import {State} from '../reducers/types';
 import CustomIcon from '../components/CustomIcon';
 
 const errorMessages = {
-    start: 'Tezos Address start wtih tz',
-    short: 'This address is too short. Tezos Addresses are 42 characters long.',
+    start: 'Tezos addresses start with tz',
+    length: 'Tezos addresses are 36 characters long.',
 };
 
 const DelegateAddress = ({navigation}: DelegateAddressProps) => {
@@ -25,13 +25,24 @@ const DelegateAddress = ({navigation}: DelegateAddressProps) => {
     const [isModal, setIsModal] = useState(false);
     const [isUndelegateModal, setIsUndelegateModal] = useState(false);
     const [modalPage, setModalPage] = useState(0);
+
+    const [bakerName, setBakerName] = useState('');
+    const [bakerFee, setBakerFee] = useState(0);
+
     const dispatch = useDispatch();
+
     const goNext = () => {
         navigation.navigate('DelegateReview');
     };
-    const onValidAddress = (value: string) => {
+
+    const onValidAddress = async (value: string) => {
         dispatch(setDelegateAddress(value));
+
+        const bakerDetails = await getBakerDetails(value);
+        setBakerName(bakerDetails.name);
+        setBakerFee(bakerDetails.fee);
     };
+
     const goNextModalPage = () => {
         if (modalPage === 1) {
             setIsModal(false);
@@ -42,23 +53,24 @@ const DelegateAddress = ({navigation}: DelegateAddressProps) => {
     };
     const onUndelegateConfirmation = () => setIsUndelegateModal(true);
     const onCancelUndelegate = () => setIsUndelegateModal(false);
-    const onUndlegate = () => {
+    const onUndelegate = () => {
         setIsUndelegateModal(false);
         dispatch(cancelDelegation());
+        navigation.navigate('Account');
     }
     const modal = [
         {
-            title: 'When you delegate, your funds stay in your control.',
-            subtitle: 'A baker cannot run away with your XTZ.',
+            title: 'Stake and keep control of your funds',
+            subtitle: 'Bakers do not have access to delegated balances.',
             btn: 'Next',
         },
         {
             title: 'There is no lock-up period',
-            subtitle:
-                'You are free to transfer funds in and out of your account.',
-            btn: 'GotIt!',
+            subtitle: 'You are free to transfer funds in and out of your account.',
+            btn: 'Got It!',
         },
     ];
+
     let headerTitle = 'Delegate';
     let addressTitle = 'Enter Baker Address';
     let nextTitle = 'Baker Address';
@@ -70,12 +82,8 @@ const DelegateAddress = ({navigation}: DelegateAddressProps) => {
     }
 
     useEffect(() => {
-        if (delegation.length > 0) {
-            return;
-        }
-        setTimeout(() => {
-            setIsModal(true);
-        }, 500);
+        if (delegation.length > 0) { return; }
+        setTimeout(() => { setIsModal(true); }, 500);
     }, []);
 
     return (
@@ -88,19 +96,32 @@ const DelegateAddress = ({navigation}: DelegateAddressProps) => {
                 goBack={() => navigation.goBack()}
                 goNext={goNext}
                 onValidAddress={onValidAddress}>
-                {delegation.length > 0 && (
-                    <View style={styles.undelegate}>
-                        <Text
-                            style={styles.undelegateText}
-                            onPress={onUndelegateConfirmation}>
-                            Undelegate
-                        </Text>
-                    </View>
-                )}
+                    {bakerName.length > 0 && (
+                        <View style={styles.bakerDetails}>
+                            <View style={styles.bakerRow}>
+                                <Text>{bakerName}</Text>
+                            </View>
+                            <View style={styles.bakerRow}>
+                                <Text>Fee {(bakerFee * 100).toFixed(2)}%</Text>
+                            </View>
+                            <View style={{alignSelf: 'flex-end'}}>
+                                <TouchableOpacity onPress={() => Linking.openURL('https://baking-bad.org/')} style={{flexDirection: 'row'}}>
+                                    <Text>Data from </Text><Text style={{textDecorationLine: 'underline'}}>BakingBad</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                    )}
+                    {delegation.length > 0 && (
+                        <View style={styles.undelegate}>
+                            <Text style={styles.undelegateText} onPress={onUndelegateConfirmation}>
+                                Undelegate
+                            </Text>
+                        </View>
+                    )}
             </EnterAddress>
             <Modal isVisible={isUndelegateModal} style={styles.modal}>
                 <View style={styles.undelegateModalContent}>
-                    <Text style={styles.typo1}>Undelegate Confirmation</Text>
+                    <Text style={styles.typo1}>Terminate Delegation</Text>
                     <View style={styles.undelegateActions}>
                         <Button transparent style={styles.btn} onPress={onCancelUndelegate}>
                             <View>
@@ -110,9 +131,9 @@ const DelegateAddress = ({navigation}: DelegateAddressProps) => {
                         <Button
                             transparent
                             style={[styles.btn, styles.btnEnd]}
-                            onPress={onUndlegate}>
+                            onPress={onUndelegate}>
                             <View>
-                                <Text style={styles.btnEndText}>Undelegate</Text>
+                                <Text style={styles.btnEndText}>Confirm</Text>
                             </View>
                         </Button>
                     </View>
@@ -183,6 +204,20 @@ const DelegateAddress = ({navigation}: DelegateAddressProps) => {
 };
 
 const styles = StyleSheet.create({
+    bakerDetails: {
+        width: '80%',
+        margin: 25,
+        flexDirection: 'column',
+        borderStyle: 'solid',
+        alignItems: 'center',
+        backgroundColor: 'white',
+        alignSelf: 'center',
+        borderRadius: 15.5,
+        padding: 12,
+    },
+    bakerRow: {
+        alignSelf: 'flex-start',
+    },
     container: {
         backgroundColor: colors.bg,
     },

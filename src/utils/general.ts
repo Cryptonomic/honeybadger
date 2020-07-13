@@ -1,5 +1,5 @@
 export const truncateHash = (value) => {
-    if (Number(value)) {
+    if (Number(value)) { // TODO: this should never happen
         return value;
     }
     if (!value || value.length < 6) {

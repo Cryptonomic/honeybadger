@@ -10,6 +10,7 @@ import CustomIcon from '../components/CustomIcon';
 import {formatAmount} from '../utils/currency';
 import {colors} from '../theme';
 import {State} from '../reducers/types';
+import constants from '../utils/constants.json';
 
 import {SendReviewProps} from './types';
 
@@ -38,6 +39,8 @@ const SendReview = ({navigation}: SendReviewProps) => {
                 from={publicKeyHash}
                 toTitle="To Recipient"
                 to={address}
+                fee={constants.fees.simpleTransaction}
+                actionTitle="Tap to Send"
                 onSend={onSend}>
                 <Text style={styles.reviewAmountTitle}>Amount</Text>
                 <View style={styles.reviewAmount}>

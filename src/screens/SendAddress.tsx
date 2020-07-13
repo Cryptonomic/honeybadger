@@ -12,8 +12,8 @@ import {State, Operation} from '../reducers/types';
 import {SendAddressProps} from './types';
 
 const errorMessages = {
-    start: 'Tezos Address start wtih tz',
-    short: 'This address is too short. Tezos Addresses are 42 characters long.',
+    start: 'Tezos address start with tz',
+    length: 'This address is too short. Tezos addresses are 36 characters long.',
 };
 
 const SendAddress = ({navigation}: SendAddressProps) => {

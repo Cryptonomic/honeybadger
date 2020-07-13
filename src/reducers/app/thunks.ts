@@ -197,7 +197,7 @@ export const sendDelegation = () => async (
             signer,
             keyStore,
             address,
-            isRevealed ? 1423 : 1423 + 1300,
+            isRevealed ? 1164 : 1164 + 1300,
         );
     } catch (e) {
         console.log('error-delegation', e);
@@ -216,14 +216,42 @@ export const cancelDelegation = () => async (dispatch: Dispatch, getState: () =>
             TezosMessageUtils.writeKeyWithHint(keyStore.secretKey, 'edsk'),
         );
 
-        await TezosNodeWriter.sendDelegationOperation(
-            tezosUrl,
-            signer,
-            keyStore,
-            undefined,
-            isRevealed ? 1423 : 1423 + 1300,
-        );
+        await TezosNodeWriter.sendDelegationOperation(tezosUrl, signer, keyStore, undefined, 1164);
     } catch(e) {
         console.log('error-cancel-delegation');
     }
 }
+
+export const getBakerDetails = async (address: string): Promise<{name: string, fee: number}> => { // TODO: needs return type
+    try {
+        const response = await fetch(`https://api.baking-bad.org/v2/bakers/${address}`);
+        const responseJSON = await response.json();
+        /*
+        address: "tz1W5VkdB5s7ENMESVBtwyt9kyvLqPcUczRT"
+        audit: "5ee0c01a5e0a85c68fb18c90"
+        balance: 855823.515106
+        estimatedRoi: 0.059174
+        fee: 0.0499
+        freeSpace: 762587.1057459991
+        insuranceCoverage: 2.97
+        logo: "https://services.tzkt.io/v1/logos/tezgate.png"
+        maxStakingBalance: 9181010.777211
+        minDelegation: 100
+        name: "Tezgate"
+        openForDelegation: true
+        payoutAccuracy: "precise"
+        payoutDelay: 1
+        payoutPeriod: 1
+        payoutTiming: "stable"
+        serviceHealth: "active"
+        serviceType: "tezos_only"
+        stakingBalance: 8418423.671465
+        stakingCapacity
+        */
+
+        return {name: responseJSON.name, fee: responseJSON.fee};
+    } catch (e) {
+        console.log('getBakerDetails', e);
+    }
+    return {name: '', fee: 0};
+};

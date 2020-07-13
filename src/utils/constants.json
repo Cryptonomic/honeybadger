@@ -1,0 +1,13 @@
+{
+    "fees": {
+        "delegation": 1163,
+        "simpleTransaction": 1420,
+        "reveal": 1300
+    },
+    "errors": {
+        "implicitAddressValidation": {
+            "start": "",
+            "length": ""
+        }
+    }
+}
