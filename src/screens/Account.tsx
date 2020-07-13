@@ -429,16 +429,3 @@ const styles = StyleSheet.create({
 });
 
 export default Account;
-
-/*
-
-
-width: 63px;
-height: 19px;
-color: rgb(13, 13, 13);
-font-size: 16px;
-font-family: Roboto-Light;
-font-weight: 300;
-letter-spacing: 0.67px;
-
-*/
