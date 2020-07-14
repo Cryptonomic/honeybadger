@@ -23,6 +23,7 @@ const Delegation = ({onDelegate}: DelegationProps) => {
 
     return (
         <View style={styles.container}>
+            {/* TODO: need something for not currently delegating, but delegation cancellation is < 5 cycles old */}
             {delegation.length === 0 && (
                 <>
                     <DelegationIllustration />
@@ -42,9 +43,11 @@ const Delegation = ({onDelegate}: DelegationProps) => {
                     <View style={styles.delegationHeader}>
                         <View style={styles.dot} />
                         <Text style={styles.typo4}>Currently Delegating</Text>
-                        <Button transparent style={styles.edit} onPress={onDelegate}>
-                            {/* TODO: Add icon */}
-                            <View><Text>e</Text></View>
+                        <Button
+                            transparent
+                            style={styles.edit}
+                            onPress={onDelegate}>
+                            <CustomIcon name="Edit" color="#4b4b4b"/>
                         </Button>
                     </View>
                     {/* <Text style={styles.typo5}>First payout in 35 days</Text> */}

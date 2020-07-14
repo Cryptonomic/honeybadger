@@ -12,7 +12,10 @@ import {Dispatch} from 'redux';
 import config from '../../config';
 import {KeyStoreUtils, SoftSigner} from '../../softsigner';
 
+import constants from '../../utils/constants.json';
 import {State} from '../types';
+
+import {BakerInfo} from '../types';
 
 import {
     setBalanceAction,
@@ -30,8 +33,14 @@ export const syncAccount = () => async (
         const publicKeyHash = getState().app.publicKeyHash;
 
         try {
-            const {balance, delegate} = await getAccountInfo(publicKeyHash);
+            let {balance, delegate} = await getAccountInfo(publicKeyHash);
             dispatch(setBalanceAction(balance));
+
+            if (delegate.length > 0) { // TODO: query once per session
+                const bakerDetails = await getBakerDetails(delegate);
+                if (bakerDetails.name.length > 0) { delegate = bakerDetails.name; }
+            }
+
             dispatch(setDelegation(delegate));
 
             const {expectedPaymentDate} = await getLastDelegation(publicKeyHash);
@@ -169,7 +178,7 @@ export const sendTransaction = () => async (
             keyStore,
             address,
             amount,
-            isRevealed ? 1423 : 1423 + 1300, // TODO
+            isRevealed ? constants.fees.simpleTransaction : constants.fees.simpleTransaction + constants.fees.reveal,
         );
         dispatch(getPendingTransaction());
     } catch (e) {
@@ -198,7 +207,7 @@ export const sendDelegation = () => async (
             signer,
             keyStore,
             address,
-            isRevealed ? 1423 : 1423 + 1300,
+            isRevealed ? constants.fees.delegation : constants.fees.delegation + constants.fees.reveal,
         );
     } catch (e) {
         console.log('error-delegation', e);
@@ -217,13 +226,7 @@ export const cancelDelegation = () => async (dispatch: Dispatch, getState: () =>
             TezosMessageUtils.writeKeyWithHint(keyStore.secretKey, 'edsk'),
         );
 
-        await TezosNodeWriter.sendDelegationOperation(
-            tezosUrl,
-            signer,
-            keyStore,
-            undefined,
-            isRevealed ? 1423 : 1423 + 1300,
-        );
+        await TezosNodeWriter.sendDelegationOperation(tezosUrl, signer, keyStore, undefined, constants.fees.clearDelegation);
     } catch(e) {
         console.log('error-cancel-delegation');
     }
@@ -267,3 +270,61 @@ export const getPendingTransaction = () => async (dispatch: Dispatch, getState: 
         console.log('error-pending-transactions', e);
     }
 }
+export const validateBakerAddress = async (address: string) => {
+    if (!(['tz1', 'tz2', 'tz3'].includes(address.substring(0, 3)))) {
+        throw new Error('Baker address must start with tz1, tz2 or tz3');
+    }
+
+    if (address.match(/[^1-9A-HJ-NP-Za-km-z]/)) {
+        throw new Error('Address contains invalid characters');
+    }
+
+    if (address.length < 36) {
+        throw new Error('Address too short');
+    }
+
+    if (address.length > 36) {
+        throw new Error('Address too long');
+    }
+
+    /*try { // TODO: for some reason this dies
+        const account = await TezosNodeReader.getAccountForBlock(config[0].nodeUrl, 'head', address);
+        if (account.balance) { throw new Error('Address not found on chain'); }
+    } catch (err) {
+        throw new Error('Could not query chain for address');
+    }*/
+}
+
+export const getBakerDetails = async (address: string): Promise<BakerInfo> => { // TODO: needs return type
+    try {
+        const response = await fetch(`https://api.baking-bad.org/v2/bakers/${address}`);
+        const responseJSON = await response.json();
+        /*
+        address: "tz1W5VkdB5s7ENMESVBtwyt9kyvLqPcUczRT"
+        audit: "5ee0c01a5e0a85c68fb18c90"
+        balance: 855823.515106
+        estimatedRoi: 0.059174
+        fee: 0.0499
+        freeSpace: 762587.1057459991
+        insuranceCoverage: 2.97
+        logo: "https://services.tzkt.io/v1/logos/tezgate.png"
+        maxStakingBalance: 9181010.777211
+        minDelegation: 100
+        name: "Tezgate"
+        openForDelegation: true
+        payoutAccuracy: "precise"
+        payoutDelay: 1
+        payoutPeriod: 1
+        payoutTiming: "stable"
+        serviceHealth: "active"
+        serviceType: "tezos_only"
+        stakingBalance: 8418423.671465
+        stakingCapacity
+        */
+
+        return {address, name: responseJSON.name, fee: responseJSON.fee, logoUrl: responseJSON.logo || '', estimatedRoi: responseJSON.estimatedRoi};
+    } catch (e) {
+        console.log('getBakerDetails', e);
+    }
+    return {address, name: '', fee: 0, logoUrl: '', estimatedRoi: 0};
+};

@@ -3,13 +3,15 @@ import {useSelector, useDispatch} from 'react-redux';
 import {StyleSheet} from 'react-native';
 import {Container, View} from 'native-base';
 
+import LinkIcon from '../../assets/link-icon.svg';
+
 import {sendDelegation} from '../reducers/app/thunks';
 import Review from '../components/Review';
 import CustomHeader from '../components/CustomHeader';
-import {colors} from '../theme';
-import LinkIcon from '../../assets/link-icon.svg';
-
 import {State} from '../reducers/types';
+import {colors} from '../theme';
+import constants from '../utils/constants.json';
+
 import {DelegateReviewProps} from './types';
 
 const DelegateReview = ({navigation}: DelegateReviewProps) => {
@@ -27,8 +29,7 @@ const DelegateReview = ({navigation}: DelegateReviewProps) => {
     };
 
     if (delegation.length > 0) {
-        info =
-            'It will take about 35 days for you to stop earning returns from your current baker and start earning returns from your new baker.';
+        info = 'Deposits from the new baker should start in about 35 days';
     }
 
     return (
@@ -43,6 +44,8 @@ const DelegateReview = ({navigation}: DelegateReviewProps) => {
                 from={publicKeyHash}
                 toTitle="To Baker’s Service"
                 to={address}
+                fee={constants.fees.delegation}
+                actionTitle="Tap to Delegate"
                 info={info}
                 onSend={onSend}>
                 <View style={styles.icon}>

@@ -46,7 +46,7 @@ const Transactions = () => {
                 amountDirection = -1;
             }
         } else if (t.kind === 'delegation') {
-            iconName = 'Back-Arrow'; // TODO
+            iconName = t.delegate ? 'Link' : 'Unlink';
             action = t.delegate ? 'Delegated' : 'Delegation Canceled'
             preposition = t.delegate ? 'to' : '';
             address = truncateHash(t.delegate) || '';

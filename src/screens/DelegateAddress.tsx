@@ -1,37 +1,61 @@
 import React, {useState, useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {StyleSheet} from 'react-native';
+import {Linking, StyleSheet, TouchableOpacity, Image} from 'react-native';
 import {Container, Text, View, Button} from 'native-base';
 import Modal from 'react-native-modal';
 
 import {setDelegateAddress} from '../reducers/app/actions';
-import {cancelDelegation} from '../reducers/app/thunks';
+import {cancelDelegation, getBakerDetails, validateBakerAddress} from '../reducers/app/thunks';
 import DelegateFirstIllustration from '../../assets/vault-illustration.svg';
 import DelegateSecondIllustration from '../../assets/wallet-illustration.svg';
 import EnterAddress from '../components/EnterAddress';
 import {colors} from '../theme';
+import {truncateHash} from '../utils/general';
 
 import {DelegateAddressProps} from './types';
 import {State} from '../reducers/types';
 import CustomIcon from '../components/CustomIcon';
-
-const errorMessages = {
-    start: 'Tezos Address start wtih tz',
-    short: 'This address is too short. Tezos Addresses are 42 characters long.',
-};
 
 const DelegateAddress = ({navigation}: DelegateAddressProps) => {
     const delegation = useSelector((state: State) => state.app.delegation);
     const [isModal, setIsModal] = useState(false);
     const [isUndelegateModal, setIsUndelegateModal] = useState(false);
     const [modalPage, setModalPage] = useState(0);
+
+    const [isValidAddress, setValidAddress] = useState(false);
+    const [bakerName, setBakerName] = useState(''); // TODO: use a single structure
+    const [bakerAddress, setBakerAddress] = useState('');
+    const [bakerFee, setBakerFee] = useState(0);
+    const [bakerLogoUrl, setBakerLogoUrl] = useState('');
+    const [bakerEstRoi, setBakerEstRoi] = useState(0);
+
     const dispatch = useDispatch();
+
     const goNext = () => {
         navigation.navigate('DelegateReview');
     };
-    const onValidAddress = (value: string) => {
+
+    const onValidAddress = async (value: string, valid: boolean) => {
         dispatch(setDelegateAddress(value));
+        setValidAddress(valid);
+        setBakerAddress(value);
+
+        if (!valid) {
+            setBakerName('');
+            setBakerFee(0);
+            setBakerLogoUrl('');
+            setBakerEstRoi(0);
+
+            return;
+        }
+
+        const bakerDetails = await getBakerDetails(value);
+        setBakerName(bakerDetails.name);
+        setBakerFee(bakerDetails.fee);
+        setBakerLogoUrl(bakerDetails.logoUrl);
+        setBakerEstRoi(bakerDetails.estimatedRoi);
     };
+
     const goNextModalPage = () => {
         if (modalPage === 1) {
             setIsModal(false);
@@ -42,23 +66,24 @@ const DelegateAddress = ({navigation}: DelegateAddressProps) => {
     };
     const onUndelegateConfirmation = () => setIsUndelegateModal(true);
     const onCancelUndelegate = () => setIsUndelegateModal(false);
-    const onUndlegate = () => {
+    const onUndelegate = () => {
         setIsUndelegateModal(false);
         dispatch(cancelDelegation());
+        navigation.navigate('Account');
     }
     const modal = [
         {
-            title: 'When you delegate, your funds stay in your control.',
-            subtitle: 'A baker cannot run away with your XTZ.',
+            title: 'Staked funds remain in your control',
+            subtitle: 'Bakers do not have access to delegated balances.',
             btn: 'Next',
         },
         {
             title: 'There is no lock-up period',
-            subtitle:
-                'You are free to transfer funds in and out of your account.',
-            btn: 'GotIt!',
+            subtitle: 'You are free to transfer funds in and out of your account.',
+            btn: 'Got It!',
         },
     ];
+
     let headerTitle = 'Delegate';
     let addressTitle = 'Enter Baker Address';
     let nextTitle = 'Baker Address';
@@ -70,12 +95,8 @@ const DelegateAddress = ({navigation}: DelegateAddressProps) => {
     }
 
     useEffect(() => {
-        if (delegation.length > 0) {
-            return;
-        }
-        setTimeout(() => {
-            setIsModal(true);
-        }, 500);
+        if (delegation.length > 0) { return; }
+        setTimeout(() => { setIsModal(true); }, 500);
     }, []);
 
     return (
@@ -83,24 +104,64 @@ const DelegateAddress = ({navigation}: DelegateAddressProps) => {
             <EnterAddress
                 headerTitle={headerTitle}
                 addressTitle={addressTitle}
-                nextTitle={nextTitle}
-                errorMessages={errorMessages}
                 goBack={() => navigation.goBack()}
-                goNext={goNext}
+                validateAddress={validateBakerAddress}
                 onValidAddress={onValidAddress}>
-                {delegation.length > 0 && (
-                    <View style={styles.undelegate}>
-                        <Text
-                            style={styles.undelegateText}
-                            onPress={onUndelegateConfirmation}>
-                            Undelegate
-                        </Text>
-                    </View>
-                )}
+                    {isValidAddress && bakerName != undefined && bakerName.length > 0 && (
+                        <View>
+                        <View style={styles.bakerDetails}>
+                            <View style={{flexDirection: 'row'}}>
+                                {bakerLogoUrl.length > 0 && (
+                                <Image source={{uri: bakerLogoUrl}} style={{width: 50, height: 50, margin: 10, justifyContent: 'center'}} />
+                                )}
+                                <View style={{justifyContent: 'center', flexGrow: 1}}>
+                                    <View style={{alignSelf: 'flex-start'}}>
+                                        <Text style={{fontWeight: '700'}}>{bakerName}</Text>
+                                        <Text style={{fontWeight: '500', color: 'grey', fontSize: 14}}>{truncateHash(bakerAddress)}</Text>
+                                    </View>
+                                </View>
+                                <View style={{justifyContent: 'center'}}>
+                                    <View style={{alignSelf: 'flex-end'}}>
+                                        <Text style={{fontWeight: '500', fontSize: 14}}>Fee: {(bakerFee * 100).toFixed(2)}%</Text>
+                                    </View>
+                                    <View style={{alignSelf: 'flex-end'}}>
+                                        <Text style={{fontWeight: '500', fontSize: 14}}>ROI: {(bakerEstRoi * 100).toFixed(2)}%</Text>
+                                    </View>
+                                </View>
+                            </View>
+                            <View>
+                                <Button style={styles.nextButton} onPress={goNext}>
+                                    <Text style={styles.typo2}>Next</Text>
+                                </Button>
+                            </View>
+                        </View>
+                        <View style={{alignSelf: 'flex-start', width: '90%', marginLeft: 28, marginTop: 10}}>
+                            <TouchableOpacity onPress={() => Linking.openURL('https://baking-bad.org/')} style={{flexDirection: 'row'}}>
+                                <Text style={{fontSize: 12, color: 'grey'}}>Data from </Text><Text style={{textDecorationLine: 'underline', fontSize: 12, color: 'grey'}}>BakingBad</Text>
+                            </TouchableOpacity>
+                        </View>
+                        </View>
+                    )}
+                    {(isValidAddress && (bakerName == undefined || bakerName.length === 0)) && (
+                        <View style={styles.bakerDetails}>
+                            <View>
+                                <Button style={styles.nextButton} onPress={goNext}>
+                                    <Text style={styles.typo2}>Next</Text>
+                                </Button>
+                            </View>
+                        </View>
+                    )}
+                    {/*delegation.length > 0 && (
+                        <View style={styles.undelegate}>
+                            <Text style={styles.undelegateText} onPress={onUndelegateConfirmation}>
+                                Undelegate
+                            </Text>
+                        </View>
+                    )*/}
             </EnterAddress>
             <Modal isVisible={isUndelegateModal} style={styles.modal}>
                 <View style={styles.undelegateModalContent}>
-                    <Text style={styles.typo1}>Undelegate Confirmation</Text>
+                    <Text style={styles.typo1}>Terminate Delegation</Text>
                     <View style={styles.undelegateActions}>
                         <Button transparent style={styles.btn} onPress={onCancelUndelegate}>
                             <View>
@@ -110,9 +171,9 @@ const DelegateAddress = ({navigation}: DelegateAddressProps) => {
                         <Button
                             transparent
                             style={[styles.btn, styles.btnEnd]}
-                            onPress={onUndlegate}>
+                            onPress={onUndelegate}>
                             <View>
-                                <Text style={styles.btnEndText}>Undelegate</Text>
+                                <Text style={styles.btnEndText}>Confirm</Text>
                             </View>
                         </Button>
                     </View>
@@ -183,6 +244,27 @@ const DelegateAddress = ({navigation}: DelegateAddressProps) => {
 };
 
 const styles = StyleSheet.create({
+    bakerDetails: {
+        width: '90%',
+        marginTop: 24,
+        marginHorizontal: 24,
+        flexDirection: 'column',
+        borderStyle: 'solid',
+        alignItems: 'center',
+        backgroundColor: 'white',
+        alignSelf: 'center',
+        borderRadius: 15.5,
+        padding: 12,
+    },
+    nextButton: {
+        marginLeft: 'auto',
+        width: 128,
+        height: 50,
+        backgroundColor: '#4b4b4b',
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 25,
+    },
     container: {
         backgroundColor: colors.bg,
     },

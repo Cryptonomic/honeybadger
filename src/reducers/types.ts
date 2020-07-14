@@ -12,4 +12,13 @@ export interface Operation {
     amount?: number;
     opGroupHash: string;
     delegate?: string;
+    //status: string;
+}
+
+export interface BakerInfo {
+    address: string;
+    name: string;
+    logoUrl: string;
+    fee: number;
+    estimatedRoi: number;
 }
