@@ -10,6 +10,7 @@ import DelegateFirstIllustration from '../../assets/vault-illustration.svg';
 import DelegateSecondIllustration from '../../assets/wallet-illustration.svg';
 import EnterAddress from '../components/EnterAddress';
 import {colors} from '../theme';
+import {truncateHash} from '../utils/general';
 
 import {DelegateAddressProps} from './types';
 import {State} from '../reducers/types';
@@ -26,9 +27,11 @@ const DelegateAddress = ({navigation}: DelegateAddressProps) => {
     const [isUndelegateModal, setIsUndelegateModal] = useState(false);
     const [modalPage, setModalPage] = useState(0);
 
-    const [bakerName, setBakerName] = useState('');
+    const [bakerName, setBakerName] = useState(''); // TODO: use a single structure
+    const [bakerAddress, setBakerAddress] = useState('');
     const [bakerFee, setBakerFee] = useState(0);
     const [bakerLogoUrl, setBakerLogoUrl] = useState('');
+    const [bakerEstRoi, setBakerEstRoi] = useState(0);
 
     const dispatch = useDispatch();
 
@@ -43,6 +46,8 @@ const DelegateAddress = ({navigation}: DelegateAddressProps) => {
         setBakerName(bakerDetails.name);
         setBakerFee(bakerDetails.fee);
         setBakerLogoUrl(bakerDetails.logoUrl);
+        setBakerEstRoi(bakerDetails.estimatedRoi);
+        if (bakerDetails.name.length > 0) { setBakerAddress(value); }
     };
 
     const goNextModalPage = () => {
@@ -99,34 +104,42 @@ const DelegateAddress = ({navigation}: DelegateAddressProps) => {
                 goNext={goNext}
                 onValidAddress={onValidAddress}>
                     {bakerName.length > 0 && (
+                        <View>
                         <View style={styles.bakerDetails}>
-                            <View style={{flexDirection: 'row', alignSelf: 'flex-start',}}>
+                            <View style={{flexDirection: 'row'}}>
                                 {bakerLogoUrl.length > 0 && (
                                 <Image source={{uri: bakerLogoUrl}} style={{width: 50, height: 50, margin: 10, justifyContent: 'center'}} />
                                 )}
-                                <View style={{justifyContent: 'center'}}>
-                                    <View style={styles.bakerRow}>
-                                        <Text>{bakerName}</Text>
+                                <View style={{justifyContent: 'center', flexGrow: 1}}>
+                                    <View style={{alignSelf: 'flex-start'}}>
+                                        <Text style={{fontWeight: '700'}}>{bakerName}</Text>
+                                        <Text style={{fontWeight: '500', color: 'grey', fontSize: 14}}>{truncateHash(bakerAddress)}</Text>
                                     </View>
-                                    <View style={styles.bakerRow}>
-                                        <Text>Fee: {(bakerFee * 100).toFixed(2)}%</Text>
+                                </View>
+                                <View style={{justifyContent: 'center'}}>
+                                    <View style={{alignSelf: 'flex-end'}}>
+                                        <Text style={{fontWeight: '500', fontSize: 14}}>Fee: {(bakerFee * 100).toFixed(2)}%</Text>
+                                    </View>
+                                    <View style={{alignSelf: 'flex-end'}}>
+                                        <Text style={{fontWeight: '500', fontSize: 14}}>ROI: {(bakerEstRoi * 100).toFixed(2)}%</Text>
                                     </View>
                                 </View>
                             </View>
-                            <View style={{alignSelf: 'flex-end'}}>
-                                <TouchableOpacity onPress={() => Linking.openURL('https://baking-bad.org/')} style={{flexDirection: 'row'}}>
-                                    <Text>Data from </Text><Text style={{textDecorationLine: 'underline'}}>BakingBad</Text>
-                                </TouchableOpacity>
-                            </View>
+                        </View>
+                        <View style={{alignSelf: 'flex-start', width: '90%', marginLeft: 28, marginTop: 10}}>
+                            <TouchableOpacity onPress={() => Linking.openURL('https://baking-bad.org/')} style={{flexDirection: 'row'}}>
+                                <Text style={{fontSize: 12, color: 'grey'}}>Data from </Text><Text style={{textDecorationLine: 'underline', fontSize: 12, color: 'grey'}}>BakingBad</Text>
+                            </TouchableOpacity>
+                        </View>
                         </View>
                     )}
-                    {delegation.length > 0 && (
+                    {/*delegation.length > 0 && (
                         <View style={styles.undelegate}>
                             <Text style={styles.undelegateText} onPress={onUndelegateConfirmation}>
                                 Undelegate
                             </Text>
                         </View>
-                    )}
+                    )*/}
             </EnterAddress>
             <Modal isVisible={isUndelegateModal} style={styles.modal}>
                 <View style={styles.undelegateModalContent}>
@@ -214,8 +227,9 @@ const DelegateAddress = ({navigation}: DelegateAddressProps) => {
 
 const styles = StyleSheet.create({
     bakerDetails: {
-        width: '80%',
-        margin: 25,
+        width: '90%',
+        marginTop: 24,
+        marginHorizontal: 24,
         flexDirection: 'column',
         borderStyle: 'solid',
         alignItems: 'center',
@@ -223,9 +237,6 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         borderRadius: 15.5,
         padding: 12,
-    },
-    bakerRow: {
-        alignSelf: 'flex-start',
     },
     container: {
         backgroundColor: colors.bg,
