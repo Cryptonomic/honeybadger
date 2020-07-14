@@ -5,7 +5,7 @@ import {Container, Text, View, Button} from 'native-base';
 import Modal from 'react-native-modal';
 
 import {setDelegateAddress} from '../reducers/app/actions';
-import {cancelDelegation, getBakerDetails} from '../reducers/app/thunks';
+import {cancelDelegation, getBakerDetails, validateBakerAddress} from '../reducers/app/thunks';
 import DelegateFirstIllustration from '../../assets/vault-illustration.svg';
 import DelegateSecondIllustration from '../../assets/wallet-illustration.svg';
 import EnterAddress from '../components/EnterAddress';
@@ -16,17 +16,13 @@ import {DelegateAddressProps} from './types';
 import {State} from '../reducers/types';
 import CustomIcon from '../components/CustomIcon';
 
-const errorMessages = {
-    start: 'Tezos addresses start with tz',
-    length: 'Tezos addresses are 36 characters long.',
-};
-
 const DelegateAddress = ({navigation}: DelegateAddressProps) => {
     const delegation = useSelector((state: State) => state.app.delegation);
     const [isModal, setIsModal] = useState(false);
     const [isUndelegateModal, setIsUndelegateModal] = useState(false);
     const [modalPage, setModalPage] = useState(0);
 
+    const [isValidAddress, setValidAddress] = useState(false);
     const [bakerName, setBakerName] = useState(''); // TODO: use a single structure
     const [bakerAddress, setBakerAddress] = useState('');
     const [bakerFee, setBakerFee] = useState(0);
@@ -39,15 +35,25 @@ const DelegateAddress = ({navigation}: DelegateAddressProps) => {
         navigation.navigate('DelegateReview');
     };
 
-    const onValidAddress = async (value: string) => {
+    const onValidAddress = async (value: string, valid: boolean) => {
         dispatch(setDelegateAddress(value));
+        setValidAddress(valid);
+        setBakerAddress(value);
+
+        if (!valid) {
+            setBakerName('');
+            setBakerFee(0);
+            setBakerLogoUrl('');
+            setBakerEstRoi(0);
+
+            return;
+        }
 
         const bakerDetails = await getBakerDetails(value);
         setBakerName(bakerDetails.name);
         setBakerFee(bakerDetails.fee);
         setBakerLogoUrl(bakerDetails.logoUrl);
         setBakerEstRoi(bakerDetails.estimatedRoi);
-        if (bakerDetails.name.length > 0) { setBakerAddress(value); }
     };
 
     const goNextModalPage = () => {
@@ -98,12 +104,10 @@ const DelegateAddress = ({navigation}: DelegateAddressProps) => {
             <EnterAddress
                 headerTitle={headerTitle}
                 addressTitle={addressTitle}
-                nextTitle={nextTitle}
-                errorMessages={errorMessages}
                 goBack={() => navigation.goBack()}
-                goNext={goNext}
+                validateAddress={validateBakerAddress}
                 onValidAddress={onValidAddress}>
-                    {bakerName.length > 0 && (
+                    {isValidAddress && bakerName != undefined && bakerName.length > 0 && (
                         <View>
                         <View style={styles.bakerDetails}>
                             <View style={{flexDirection: 'row'}}>
@@ -125,12 +129,26 @@ const DelegateAddress = ({navigation}: DelegateAddressProps) => {
                                     </View>
                                 </View>
                             </View>
+                            <View>
+                                <Button style={styles.nextButton} onPress={goNext}>
+                                    <Text style={styles.typo2}>Next</Text>
+                                </Button>
+                            </View>
                         </View>
                         <View style={{alignSelf: 'flex-start', width: '90%', marginLeft: 28, marginTop: 10}}>
                             <TouchableOpacity onPress={() => Linking.openURL('https://baking-bad.org/')} style={{flexDirection: 'row'}}>
                                 <Text style={{fontSize: 12, color: 'grey'}}>Data from </Text><Text style={{textDecorationLine: 'underline', fontSize: 12, color: 'grey'}}>BakingBad</Text>
                             </TouchableOpacity>
                         </View>
+                        </View>
+                    )}
+                    {(isValidAddress && (bakerName == undefined || bakerName.length === 0)) && (
+                        <View style={styles.bakerDetails}>
+                            <View>
+                                <Button style={styles.nextButton} onPress={goNext}>
+                                    <Text style={styles.typo2}>Next</Text>
+                                </Button>
+                            </View>
                         </View>
                     )}
                     {/*delegation.length > 0 && (
@@ -237,6 +255,15 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         borderRadius: 15.5,
         padding: 12,
+    },
+    nextButton: {
+        marginLeft: 'auto',
+        width: 128,
+        height: 50,
+        backgroundColor: '#4b4b4b',
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 25,
     },
     container: {
         backgroundColor: colors.bg,

@@ -1,31 +1,25 @@
 import React, {useState, FunctionComponent} from 'react';
 import {StyleSheet, Clipboard} from 'react-native';
-import {Text, View, Input, Item, Button, Icon} from 'native-base';
+import {Text, View, Input, Item, Icon} from 'native-base';
 import {RNCamera} from 'react-native-camera';
 
 import CustomButton from '../components/CustomButton';
-import CustomIcon from '../components/CustomIcon';
 import CustomHeader from '../components/CustomHeader';
-import {truncateHash} from '../utils/general';
 
 interface EnterAddressProps {
     headerTitle: string;
     addressTitle: string;
-    nextTitle: string;
-    errorMessages: Record<'start' | 'length', string>;
     goBack: () => void;
-    goNext: () => void;
-    onValidAddress: (value: string) => void;
+    validateAddress: (value: string) => void;
+    onValidAddress: (value: string, valid: boolean) => void;
 }
 
 const EnterAddress: FunctionComponent<EnterAddressProps> = ({
     headerTitle,
     addressTitle,
-    nextTitle,
-    errorMessages,
     children,
     goBack,
-    goNext,
+    validateAddress,
     onValidAddress,
 }) => {
     const [isValid, setIsValid] = useState(false);
@@ -34,30 +28,24 @@ const EnterAddress: FunctionComponent<EnterAddressProps> = ({
     const [address, setAddress] = useState('');
     const [showCamera, setShowCamera] = useState(false);
 
-    const onAddressTextChange = (value: string) => {
+    const onAddressTextChange = async (value: string) => {
         setAddress(value);
 
-        if (value.length >= 2 && !value.includes('tz', 0)) {
-            setIsError(true);
-            setErrorMessage(errorMessages['start']);
-            return;
-        }
+        if (value.trim().length === 0) { return; }
 
-        if (value.length === 36) {
-            onValidAddress(value);
+        try {
+            await validateAddress(value);
+
             setIsValid(true);
             setIsError(false);
             setErrorMessage('');
-            return;
-        }
-
-        if (value.length < 36 || value.length > 36) {
+            onValidAddress(value, true);
+        } catch (err) {
             setIsValid(false);
             setIsError(true);
-            setErrorMessage(errorMessages['length']);
+            setErrorMessage(err.message);
+            onValidAddress(value, false);
         }
-
-        // TODO: if TezosNodeReader.isImplicitAndEmpty show a warning
     };
     const onPasteAddress = async () => {
         const copiedMessage = await Clipboard.getString();
@@ -128,51 +116,27 @@ const EnterAddress: FunctionComponent<EnterAddressProps> = ({
                             </View>
                         </View>
                     )}
-                    <View style={styles.actions}>
-                        {!isValid && (
-                            <>
-                                <View>
-                                    <CustomButton
-                                        icon="Paste"
-                                        label="Paste Address"
-                                        color="#f5942a"
-                                        onPress={onPasteAddress}
-                                    />
-                                </View>
-                                <View style={styles.actionLine} />
-                                <View>
-                                    <CustomButton
-                                        icon="Scan"
-                                        label="Scan QR Code"
-                                        color="#f5942a"
-                                        onPress={onScanQrCode}
-                                    />
-                                </View>
-                            </>
-                        )}
-                        {isValid && (
-                            <View style={styles.next}>
-                                <View style={styles.nextCircle}>
-                                    <CustomIcon
-                                        name="Checkmark"
-                                        size={16}
-                                        color="#ff8f00"
-                                    />
-                                </View>
-                                <View>
-                                    <Text style={styles.typo1}>
-                                        {nextTitle}
-                                    </Text>
-                                    <Text>{truncateHash(address)}</Text>
-                                </View>
-                                <Button
-                                    style={styles.nextButton}
-                                    onPress={goNext}>
-                                    <Text style={styles.typo2}>Next</Text>
-                                </Button>
+                    {!isValid && (
+                        <View style={styles.actions}>
+                            <View>
+                                <CustomButton
+                                    icon="Paste"
+                                    label="Paste Address"
+                                    color="#f5942a"
+                                    onPress={onPasteAddress}
+                                />
                             </View>
-                        )}
-                    </View>
+                            <View style={styles.actionLine} />
+                            <View>
+                                <CustomButton
+                                    icon="Scan"
+                                    label="Scan QR Code"
+                                    color="#f5942a"
+                                    onPress={onScanQrCode}
+                                />
+                            </View>
+                        </View>
+                    )}
                 </>
             )}
         </>

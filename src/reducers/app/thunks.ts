@@ -15,6 +15,8 @@ import {KeyStoreUtils, SoftSigner} from '../../softsigner';
 import constants from '../../utils/constants.json';
 import {State} from '../types';
 
+import {BakerInfo} from '../types';
+
 import {
     setBalanceAction,
     setRevealedAction,
@@ -229,7 +231,32 @@ export const cancelDelegation = () => async (dispatch: Dispatch, getState: () =>
     }
 }
 
-export const getBakerDetails = async (address: string): Promise<{name: string, fee: number, logoUrl: string, estimatedRoi: number}> => { // TODO: needs return type
+export const validateBakerAddress = async (address: string) => {
+    if (!(['tz1', 'tz2', 'tz3'].includes(address.substring(0, 3)))) {
+        throw new Error('Baker address must start with tz1, tz2 or tz3');
+    }
+
+    if (address.match(/[^1-9A-HJ-NP-Za-km-z]/)) {
+        throw new Error('Address contains invalid characters');
+    }
+
+    if (address.length < 36) {
+        throw new Error('Address too short');
+    }
+
+    if (address.length > 36) {
+        throw new Error('Address too long');
+    }
+
+    /*try { // TODO: for some reason this dies
+        const account = await TezosNodeReader.getAccountForBlock(config[0].nodeUrl, 'head', address);
+        if (account.balance) { throw new Error('Address not found on chain'); }
+    } catch (err) {
+        throw new Error('Could not query chain for address');
+    }*/
+}
+
+export const getBakerDetails = async (address: string): Promise<BakerInfo> => { // TODO: needs return type
     try {
         const response = await fetch(`https://api.baking-bad.org/v2/bakers/${address}`);
         const responseJSON = await response.json();
@@ -256,9 +283,9 @@ export const getBakerDetails = async (address: string): Promise<{name: string, f
         stakingCapacity
         */
 
-        return {name: responseJSON.name, fee: responseJSON.fee, logoUrl: responseJSON.logo || '', estimatedRoi: responseJSON.estimatedRoi};
+        return {address, name: responseJSON.name, fee: responseJSON.fee, logoUrl: responseJSON.logo || '', estimatedRoi: responseJSON.estimatedRoi};
     } catch (e) {
         console.log('getBakerDetails', e);
     }
-    return {name: '', fee: 0, logoUrl: '', estimatedRoi: 0};
+    return {address, name: '', fee: 0, logoUrl: '', estimatedRoi: 0};
 };
