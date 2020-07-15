@@ -16,81 +16,114 @@ interface DelegationProps {
 
 const Delegation = ({onDelegate}: DelegationProps) => {
     const delegation = useSelector((state: State) => state.app.delegation);
+    const pendingDelegations = useSelector(
+        (state: State) => state.app.pendingDelegations,
+    );
     const balance = useSelector((state: State) => state.app.balance);
     const expectedPaymentDate = useSelector(
         (state: State) => state.app.expectedPaymentDate,
     );
-
+    const lastPendingDelegation =
+        pendingDelegations[pendingDelegations.length - 1];
     return (
         <View style={styles.container}>
             {/* TODO: need something for not currently delegating, but delegation cancellation is < 5 cycles old */}
-            {delegation.length === 0 && (
-                <>
-                    <DelegationIllustration />
-                    <Text style={[styles.title, styles.typo1]}>
-                        Grow your Tezos stash
-                    </Text>
-                    <Text style={[styles.subtitle, styles.typo2]}>
-                        Delegate XTZ to earn returns.
-                    </Text>
-                    <Button style={styles.btn} onPress={onDelegate}>
-                        <Text style={styles.typo3}>Delegate Now</Text>
-                    </Button>
-                </>
-            )}
+            {delegation.length === 0 &&
+                (!lastPendingDelegation && (
+                    <>
+                        <DelegationIllustration />
+                        <Text style={[styles.title, styles.typo1]}>
+                            Grow your Tezos stash
+                        </Text>
+                        <Text style={[styles.subtitle, styles.typo2]}>
+                            Delegate XTZ to earn returns.
+                        </Text>
+                        <Button style={styles.btn} onPress={onDelegate}>
+                            <Text style={styles.typo3}>Delegate Now</Text>
+                        </Button>
+                    </>
+                ))}
             {delegation.length > 0 && (
                 <>
                     <View style={styles.delegationHeader}>
-                        <View style={styles.dot} />
-                        <Text style={styles.typo4}>Currently Delegating</Text>
-                        <Button
-                            transparent
-                            style={styles.edit}
-                            onPress={onDelegate}>
-                            <CustomIcon name="Edit" color="#4b4b4b"/>
-                        </Button>
+                        {!lastPendingDelegation && (
+                            <View style={styles.currnetDelegationHeader}>
+                                <View style={styles.dot} />
+                                <Text style={styles.typo4}>
+                                    Currently Delegating
+                                </Text>
+                                <Button
+                                    transparent
+                                    style={styles.edit}
+                                    onPress={onDelegate}>
+                                    <CustomIcon name="Edit" color="#4b4b4b" />
+                                </Button>
+                            </View>
+                        )}
+                        {lastPendingDelegation && (
+                            <View style={styles.pending}>
+                                <CustomIcon
+                                    name="Sand-Timer"
+                                    size={16}
+                                    color="#f5942a"
+                                />
+                                <Text
+                                    style={[styles.pendingText, styles.typo8]}>
+                                    Delegation Transaction Pending…
+                                </Text>
+                            </View>
+                        )}
                     </View>
                     {/* <Text style={styles.typo5}>First payout in 35 days</Text> */}
-                    <View style={styles.delegationPaper}>
-                        <View style={styles.row}>
-                            <Text style={styles.typo6}>Amount</Text>
-                            <View
-                                style={{
-                                    alignItems: 'center',
-                                    flexDirection: 'row',
-                                }}>
+                    <View style={styles.paper}>
+                        <View style={styles.delegationPaper}>
+                            {lastPendingDelegation && <View style={styles.paperOpacity}/>}
+                            <View style={styles.row}>
+                                <Text style={styles.typo6}>Amount</Text>
+                                <View
+                                    style={{
+                                        alignItems: 'center',
+                                        flexDirection: 'row',
+                                    }}>
+                                    <Text
+                                        style={[
+                                            styles.paperTextMargin,
+                                            styles.typo7,
+                                        ]}>
+                                        {formatAmount(balance)}
+                                    </Text>
+                                    <CustomIcon
+                                        name="XTZ"
+                                        size={16}
+                                        color="#343434"
+                                        style={{marginTop: 10}}
+                                    />
+                                </View>
+                            </View>
+                            <View style={styles.divider} />
+                            <View style={styles.row}>
+                                <Text style={styles.typo6}>Baker Service</Text>
                                 <Text
                                     style={[
                                         styles.paperTextMargin,
                                         styles.typo7,
                                     ]}>
-                                    {formatAmount(balance)}
+                                    {truncateHash(
+                                        lastPendingDelegation?.delegate ||
+                                            delegation,
+                                    )}
                                 </Text>
-                                <CustomIcon
-                                    name="XTZ"
-                                    size={16}
-                                    color="#343434"
-                                    style={{marginTop: 10}}
-                                />
                             </View>
                         </View>
-                        <View style={styles.divider} />
-                        <View style={styles.row}>
-                            <Text style={styles.typo6}>Baker Service</Text>
-                            <Text
-                                style={[styles.paperTextMargin, styles.typo7]}>
-                                {truncateHash(delegation)}
+                        {!lastPendingDelegation && <View style={styles.delegationDate}>
+                            <Text style={styles.typo6}>
+                                Next payment expected on{' '}
+                                {moment
+                                    .utc(new Date(expectedPaymentDate))
+                                    .local()
+                                    .format('MMM D, HH:mm')}
                             </Text>
-                        </View>
-                    </View>
-                    <View style={styles.delegationDate}>
-                        <Text style={styles.typo6}>
-                            Next payment expected on{' '}
-                            {moment
-                                .utc(new Date(expectedPaymentDate))
-                                .local()
-                                .format('MMM D, HH:mm')}
-                        </Text>
+                        </View>}
                     </View>
                 </>
             )}
@@ -100,7 +133,9 @@ const Delegation = ({onDelegate}: DelegationProps) => {
 
 const styles = StyleSheet.create({
     container: {
+        width: '90%',
         alignItems: 'center',
+        alignSelf: 'center',
         marginTop: 25,
     },
     title: {
@@ -110,10 +145,31 @@ const styles = StyleSheet.create({
         marginTop: 10,
     },
     delegationHeader: {
+        width: '100%',
+    },
+    pending: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    pendingText: {
+        marginLeft: 10,
+    },
+    currnetDelegationHeader: {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
         width: '100%',
+    },
+    paper: {
+        width: '100%',
+    },
+    paperOpacity: {
+        position: 'absolute',
+        width: '100%',
+        height: '100%',
+        backgroundColor: 'rgba(255, 255, 255, 0.5)',
+        zIndex: 10
     },
     delegationPaper: {
         marginTop: 25,
@@ -121,6 +177,13 @@ const styles = StyleSheet.create({
         borderColor: '#eeeded',
         borderRadius: 9,
         width: '100%',
+        backgroundColor: '#ffffff',
+        shadowColor: 'rgba(0, 0, 0, 0.3)',
+        shadowOffset: {width: 5, height: 5},
+        shadowOpacity: 0.5,
+        shadowRadius: 15,
+        elevation: 1,
+        padding: 16,
     },
     paperTextMargin: {
         marginTop: 10,
@@ -205,6 +268,12 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: '500',
         lineHeight: 24,
+    },
+    typo8: {
+        fontFamily: 'Roboto-Light',
+        fontSize: 14,
+        fontWeight: '300',
+        color: '#4a4a4a',
     },
 });
 

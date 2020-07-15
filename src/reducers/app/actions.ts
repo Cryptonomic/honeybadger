@@ -10,7 +10,8 @@ import {
     SetTermsDateAction,
     SetDelegateAddressAction,
     SetDelegationAction,
-    SetDelegationExpectedDate
+    SetDelegationExpectedDate,
+    SetPendingOperationsAction,
 } from './types';
 import {Operation} from '../types';
 
@@ -25,6 +26,7 @@ export const SET_TERMS_DATE = 'SET_TERMS_DATE';
 export const SET_DELEGATE_ADDRESS = 'SET_DELEGATE_ADDRESS';
 export const SET_DELEGATION = 'SET_DELEGATION';
 export const SET_EXPECTEDDELEGATEDATE = 'SET_EXPECTEDDELEGATEDATE';
+export const SET_PENDING_OPERATIONS = 'SET_PENDING_OPERATIONS';
 
 export const setKeysAction = (keys: KeyStore): SetKeysAction => ({
     type: SET_KEYS,
@@ -82,3 +84,9 @@ export const setDelegateExpectedDate = (date: Date): SetDelegationExpectedDate =
     type: SET_EXPECTEDDELEGATEDATE,
     date
 });
+
+export const setPendingOperations = (transactions: any[], delegations: any[]): SetPendingOperationsAction => ({
+    type: SET_PENDING_OPERATIONS,
+    transactions,
+    delegations
+})

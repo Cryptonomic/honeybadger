@@ -7,39 +7,45 @@ import moment from 'moment';
 import TransactionsIllustration from '../../assets/transactions-illustration.svg';
 import {State, Operation} from '../reducers/types';
 import CustomIcon from './CustomIcon';
+import PendingTransactions from '../components/PendingTransactions';
 import {truncateHash} from '../utils/general';
 import {formatAmount} from '../utils/currency';
 import config from '../config';
 
 const Transactions = () => {
     const transactions = useSelector((state: State) => state.app.transactions);
-    const publicHashKey = useSelector((state: State) => state.app.publicKeyHash);
+    const publicHashKey = useSelector(
+        (state: State) => state.app.publicKeyHash,
+    );
 
     const onTransactionPress = (opGroupHash: string) => {
         Linking.openURL(`${config[0].explorerUrl}/${opGroupHash}`);
     };
 
-    const displayTransactions = transactions.map(t => {
+    const displayTransactions = transactions.map((t) => {
         const opGroupHash = t.opGroupHash;
         let iconName = '';
         let action = '';
-        let preposition = ''
+        let preposition = '';
         let amount = '';
         let amountDirection = 0;
         let address = '';
-        const date = moment.utc(new Date(t.timestamp)).local().format("MMM D, HH:mm");
+        const date = moment
+            .utc(new Date(t.timestamp))
+            .local()
+            .format('MMM D, HH:mm');
 
         if (t.kind === 'transaction') {
             if (t.destination === publicHashKey) {
                 iconName = 'Forward-Arrow';
-                action = 'Received'
+                action = 'Received';
                 preposition = 'from';
                 address = truncateHash(t.source);
                 amount = formatAmount(Number(t.amount));
                 amountDirection = 1;
             } else if (t.source === publicHashKey) {
                 iconName = 'Back-Arrow';
-                action = 'Sent'
+                action = 'Sent';
                 preposition = 'to';
                 address = truncateHash(t.destination);
                 amount = formatAmount(Number(t.amount));
@@ -47,39 +53,57 @@ const Transactions = () => {
             }
         } else if (t.kind === 'delegation') {
             iconName = t.delegate ? 'Link' : 'Unlink';
-            action = t.delegate ? 'Delegated' : 'Delegation Canceled'
+            action = t.delegate ? 'Delegated' : 'Delegation Canceled';
             preposition = t.delegate ? 'to' : '';
             address = truncateHash(t.delegate) || '';
             amount = '';
             amountDirection = 0;
         }
 
-        return {opGroupHash, iconName, action, preposition, amountDirection, amount, address, date};
+        return {
+            opGroupHash,
+            iconName,
+            action,
+            preposition,
+            amountDirection,
+            amount,
+            address,
+            date,
+        };
     });
 
     return (
-        <ScrollView>
-            {displayTransactions.length === 0 && (
-                <View style={styles.container}>
-                    <TransactionsIllustration />
-                    <View style={styles.text}>
-                        <Text style={styles.typo1}>
-                            You don’t have any transactions yet.{' '}
-                        </Text>
-                        <Text style={[styles.typo1]}>
-                            Fund your account{' '}
-                        </Text>
-                        <Text style={styles.typo1}>to get started.</Text>
+        <>
+            <View style={styles.pending}>
+                <PendingTransactions />
+            </View>
+            <ScrollView>
+                {displayTransactions.length === 0 && (
+                    <View style={styles.container}>
+                        <TransactionsIllustration />
+                        <View style={styles.text}>
+                            <Text style={styles.typo1}>
+                                You don’t have any transactions yet.{' '}
+                            </Text>
+                            <Text style={[styles.typo1]}>
+                                Fund your account{' '}
+                            </Text>
+                            <Text style={styles.typo1}>to get started.</Text>
+                        </View>
                     </View>
-                </View>
-            )}
-            {displayTransactions.length > 0 &&
-                displayTransactions
-                    .map((t: any) => (
-                        <TouchableOpacity onPress={() => onTransactionPress(t.opGroupHash)}>
+                )}
+                {displayTransactions.length > 0 &&
+                    displayTransactions.map((t: any) => (
+                        <TouchableOpacity
+                            style={styles.list}
+                            onPress={() => onTransactionPress(t.opGroupHash)}>
                             <View style={styles.listItem}>
                                 <View style={styles.left}>
-                                    <CustomIcon name={t.iconName} size={14} color="#f5942a" />
+                                    <CustomIcon
+                                        name={t.iconName}
+                                        size={14}
+                                        color="#f5942a"
+                                    />
                                 </View>
                                 <View style={styles.body}>
                                     <View style={{flexDirection: 'row'}}>
@@ -87,35 +111,52 @@ const Transactions = () => {
                                             {t.action}
                                         </Text>
                                         <Text style={styles.typo4}>
-                                            {' '}{t.preposition}
+                                            {' '}
+                                            {t.preposition}
                                         </Text>
                                     </View>
-                                    {t.preposition.length > 0 && <View style={styles.subtitle}>
-                                        <Text style={styles.typo3}>
-                                            {t.address}
-                                        </Text>
-                                    </View>}
+                                    {t.preposition.length > 0 && (
+                                        <View style={styles.subtitle}>
+                                            <Text style={styles.typo3}>
+                                                {t.address}
+                                            </Text>
+                                        </View>
+                                    )}
                                 </View>
                                 <View style={styles.right}>
                                     {t.amountDirection !== 0 && (
-                                    <View style={styles.amount}>
-                                        <Text style={[styles.typo5, t.amountDirection < 0 ? styles.colorSend : styles.colorReceive]}>
-                                                {`${t.amountDirection < 0 ? '-' : '+'}${t.amount}`}
-                                        </Text>
-                                        <CustomIcon
-                                            name="XTZ"
-                                            size={14}
-                                            color={ t.amountDirection < 0 ? '#e3787d' : '#259c90'} />
-                                    </View>
+                                        <View style={styles.amount}>
+                                            <Text
+                                                style={[
+                                                    styles.typo5,
+                                                    t.amountDirection < 0
+                                                        ? styles.colorSend
+                                                        : styles.colorReceive,
+                                                ]}>
+                                                {`${
+                                                    t.amountDirection < 0
+                                                        ? '-'
+                                                        : '+'
+                                                }${t.amount}`}
+                                            </Text>
+                                            <CustomIcon
+                                                name="XTZ"
+                                                size={14}
+                                                color={
+                                                    t.amountDirection < 0
+                                                        ? '#e3787d'
+                                                        : '#259c90'
+                                                }
+                                            />
+                                        </View>
                                     )}
-                                    <Text style={styles.typo6}>
-                                        {t.date}
-                                    </Text>
+                                    <Text style={styles.typo6}>{t.date}</Text>
                                 </View>
                             </View>
                         </TouchableOpacity>
                     ))}
-        </ScrollView>
+            </ScrollView>
+        </>
     );
 };
 
@@ -129,6 +170,10 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         flexWrap: 'wrap',
         justifyContent: 'center',
+    },
+    list: {
+        width: '90%',
+        alignSelf: 'center',
     },
     listItem: {
         width: '100%',
@@ -169,6 +214,9 @@ const styles = StyleSheet.create({
     },
     colorReceive: {
         color: '#259c90',
+    },
+    pending: {
+        alignItems: 'center',
     },
     typo1: {
         fontFamily: 'Roboto-Light',

@@ -16,7 +16,6 @@ import {syncAccount} from '../reducers/app/thunks';
 
 import Transactions from '../components/Transactions';
 import Delegation from '../components/Delegation';
-import PendingTransaction from '../components/PendingTransaction';
 import SecurityLevelButton from '../components/SecurityLevelButton';
 import Receive from '../../assets/receive.svg';
 import Send from '../../assets/send.svg';
@@ -56,7 +55,7 @@ const Account = ({navigation}: AccountProps) => {
                 if (wallet) {
                     dispatch(syncAccount());
                     setTimeout(() => {
-                        // load();
+                        load();
                     }, 60000);
                 } else {
                     navigation.replace('Welcome');
@@ -242,7 +241,6 @@ const Account = ({navigation}: AccountProps) => {
                         </Button>
                     </View>
                 </View>
-                <PendingTransaction />
                 <View style={styles.tabContainer}>
                     {tab === 0 && <Transactions />}
                     {tab === 1 && <Delegation onDelegate={onDelegate} />}
@@ -373,7 +371,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     tabContainer: {
-        width: '90%',
+        width: '100%',
     },
     tabActive: {
         color: 'rgba(0, 0, 0, 0.92)',

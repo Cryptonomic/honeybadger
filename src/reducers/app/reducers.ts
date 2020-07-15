@@ -11,7 +11,8 @@ import {
     SET_DELEGATE_ADDRESS,
     SET_REVEALED,
     SET_DELEGATION,
-    SET_EXPECTEDDELEGATEDATE
+    SET_EXPECTEDDELEGATEDATE,
+    SET_PENDING_OPERATIONS
 } from './actions';
 
 const initialState = {
@@ -29,7 +30,9 @@ const initialState = {
     sendAmount: 0,
     termsDate: '',
     delegateAddress: '',
-    expectedPaymentDate: null
+    expectedPaymentDate: null,
+    pendingTransactions: [],
+    pendingDelegations: [],
 };
 
 const app = (state = initialState, action: AppActions) => {
@@ -70,6 +73,8 @@ const app = (state = initialState, action: AppActions) => {
             return {...state, delegation: action.delegation};
         case SET_EXPECTEDDELEGATEDATE:
             return {...state, expectedPaymentDate: action.date};
+        case SET_PENDING_OPERATIONS:
+            return {...state, pendingTransactions: action.transactions, pendingDelegations: action.delegations};
         default:
             return state;
     }

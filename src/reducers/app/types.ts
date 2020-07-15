@@ -10,7 +10,8 @@ import {
     SET_DELEGATE_ADDRESS,
     SET_REVEALED,
     SET_DELEGATION,
-    SET_EXPECTEDDELEGATEDATE
+    SET_EXPECTEDDELEGATEDATE,
+    SET_PENDING_OPERATIONS
 } from './actions';
 import {Operation} from '../types';
 
@@ -35,6 +36,8 @@ export interface State {
     sendAmount: number;
     delegateAddress: string;
     expectedPaymentDate: Date;
+    pendingTransactions: [];
+    pendingDelegations: [];
 }
 
 export interface SetKeysAction {
@@ -92,7 +95,11 @@ export interface SetDelegationExpectedDate {
     date: Date;
 }
 
-
+export interface SetPendingOperationsAction {
+    type: typeof SET_PENDING_OPERATIONS;
+    transactions: any[],
+    delegations: any[]
+}
 
 export type AppActions =
     | SetTransactionsAction
@@ -106,4 +113,5 @@ export type AppActions =
     | SetDelegateAddressAction
     | SetDelegationAction
     | SetDelegationExpectedDate
+    | SetPendingOperationsAction
     ;
