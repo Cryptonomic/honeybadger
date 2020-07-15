@@ -63,7 +63,6 @@ const styles = StyleSheet.create({
         maxWidth: 50,
         justifyContent: 'center',
         alignItems: 'center',
-        // marginLeft: 'auto',
     },
     title: {
         fontFamily: 'Roboto-Medium',
@@ -71,6 +70,8 @@ const styles = StyleSheet.create({
         fontWeight: '500',
         lineHeight: 24,
         letterSpacing: 0.83,
+        color: '#000000',
+        alignSelf: 'center'
     },
 });
 

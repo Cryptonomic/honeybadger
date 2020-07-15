@@ -137,6 +137,7 @@ const styles = StyleSheet.create({
         padding: 20,
         alignItems: 'center',
         justifyContent: 'center',
+        alignSelf: 'center',
     },
     address: {
         marginTop: 55,

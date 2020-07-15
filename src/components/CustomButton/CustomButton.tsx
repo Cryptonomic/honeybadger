@@ -15,7 +15,7 @@ const CustomButton = ({
 }: CustomButtonProps) => {
     return (
         <View style={styles.container}>
-            <Button style={styles.button} onPress={onPress}>
+            <Button style={styles.button} onPress={onPress} transparent>
                 <CustomIcon name={icon} size={size} color={color} />
             </Button>
             <Text style={styles.text}>{label}</Text>
