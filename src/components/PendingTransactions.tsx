@@ -69,7 +69,7 @@ const PendingTransactions = () => {
                             </View>
                             <View style={styles.row}>
                                 <Text style={styles.typo2}>{direction}</Text>
-                                <Text>{address}</Text>
+                                <Text style={styles.typo1}>{address}</Text>
                             </View>
                         </View>
                         <View style={styles.linkIcon}>
