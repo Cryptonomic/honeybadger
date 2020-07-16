@@ -1,6 +1,6 @@
 {
     "fees": {
-        "delegation": 1163,
+        "delegation": 1297,
         "clearDelegation": 1238,
         "simpleTransaction": 1421,
         "reveal": 1301
