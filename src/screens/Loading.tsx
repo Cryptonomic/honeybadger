@@ -22,29 +22,32 @@ const Loading = ({navigation}: LoadingProps) => {
     useEffect(() => {
         async function save() {
             try {
-                const keys = await KeyStoreUtils.generateIdentity();
-                await Keychain.resetGenericPassword();
-                await Keychain.setGenericPassword(
-                    'newwallet',
-                    JSON.stringify({...keys, termsDate}),
-                );
-                dispatch(setKeysAction(keys));
-                setTimeout(() => {
-                    setReady(true);
-                }, 2000);
+                if (termsDate) {
+                    const keys = await KeyStoreUtils.generateIdentity();
+                    await Keychain.resetGenericPassword();
+                    await Keychain.setGenericPassword(
+                        'newwallet',
+                        JSON.stringify({...keys, termsDate}),
+                    );
+                        dispatch(setKeysAction(keys));
+                        setReady(true);
+                }
             } catch (e) {
                 console.log('[ERROR]', e);
             }
         }
         save();
-    }, [dispatch, termsDate]);
+    }, []);
 
     useEffect(() => {
-        if (ready) {
-            setProgress(100);
+        if (ready && progress === 100) {
             setTimeout(() => {
                 navigation.replace('Account');
             }, 2000);
+        }
+
+        if (ready && progress >= 90) {
+            setProgress(100);
             return;
         }
 
@@ -56,7 +59,7 @@ const Loading = ({navigation}: LoadingProps) => {
             const newProgress = progress + 15;
             setProgress(newProgress);
         }, 600);
-    }, [navigation, progress, ready]);
+    }, [progress, ready]);
 
     return (
         <Container style={styles.container}>
