@@ -8,10 +8,10 @@ import CustomTooltip from '../components/CustomTooltip';
 import CustomIcon from '../components/CustomIcon';
 import {colors} from '../theme';
 
-import {KeysProps} from './types';
+import {SeedPhraseProps} from './types';
 import {State} from '../reducers/types';
 
-const SeedPhrase = ({navigation}: KeysProps) => {
+const SeedPhrase = ({navigation}: SeedPhraseProps) => {
     const seed = useSelector((state: State) => state.app.seed);
     const [copied, setCopied] = useState(false);
     const arr = seed.split(' ');
@@ -143,8 +143,6 @@ const styles = StyleSheet.create({
     btn: {
         width: 256,
         height: 50,
-        borderWidth: 1,
-        borderColor: 'green',
         borderRadius: 25,
         justifyContent: 'center',
         alignItems: 'center',

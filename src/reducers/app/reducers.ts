@@ -8,7 +8,10 @@ import {
     SET_TRANSACTIONS,
     SET_SEND_AMOUNT,
     SET_TERMS_DATE,
+    SET_DELEGATE_ADDRESS,
     SET_REVEALED,
+    SET_DELEGATION,
+    SET_EXPECTEDDELEGATEDATE
 } from './actions';
 
 const initialState = {
@@ -20,11 +23,13 @@ const initialState = {
     balance: 0,
     revealed: false,
     transactions: [],
-    delegations: [],
+    delegation: [],
     sendStep: 1,
     sendAddress: '',
     sendAmount: 0,
     termsDate: '',
+    delegateAddress: '',
+    expectedPaymentDate: null
 };
 
 const app = (state = initialState, action: AppActions) => {
@@ -59,6 +64,12 @@ const app = (state = initialState, action: AppActions) => {
             return {...state, transactions: action.transactions};
         case SET_TERMS_DATE:
             return {...state, termsDate: action.date};
+        case SET_DELEGATE_ADDRESS:
+            return {...state, delegateAddress: action.address};
+        case SET_DELEGATION:
+            return {...state, delegation: action.delegation};
+        case SET_EXPECTEDDELEGATEDATE:
+            return {...state, expectedPaymentDate: action.date};
         default:
             return state;
     }

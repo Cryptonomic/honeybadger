@@ -1,34 +1,31 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 import {StyleSheet} from 'react-native';
-import {Container, Text, View, Button} from 'native-base';
+import {Container, Text, View} from 'native-base';
 
 import {sendTransaction} from '../reducers/app/thunks';
+import Review from '../components/Review';
 import CustomHeader from '../components/CustomHeader';
 import CustomIcon from '../components/CustomIcon';
-import {truncateHash} from '../utils/general';
 import {formatAmount} from '../utils/currency';
 import {colors} from '../theme';
 import {State} from '../reducers/types';
+import constants from '../utils/constants.json';
 
 import {SendReviewProps} from './types';
 
 const SendReview = ({navigation}: SendReviewProps) => {
     const dispatch = useDispatch();
-    const publicKeyHash = useSelector((state: State) => state.app.publicKeyHash);
+    const publicKeyHash = useSelector(
+        (state: State) => state.app.publicKeyHash,
+    );
     const address = useSelector((state: State) => state.app.sendAddress);
     const amount = useSelector((state: State) => state.app.sendAmount);
-    const isRevealed = useSelector((state: State) => state.app.revealed);
-    const [currency] = useState(0);
-    const [fee] = useState(0.02); // TODO
-    const [feeCurrency] = useState(0.001423); // TODO
 
     const onSend = () => {
         dispatch(sendTransaction());
         navigation.replace('Account');
     };
-
-    // TODO: if TezosNodeReader.isImplicitAndEmpty show a note on burn
 
     return (
         <Container style={styles.container}>
@@ -37,45 +34,20 @@ const SendReview = ({navigation}: SendReviewProps) => {
                 onBack={() => navigation.goBack()}
                 onClose={() => navigation.navigate('Account')}
             />
-            <View style={styles.paper}>
-                <Text style={[styles.title, styles.typo1]}>
-                    From My Account
-                </Text>
-                <Text style={[styles.address, styles.typo2]}>
-                    {truncateHash(publicKeyHash)}
-                </Text>
-                <View style={styles.dividerLine} />
-                <Text style={[styles.title, styles.typo1]}>Amount</Text>
-                <View style={[styles.row, styles.amount]}>
-                    <Text style={styles.typo3}>{formatAmount(amount)}</Text>
+            <Review
+                fromTitle="From My Account"
+                from={publicKeyHash}
+                toTitle="To Recipient"
+                to={address}
+                fee={constants.fees.simpleTransaction}
+                actionTitle="Tap to Send"
+                onSend={onSend}>
+                <Text style={styles.reviewAmountTitle}>Amount</Text>
+                <View style={styles.reviewAmount}>
+                    <Text style={styles.typo1}>{formatAmount(amount)}</Text>
                     <CustomIcon name="XTZ" size={30} color="#1a1919" />
                 </View>
-                {/*<View style={styles.currency}>
-                    <Text style={styles.typo4}>$</Text>
-                    <Text style={styles.typo4}>{currency}</Text>
-                </View>*/}
-                <View style={styles.dividerLine} />
-                <View style={[styles.dividerArrow1, styles.arrow]} />
-                <View style={[styles.dividerArrow2, styles.arrow]} />
-                <Text style={[styles.title, styles.typo1, styles.recipient]}>
-                    To Recipient
-                </Text>
-                <Text style={[styles.address, styles.typo2]}>
-                    {truncateHash(address)}
-                </Text>
-                <View style={[styles.fee, styles.row]}>
-                    {/*<Text style={styles.typo5}>
-                        {`Operation Fee $${fee}`}
-                    </Text>*/}
-                    <View style={[styles.row, styles.feeCurrency]}>
-                        <Text>{`Operation Fee ${isRevealed ? feeCurrency : (feeCurrency + 0.001300).toFixed(3) /* TODO */}`}</Text>
-                        <CustomIcon name="XTZ" size={14} />
-                    </View>
-                </View>
-                <Button style={styles.button} onPress={onSend}>
-                    <Text>Tap to Send</Text>
-                </Button>
-            </View>
+            </Review>
         </Container>
     );
 };
@@ -84,107 +56,22 @@ const styles = StyleSheet.create({
     container: {
         backgroundColor: colors.bg,
     },
-    paper: {
-        backgroundColor: '#ffffff',
-        flexGrow: 1,
-        borderTopLeftRadius: 26,
-        borderTopRightRadius: 26,
-        marginTop: 20,
-        paddingHorizontal: 36,
-        paddingTop: 67,
-        paddingBottom: 23,
-        alignItems: 'center',
-    },
-    title: {
+    reviewAmountTitle: {
         color: '#343434',
-    },
-    address: {
-        marginTop: 13,
-    },
-    dividerLine: {
-        marginTop: 20,
-        marginBottom: 26,
-        width: 2,
-        height: 56,
-        backgroundColor: '#fcd104',
-        zIndex: 10,
-    },
-    dividerArrow1: {
-        marginTop: -30,
-        borderTopColor: '#fcd104',
-    },
-    dividerArrow2: {
-        marginTop: -9,
-        borderTopColor: '#ffffff',
-    },
-    arrow: {
-        width: 0,
-        height: 0,
-        borderLeftWidth: 6,
-        borderStyle: 'solid',
-        borderLeftColor: 'transparent',
-        borderRightWidth: 6,
-        borderRightColor: 'transparent',
-        borderTopWidth: 6,
-    },
-    row: {
-        flexDirection: 'row',
-        alignItems: 'center',
-    },
-    amount: {
-        marginTop: 15,
-    },
-    currency: {
-        marginTop: 10,
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    recipient: {
-        marginTop: 23,
-    },
-    fee: {
-        marginTop: 58,
-    },
-    feeCurrency: {
-        marginLeft: 2,
-    },
-    button: {
-        marginTop: 21,
-        width: 277,
-        height: 61,
-        alignItems: 'center',
-        justifyContent: 'center',
-        borderRadius: 30.5,
-        backgroundColor: '#4b4b4b',
-    },
-    typo1: {
         fontFamily: 'Roboto-Regular',
         fontSize: 16,
         fontWeight: 'normal',
     },
-    typo2: {
-        fontFamily: 'Roboto-Medium',
-        fontSize: 24,
-        fontWeight: '500',
+    reviewAmount: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginTop: 15,
     },
-    typo3: {
+    typo1: {
         fontFamily: 'Roboto-Medium',
         fontSize: 36,
         fontWeight: '500',
         color: '#1a1919',
-    },
-    typo4: {
-        fontFamily: 'Roboto-Medium',
-        fontSize: 20,
-        fontWeight: '500',
-        color: '#7f7c7c',
-    },
-    typo5: {
-        fontFamily: 'Roboto-Bold',
-        fontSize: 16,
-        fontWeight: 'bold',
-        color: '#7f7c7c',
     },
 });
 

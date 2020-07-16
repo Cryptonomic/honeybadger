@@ -33,8 +33,6 @@ const Account = ({navigation}: AccountProps) => {
         (state: State) => state.app.publicKeyHash,
     );
     const balance = useSelector((state: State) => state.app.balance);
-    const transactions = useSelector((state: State) => state.app.transactions);
-    const delegations = useSelector((state: State) => state.app.delegations);
     const [tab, setTab] = useState(0);
     const [openSettings, setOpenSettings] = useState(false);
 
@@ -56,7 +54,9 @@ const Account = ({navigation}: AccountProps) => {
                 const wallet = await Keychain.getGenericPassword();
                 if (wallet) {
                     dispatch(syncAccount());
-                    setTimeout(() => { load(); }, 60000);
+                    setTimeout(() => {
+                        load();
+                    }, 60000);
                 } else {
                     navigation.replace('Welcome');
                 }
@@ -68,7 +68,7 @@ const Account = ({navigation}: AccountProps) => {
     }, []);
 
     const onPress = (value: string) => {
-        if ((value === 'SendAddress' || value === Receive) && !modalWasShown){
+        if ((value === 'SendAddress' || value === 'Receive') && !modalWasShown) {
             setModalNext(value);
             toggleModal();
         } else {
@@ -76,17 +76,19 @@ const Account = ({navigation}: AccountProps) => {
         }
     };
 
+    const onDelegate = () => navigation.navigate('DelegateAddress');
+
     const onSettingsSelect = (item: any) => {
         setOpenSettings(false);
         navigation.navigate(item.title);
     };
 
     const toggleModal = () => {
-      setModalVisible(!isModalVisible);
-      setModalWasShown(true);
-      if (modalNext) {
-        navigation.navigate(modalNext);
-      }
+        setModalVisible(!isModalVisible);
+        setModalWasShown(true);
+        if (modalNext) {
+            navigation.navigate(modalNext);
+        }
     };
 
     const onLogout = (item: any) => {
@@ -241,16 +243,20 @@ const Account = ({navigation}: AccountProps) => {
                 </View>
                 <View style={styles.tabContainer}>
                     {tab === 0 && <Transactions />}
-                    {tab === 1 && <Delegation />}
+                    {tab === 1 && <Delegation onDelegate={onDelegate} />}
                 </View>
             </View>
 
             <Modal isVisible={isModalVisible}>
                 <View style={styles.warningModal}>
                     <Text style={{marginBottom: 5}}>
-                        We only recommend storing and transferring small amounts of tez with this mobile wallet. You might want to wait for hardware wallet support for larger amounts.
+                        We only recommend storing and transferring small amounts
+                        of tez with this mobile wallet. You might want to wait
+                        for hardware wallet support for larger amounts.
                     </Text>
-                    <Button onPress={toggleModal} style={styles.warningModalButton}>
+                    <Button
+                        onPress={toggleModal}
+                        style={styles.warningModalButton}>
                         <Text>OK</Text>
                     </Button>
                 </View>
@@ -310,7 +316,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         borderRadius: 0,
         width: 50,
-        height: 50
+        height: 50,
     },
     icon: {
         alignItems: 'center',
@@ -423,16 +429,3 @@ const styles = StyleSheet.create({
 });
 
 export default Account;
-
-/*
-
-
-width: 63px;
-height: 19px;
-color: rgb(13, 13, 13);
-font-size: 16px;
-font-family: Roboto-Light;
-font-weight: 300;
-letter-spacing: 0.67px;
-
-*/

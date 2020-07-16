@@ -9,7 +9,9 @@ import store from './store';
 
 export default function App() {
     useEffect(() => {
-        SplashScreen.hide();
+        setTimeout(() => {
+            SplashScreen.hide();
+        }, 3000);
     }, []);
     return (
         <Provider store={store}>

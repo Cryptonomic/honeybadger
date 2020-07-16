@@ -7,24 +7,34 @@ import {
     SET_SEND_ADDRESS,
     SET_SEND_AMOUNT,
     SET_TERMS_DATE,
+    SET_DELEGATE_ADDRESS,
     SET_REVEALED,
+    SET_DELEGATION,
+    SET_EXPECTEDDELEGATEDATE
 } from './actions';
 import {Operation} from '../types';
 
 export interface State {
-    publicKey: string;
+    publicKey: string; // TODO: store a KeyStore object
     secretKey: string;
     publicKeyHash: string;
     storeType: string | number;
     seed: string;
-    balance: number;
-    revealed: boolean;
-    sendStep: number;
+
+    termsDate: string;
+    //delegationNoticeDate: string; // TODO: don't show delegation notice more than once
+    //betaNoticeDate: string; // TODO: send/receive small amounts notice
+
+    balance: number; // TODO: transient state
+    revealed: boolean; // TODO: transient state
+    delegation: string;
+    transactions: Array<Operation>;
+
+    sendStep: number; // TODO: view state
     sendAddress: string;
     sendAmount: number;
-    transactions: Array<Operation>;
-    delegations: Array<{}>;
-    termsDate: string;
+    delegateAddress: string;
+    expectedPaymentDate: Date;
 }
 
 export interface SetKeysAction {
@@ -67,6 +77,23 @@ export interface SetTermsDateAction {
     date: string;
 }
 
+export interface SetDelegateAddressAction {
+    type: typeof SET_DELEGATE_ADDRESS;
+    address: string;
+}
+
+export interface SetDelegationAction {
+    type: typeof SET_DELEGATION;
+    delegation: string;
+}
+
+export interface SetDelegationExpectedDate {
+    type: typeof SET_EXPECTEDDELEGATEDATE;
+    date: Date;
+}
+
+
+
 export type AppActions =
     | SetTransactionsAction
     | SetBalanceAction
@@ -75,4 +102,8 @@ export type AppActions =
     | SetSendStepAction
     | SetSendAddressAction
     | SetSendAmountAction
-    | SetTermsDateAction;
+    | SetTermsDateAction
+    | SetDelegateAddressAction
+    | SetDelegationAction
+    | SetDelegationExpectedDate
+    ;
