@@ -73,90 +73,88 @@ const Transactions = () => {
     });
 
     return (
-        <>
+        <ScrollView>
             <View style={styles.pending}>
                 <PendingTransactions />
             </View>
-            <ScrollView>
-                {displayTransactions.length === 0 && (
-                    <View style={styles.container}>
-                        <TransactionsIllustration />
-                        <View style={styles.text}>
-                            <Text style={styles.typo1}>
-                                You don’t have any transactions yet.{' '}
-                            </Text>
-                            <Text style={[styles.typo1]}>
-                                Fund your account{' '}
-                            </Text>
-                            <Text style={styles.typo1}>to get started.</Text>
-                        </View>
+            {displayTransactions.length === 0 && (
+                <View style={styles.container}>
+                    <TransactionsIllustration />
+                    <View style={styles.text}>
+                        <Text style={styles.typo1}>
+                            You don’t have any transactions yet.{' '}
+                        </Text>
+                        <Text style={[styles.typo1]}>
+                            Fund your account{' '}
+                        </Text>
+                        <Text style={styles.typo1}>to get started.</Text>
                     </View>
-                )}
-                {displayTransactions.length > 0 &&
-                    displayTransactions.map((t: any) => (
-                        <TouchableOpacity
-                            style={styles.list}
-                            onPress={() => onTransactionPress(t.opGroupHash)}>
-                            <View style={styles.listItem}>
-                                <View style={styles.left}>
-                                    <CustomIcon
-                                        name={t.iconName}
-                                        size={14}
-                                        color="#f5942a"
-                                    />
+                </View>
+            )}
+            {displayTransactions.length > 0 &&
+                displayTransactions.map((t: any) => (
+                    <TouchableOpacity
+                        style={styles.list}
+                        onPress={() => onTransactionPress(t.opGroupHash)}>
+                        <View style={styles.listItem}>
+                            <View style={styles.left}>
+                                <CustomIcon
+                                    name={t.iconName}
+                                    size={14}
+                                    color="#f5942a"
+                                />
+                            </View>
+                            <View style={styles.body}>
+                                <View style={{flexDirection: 'row'}}>
+                                    <Text style={styles.typo3}>
+                                        {t.action}
+                                    </Text>
+                                    <Text style={styles.typo4}>
+                                        {' '}
+                                        {t.preposition}
+                                    </Text>
                                 </View>
-                                <View style={styles.body}>
-                                    <View style={{flexDirection: 'row'}}>
+                                {t.preposition.length > 0 && (
+                                    <View style={styles.subtitle}>
                                         <Text style={styles.typo3}>
-                                            {t.action}
-                                        </Text>
-                                        <Text style={styles.typo4}>
-                                            {' '}
-                                            {t.preposition}
+                                            {t.address}
                                         </Text>
                                     </View>
-                                    {t.preposition.length > 0 && (
-                                        <View style={styles.subtitle}>
-                                            <Text style={styles.typo3}>
-                                                {t.address}
-                                            </Text>
-                                        </View>
-                                    )}
-                                </View>
-                                <View style={styles.right}>
-                                    {t.amountDirection !== 0 && (
-                                        <View style={styles.amount}>
-                                            <Text
-                                                style={[
-                                                    styles.typo5,
-                                                    t.amountDirection < 0
-                                                        ? styles.colorSend
-                                                        : styles.colorReceive,
-                                                ]}>
-                                                {`${
-                                                    t.amountDirection < 0
-                                                        ? '-'
-                                                        : '+'
-                                                }${t.amount}`}
-                                            </Text>
-                                            <CustomIcon
-                                                name="XTZ"
-                                                size={14}
-                                                color={
-                                                    t.amountDirection < 0
-                                                        ? '#e3787d'
-                                                        : '#259c90'
-                                                }
-                                            />
-                                        </View>
-                                    )}
-                                    <Text style={styles.typo6}>{t.date}</Text>
-                                </View>
+                                )}
                             </View>
-                        </TouchableOpacity>
-                    ))}
-            </ScrollView>
-        </>
+                            <View style={styles.right}>
+                                {t.amountDirection !== 0 && (
+                                    <View style={styles.amount}>
+                                        <Text
+                                            style={[
+                                                styles.typo5,
+                                                t.amountDirection < 0
+                                                    ? styles.colorSend
+                                                    : styles.colorReceive,
+                                            ]}>
+                                            {`${
+                                                t.amountDirection < 0
+                                                    ? '-'
+                                                    : '+'
+                                            }${t.amount}`}
+                                        </Text>
+                                        <CustomIcon
+                                            name="XTZ"
+                                            size={14}
+                                            color={
+                                                t.amountDirection < 0
+                                                    ? '#e3787d'
+                                                    : '#259c90'
+                                            }
+                                        />
+                                    </View>
+                                )}
+                                <Text style={styles.typo6}>{t.date}</Text>
+                            </View>
+                        </View>
+                    </TouchableOpacity>
+                ))}
+        </ScrollView>
     );
 };
 

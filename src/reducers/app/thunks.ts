@@ -64,7 +64,7 @@ export const syncAccount = () => async (
             dispatch(setTransactions(transactions));
         } catch (transactionError) {}
 
-        dispatch(getPendingOperations());
+        await dispatch(getPendingOperations());
         // TODO: tokens
     } catch (e) {}
 };
@@ -183,7 +183,7 @@ export const sendTransaction = () => async (
             isRevealed ? constants.fees.simpleTransaction : constants.fees.simpleTransaction + constants.fees.reveal,
         );
 
-        dispatch(getPendingOperations());
+        await dispatch(getPendingOperations());
     } catch (e) {
         console.log('error-transaction', e);
     }
@@ -213,7 +213,7 @@ export const sendDelegation = () => async (
             isRevealed ? constants.fees.delegation : constants.fees.delegation + constants.fees.reveal,
         );
 
-        dispatch(getPendingOperations());
+        await dispatch(getPendingOperations());
     } catch (e) {
         console.log('error-delegation', e);
     }

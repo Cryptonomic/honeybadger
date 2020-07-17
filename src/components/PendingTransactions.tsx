@@ -17,12 +17,6 @@ const PendingTransactions = () => {
     const pendingTransactions = useSelector(
         (state: State) => state.app.pendingTransactions,
     );
-    const lastPendingTransaction: any =
-        pendingTransactions[pendingTransactions.length - 1];
-    let title = '';
-    let direction = '';
-    let address = '';
-    let opGroupHashLink = '';
 
     const onPendingTransactionPress = (opGroupHash: string) => {
         if (!opGroupHash) {
@@ -31,53 +25,66 @@ const PendingTransactions = () => {
         Linking.openURL(`${config[0].explorerUrl}/${opGroupHash}`);
     };
 
-    if (lastPendingTransaction) {
-        const amount = formatAmount(lastPendingTransaction.amount);
-        title =
-            lastPendingTransaction.destination === publicKeyHash
-                ? `Receiving ${amount}`
-                : `Sending ${amount}`;
-        direction =
-            lastPendingTransaction.destination === publicKeyHash
-                ? 'from '
-                : 'to ';
-        address = truncateHash(lastPendingTransaction.source);
-        opGroupHashLink = lastPendingTransaction.operation_group_hash;
+    const getTitle = (destination: string, amount: number) => {
+        if (publicKeyHash === destination) {
+            return `Receiving ${formatAmount(amount)}`;
+        };
+        return `Sending ${formatAmount(amount)}`;
+    };
+
+    const getDirection = (destination: string) => {
+        if (destination === publicKeyHash) {
+            return 'from ';
+        };
+        return 'to ';
+    };
+
+    const getAddress = (destination: string, source: string) => {
+        if (destination === publicKeyHash) {
+            return truncateHash(source);
+        }
+        return truncateHash(destination);
     }
 
     return (
         <>
-            {pendingTransactions.length > 0 && (
-                <TouchableOpacity
-                    onPress={() => onPendingTransactionPress(opGroupHashLink)}>
-                    <View style={styles.container}>
-                        <View style={styles.pendingIcon}>
-                            <CustomIcon
-                                name="Sand-Timer"
-                                size={16}
-                                color="#f5942a"
-                            />
-                        </View>
-                        <View style={styles.text}>
-                            <View style={styles.row}>
-                                <Text style={styles.typo1}>{title}</Text>
+            {pendingTransactions.length > 0 &&
+                pendingTransactions.map((t) => (
+                    <TouchableOpacity
+                        key={t.operation_group_hash}
+                        onPress={() =>
+                            onPendingTransactionPress(t.operation_group_hash)
+                        }>
+                        <View style={styles.container}>
+                            <View style={styles.pendingIcon}>
                                 <CustomIcon
-                                    name="XTZ"
+                                    name="Sand-Timer"
                                     size={16}
-                                    color="#4a4a4a"
+                                    color="#f5942a"
                                 />
                             </View>
-                            <View style={styles.row}>
-                                <Text style={styles.typo2}>{direction}</Text>
-                                <Text style={styles.typo1}>{address}</Text>
+                            <View style={styles.text}>
+                                <View style={styles.row}>
+                                    <Text style={styles.typo1}>{getTitle(t.destination, t.amount)}</Text>
+                                    <CustomIcon
+                                        name="XTZ"
+                                        size={16}
+                                        color="#4a4a4a"
+                                    />
+                                </View>
+                                <View style={styles.row}>
+                                    <Text style={styles.typo2}>
+                                        {getDirection(t.destination)}
+                                    </Text>
+                                    <Text style={styles.typo1}>{getAddress(t.destination, t.source)}</Text>
+                                </View>
+                            </View>
+                            <View style={styles.linkIcon}>
+                                <CustomIcon name="New-Window" size={16} />
                             </View>
                         </View>
-                        <View style={styles.linkIcon}>
-                            <CustomIcon name="New-Window" size={16} />
-                        </View>
-                    </View>
-                </TouchableOpacity>
-            )}
+                    </TouchableOpacity>
+                ))}
         </>
     );
 };
@@ -86,7 +93,7 @@ const styles = StyleSheet.create({
     container: {
         width: '90%',
         height: 69,
-        marginTop: 25,
+        marginTop: 10,
         flexDirection: 'row',
         alignItems: 'center',
         backgroundColor: '#ffffff',

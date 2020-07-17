@@ -24,7 +24,7 @@ const Delegation = ({onDelegate}: DelegationProps) => {
         (state: State) => state.app.expectedPaymentDate,
     );
     const lastPendingDelegation =
-        pendingDelegations[pendingDelegations.length - 1];
+        pendingDelegations[0];
     return (
         <View style={styles.container}>
             {/* TODO: need something for not currently delegating, but delegation cancellation is < 5 cycles old */}
@@ -43,7 +43,7 @@ const Delegation = ({onDelegate}: DelegationProps) => {
                         </Button>
                     </>
                 ))}
-            {delegation.length > 0 && (
+            {(delegation.length > 0 || lastPendingDelegation) && (
                 <>
                     <View style={styles.delegationHeader}>
                         {!lastPendingDelegation && (
