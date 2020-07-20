@@ -2,7 +2,7 @@ PODS:
   - boost-for-react-native (1.63.0)
   - CocoaAsyncSocket (7.6.4)
   - CocoaLibEvent (1.0.0)
-  - djinni_objc (4.13.3)
+  - djinni_objc (4.14.2)
   - DoubleConversion (1.1.6)
   - FBLazyVector (0.63.1)
   - FBReactNativeSpec (0.63.1):
@@ -237,23 +237,23 @@ PODS:
     - React-cxxreact (= 0.63.1)
     - React-jsi (= 0.63.1)
   - React-jsinspector (0.63.1)
-  - react-native-camera (3.31.0):
+  - react-native-camera (3.32.0):
     - React
-    - react-native-camera/RCT (= 3.31.0)
-    - react-native-camera/RN (= 3.31.0)
-  - react-native-camera/RCT (3.31.0):
+    - react-native-camera/RCT (= 3.32.0)
+    - react-native-camera/RN (= 3.32.0)
+  - react-native-camera/RCT (3.32.0):
     - React
-  - react-native-camera/RN (3.31.0):
+  - react-native-camera/RN (3.32.0):
     - React
   - react-native-pdf (6.2.0):
     - React
   - react-native-progress-bar-android (1.0.3):
     - React
-  - react-native-progress-view (1.0.3):
+  - react-native-progress-view (1.1.0):
     - React
   - react-native-randombytes (3.5.3):
     - React
-  - react-native-safe-area-context (3.0.7):
+  - react-native-safe-area-context (3.1.1):
     - React
   - react-native-sodium (0.3.8):
     - React
@@ -323,7 +323,7 @@ PODS:
     - React-Core
   - RNCMaskedView (0.1.10):
     - React
-  - RNDeviceInfo (5.6.1):
+  - RNDeviceInfo (5.6.2):
     - React
   - RNFS (2.16.6):
     - React
@@ -337,7 +337,7 @@ PODS:
     - React
   - RNScreens (2.9.0):
     - React
-  - RNShare (3.6.0):
+  - RNShare (3.7.0):
     - React
   - RNSVG (12.1.0):
     - React
@@ -527,7 +527,7 @@ SPEC CHECKSUMS:
   boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
   CocoaAsyncSocket: 694058e7c0ed05a9e217d1b3c7ded962f4180845
   CocoaLibEvent: 2fab71b8bd46dd33ddb959f7928ec5909f838e3f
-  djinni_objc: eea0f58158bdca2aedb6c5e8f1efae6416306200
+  djinni_objc: 6d514e6f2c7ed0a524879e9b55242a7066efbb73
   DoubleConversion: cde416483dac037923206447da6e1454df403714
   FBLazyVector: a50434c875bd42f2b1c99c712bda892a1dc659c7
   FBReactNativeSpec: 393853a536428e05a9da00b6290042f09809b15b
@@ -551,12 +551,12 @@ SPEC CHECKSUMS:
   React-jsi: b32a31da32e030f30bbf9a8d3a9c8325df9e793f
   React-jsiexecutor: 7ab9cdcdd18d57652fb041f8a147fe9658d4e00a
   React-jsinspector: 2e28bb487e42dda6c94dbfa0c648d1343767a0fb
-  react-native-camera: 679479bfe0f59103aca704e8dc39b0cedf5e2f65
+  react-native-camera: 4e47bcac13263ef3cde5bbb4daa3c72703d6e256
   react-native-pdf: 909cd849e6a806731b2135263189fea39494b55e
   react-native-progress-bar-android: d1b109b86c699d36f6a7099dab1a117dc1d66d3c
-  react-native-progress-view: c3aea3f38ec17ded9712f071cbdba5c8a9e47daf
+  react-native-progress-view: 3fb787b0db1af2a368453eac6696d12f1785d2c0
   react-native-randombytes: 991545e6eaaf700b4ee384c291ef3d572e0b2ca8
-  react-native-safe-area-context: c39fc20a20cd66ebf1d56c6f8b8711142fbfee98
+  react-native-safe-area-context: 4c3249e4840225c61fcd215b136af0a737bccb79
   react-native-sodium: 2d13b6118d7f575ffd9abd9527472c6706d8b4d1
   react-native-splash-screen: 200d11d188e2e78cea3ad319964f6142b6384865
   React-RCTActionSheet: 1702a1a85e550b5c36e2e03cb2bd3adea053de95
@@ -571,14 +571,14 @@ SPEC CHECKSUMS:
   ReactCommon: 2905859f84a94a381bb0d8dd3921ccb1a0047cb8
   rn-fetch-blob: f065bb7ab7fb48dd002629f8bdcb0336602d3cba
   RNCMaskedView: f5c7d14d6847b7b44853f7acb6284c1da30a3459
-  RNDeviceInfo: ab2ab4ca9e7f2bc4f35d62ab6ce2b66f2cbf1e7a
+  RNDeviceInfo: e9b45b08fd1d733c3940879ed286c37d90bff7a0
   RNFS: 2bd9eb49dc82fa9676382f0585b992c424cd59df
   RNGestureHandler: 8f09cd560f8d533eb36da5a6c5a843af9f056b38
   RNKeychain: db956c02a018f7dd3a0ea8a6cf3087bc1894bf2b
   RNOS: 6f2f9a70895bbbfbdad7196abd952e7b01d45027
   RNReanimated: b5ccb50650ba06f6e749c7c329a1bc3ae0c88b43
   RNScreens: c526239bbe0e957b988dacc8d75ac94ec9cb19da
-  RNShare: 953e60d1a179b214ae50b22a1b1f2e50ec549e6d
+  RNShare: a1d5064df7a0ebe778d001869b3f0a124bf0a491
   RNSVG: ce9d996113475209013317e48b05c21ee988d42e
   Yoga: d5bd05a2b6b94c52323745c2c2b64557c8c66f64
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
