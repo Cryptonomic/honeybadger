@@ -146,7 +146,7 @@ const DelegateAddress = ({navigation}: DelegateAddressProps) => {
                         <View style={styles.bakerDetails}>
                             <View>
                                 <Button style={styles.nextButton} onPress={goNext}>
-                                    <Text style={styles.typo2}>Next</Text>
+                                    <Text style={[styles.typo2, styles.goNext]}>Next</Text>
                                 </Button>
                             </View>
                         </View>
@@ -364,6 +364,9 @@ const styles = StyleSheet.create({
     undelegateCancelText: {
         color: '#4b4b4b'
     },
+    goNext: {
+        textTransform: 'capitalize',
+    },
     typo1: {
         fontFamily: 'Roboto-Medium',
         fontSize: 24,
@@ -380,6 +383,7 @@ const styles = StyleSheet.create({
     typo3: {
         fontFamily: 'Roboto-Regular',
         fontSize: 16,
+        textTransform: 'capitalize',
     },
 });
 

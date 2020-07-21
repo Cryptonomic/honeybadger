@@ -166,8 +166,7 @@ const styles = StyleSheet.create({
         borderBottomColor: '#e8e8e8',
     },
     center: {
-        alignItems: 'center',
-        justifyContent: 'center',
+        alignSelf: 'center',
     },
     actions: {
         width: '90%',
@@ -176,6 +175,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
+        paddingTop: 15,
     },
     btn: {
         width: 160,
@@ -204,9 +204,10 @@ const styles = StyleSheet.create({
     },
     typo1: {
         fontFamily: 'Roboto-Medium',
-        fontSize: 18,
+        fontSize: 16,
         fontWeight: '500',
         lineHeight: 27,
+        textTransform: 'capitalize',
     },
 });
 

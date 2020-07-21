@@ -204,7 +204,7 @@ const Account = ({navigation}: AccountProps) => {
                                 : styles.tabBorderInactive,
                         ]}>
                         <Button
-                            style={styles.center}
+                            style={styles.tabBtn}
                             transparent
                             onPress={() => changeTab(0)}>
                             <Text
@@ -226,7 +226,7 @@ const Account = ({navigation}: AccountProps) => {
                                 : styles.tabBorderInactive,
                         ]}>
                         <Button
-                            style={styles.center}
+                            style={styles.tabBtn}
                             transparent
                             onPress={() => changeTab(1)}>
                             <Text
@@ -268,7 +268,6 @@ const Account = ({navigation}: AccountProps) => {
 const styles = StyleSheet.create({
     warningModal: {
         borderRadius: 26,
-        height: 155,
         padding: 15,
         backgroundColor: '#ffffff',
         alignItems: 'center',
@@ -282,6 +281,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: '#4b4b4b',
+        alignSelf: 'center',
+        marginTop: 10,
     },
     container: {
         backgroundColor: '#fcd104',
@@ -370,6 +371,9 @@ const styles = StyleSheet.create({
         width: '50%',
         justifyContent: 'center',
     },
+    tabBtn: {
+        alignSelf: 'center',
+    },
     tabContainer: {
         width: '100%',
     },
@@ -414,6 +418,7 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: '500',
         lineHeight: 27,
+        textTransform: 'capitalize',
     },
     typo4: {
         fontFamily: 'Roboto-Regular',

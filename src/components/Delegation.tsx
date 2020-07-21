@@ -217,6 +217,7 @@ const styles = StyleSheet.create({
         borderRadius: 25,
         backgroundColor: '#4b4b4b',
         justifyContent: 'center',
+        alignSelf: 'center',
     },
     edit: {
         width: 40,
@@ -246,6 +247,7 @@ const styles = StyleSheet.create({
         fontSize: 17,
         fontWeight: '500',
         letterSpacing: 0.85,
+        textTransform: 'capitalize',
     },
     typo4: {
         fontFamily: 'Roboto-Regular',

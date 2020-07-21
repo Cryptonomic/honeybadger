@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
-import {StyleSheet} from 'react-native';
+import {StyleSheet, Platform} from 'react-native';
 import {Container, Text, Input, View, Button} from 'native-base';
 
 import {setSendAmount} from '../reducers/app/actions';
@@ -43,6 +43,21 @@ const SendAmount = ({navigation}: SendAmountProps) => {
         setAmount(value);
     };
 
+    const onKeyPress = (e) => {
+        const value = e.nativeEvent.key;
+        if (e.nativeEvent.key === 'Backspace') {
+            const val =
+                amount.length > 1 ? amount.slice(0, amount.length - 1) : '';
+            setAmount(val);
+            return;
+        }
+        if (!Number(value) && value !== '.') {
+            return;
+        }
+        const newValue = amount + value;
+        onChange(newValue);
+    };
+
     const goNext = () => {
         if (!amount.length) {
             return;
@@ -65,13 +80,23 @@ const SendAmount = ({navigation}: SendAmountProps) => {
             />
             <Text style={styles.title}>{title}</Text>
             <View style={styles.amount}>
-                <Input
-                    autoFocus
-                    style={styles.input}
-                    value={amount}
-                    onChangeText={onChange}
-                    keyboardType="numeric"
-                />
+                {Platform.OS === 'android' && (
+                    <Input
+                        autoFocus
+                        style={styles.input}
+                        value={amount}
+                        onKeyPress={onKeyPress}
+                    />
+                )}
+                {Platform.OS === 'ios' && (
+                    <Input
+                        autoFocus
+                        style={styles.input}
+                        value={amount}
+                        onChangeText={onChange}
+                        keyboardType="numeric"
+                    />
+                )}
                 <Text style={styles.typo1}>
                     {formatAmount(Number(amount) * 1000000)}
                 </Text>
@@ -167,11 +192,13 @@ const styles = StyleSheet.create({
     },
     button: {
         marginTop: 48,
+        width: 213,
         height: 50,
         alignItems: 'center',
         justifyContent: 'center',
         borderRadius: 25,
         backgroundColor: '#4b4b4b',
+        alignSelf: 'center',
     },
     typo1: {
         fontFamily: 'Roboto-Medium',
@@ -208,6 +235,7 @@ const styles = StyleSheet.create({
         fontSize: 17,
         fontWeight: '500',
         letterSpacing: 0.85,
+        textTransform: 'capitalize',
     },
 });
 

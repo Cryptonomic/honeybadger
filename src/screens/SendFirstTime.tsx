@@ -82,12 +82,14 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         borderRadius: 25,
         backgroundColor: '#4b4b4b',
+        alignSelf: 'center',
     },
     buttonText: {
         fontFamily: 'Roboto-Medium',
         fontSize: 17,
         fontWeight: '500',
         letterSpacing: 0.85,
+        textTransform: 'capitalize',
     },
 });
 
