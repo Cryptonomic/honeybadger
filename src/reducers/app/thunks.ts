@@ -330,7 +330,7 @@ export const getBakerDetails = async (address: string): Promise<BakerInfo> => { 
         insuranceCoverage: 2.97
         logo: "https://services.tzkt.io/v1/logos/tezgate.png"
         maxStakingBalance: 9181010.777211
-        minDelegation: 100
+        minDelegation: 100  
         name: "Tezgate"
         openForDelegation: true
         payoutAccuracy: "precise"
@@ -342,6 +342,8 @@ export const getBakerDetails = async (address: string): Promise<BakerInfo> => { 
         stakingBalance: 8418423.671465
         stakingCapacity
         */
+
+        if (responseJSON.error !== undefined && responseJSON.error.length > 0) { throw ''; }
 
         return {address, name: responseJSON.name, fee: responseJSON.fee, logoUrl: responseJSON.logo || '', estimatedRoi: responseJSON.estimatedRoi};
     } catch (e) {
