@@ -22,11 +22,12 @@ import {
     setRevealedAction,
     setTransactions,
     setDelegation,
-    setDelegateExpectedDate
+    setDelegateExpectedDate,
+    setPendingOperations
 } from './actions';
 
 export const syncAccount = () => async (
-    dispatch: Dispatch,
+    dispatch,
     getState: () => State,
 ) => {
     try {
@@ -63,6 +64,7 @@ export const syncAccount = () => async (
             dispatch(setTransactions(transactions));
         } catch (transactionError) {}
 
+        await dispatch(getPendingOperations());
         // TODO: tokens
     } catch (e) {}
 };
@@ -160,7 +162,7 @@ export const getLastDelegation = async (accountHash: string) => {
 }
 
 export const sendTransaction = () => async (
-    dispatch: Dispatch,
+    dispatch,
     getState: () => State,
 ) => {
     try {
@@ -180,13 +182,15 @@ export const sendTransaction = () => async (
             amount,
             isRevealed ? constants.fees.simpleTransaction : constants.fees.simpleTransaction + constants.fees.reveal,
         );
+
+        await dispatch(getPendingOperations());
     } catch (e) {
         console.log('error-transaction', e);
     }
 };
 
 export const sendDelegation = () => async (
-    dispatch: Dispatch,
+    dispatch,
     getState: () => State,
 ) => {
     try {
@@ -208,6 +212,8 @@ export const sendDelegation = () => async (
             address,
             isRevealed ? constants.fees.delegation : constants.fees.delegation + constants.fees.reveal,
         );
+
+        await dispatch(getPendingOperations());
     } catch (e) {
         console.log('error-delegation', e);
     }
@@ -228,6 +234,59 @@ export const cancelDelegation = () => async (dispatch: Dispatch, getState: () =>
         await TezosNodeWriter.sendDelegationOperation(tezosUrl, signer, keyStore, undefined, constants.fees.clearDelegation);
     } catch(e) {
         console.log('error-cancel-delegation');
+    }
+}
+
+export function processNodeOperationGroup(group: any, ttl: number = 0) {
+    const first = group.contents[0];
+
+    /*
+    amount: Number(first.amount),
+    balance: 0,
+    block_hash: '',
+    block_level: -1,
+    delegate: first.delegate || '',
+    destination: first.destination || '',
+    fee: parseInt(first.fee, 10),
+    gas_limit: parseInt(first.gas_limit, 10),
+    kind: first.kind,
+    operation_group_hash: group.hash,
+    operation_id: 'OPID',
+    pkh: first.pkh || '',
+    status: 'Pending',
+    source: first.source || '',
+    storage_limit: parseInt(first.storage_limit, 10),
+    timestamp: new Date(),
+    ttl
+    */
+
+    return {
+        amount: Number(first.amount),
+        delegate: first.delegate || '',
+        destination: first.destination || '',
+        fee: parseInt(first.fee, 10),
+        kind: first.kind,
+        operation_group_hash: group.hash,
+        pkh: first.pkh || '',
+        status: 'Pending',
+        source: first.source || '',
+        timestamp: new Date(),
+    };
+}
+
+export const getPendingOperations = () => async (dispatch: Dispatch, getState: () => State) => {
+    try {
+        const tezosUrl = config[0].nodeUrl; // TODO: getState().config
+        const publicKeyHash = getState().app.publicKeyHash;
+        const pendingGroups: any[] = await TezosNodeReader.getMempoolOperationsForAccount(tezosUrl, publicKeyHash);
+        const pendingOperations = await Promise.all(pendingGroups.map(
+                async (g) => processNodeOperationGroup(g, await TezosNodeReader.estimateBranchTimeout(tezosUrl, g.branch))
+              ));
+        const transactions = pendingOperations.filter((o) => !o.delegate);
+        const delegations = pendingOperations.filter((o) => o.delegate);
+        dispatch(setPendingOperations(transactions, delegations))
+    } catch(e) {
+        console.log('error-pending-transactions', e);
     }
 }
 
