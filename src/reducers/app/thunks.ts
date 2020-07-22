@@ -241,7 +241,6 @@ export function processNodeOperationGroup(group: any, ttl: number = 0) {
     const first = group.contents[0];
 
     /*
-
     amount: Number(first.amount),
     balance: 0,
     block_hash: '',
@@ -258,8 +257,7 @@ export function processNodeOperationGroup(group: any, ttl: number = 0) {
     source: first.source || '',
     storage_limit: parseInt(first.storage_limit, 10),
     timestamp: new Date(),
-    ttl,
-
+    ttl
     */
 
     return {
@@ -281,9 +279,9 @@ export const getPendingOperations = () => async (dispatch: Dispatch, getState: (
         const tezosUrl = config[0].nodeUrl; // TODO: getState().config
         const publicKeyHash = getState().app.publicKeyHash;
         const pendingGroups: any[] = await TezosNodeReader.getMempoolOperationsForAccount(tezosUrl, publicKeyHash);
-        const pendingOperations = await Promise.all(
-            pendingGroups.map(async (g) => processNodeOperationGroup(g, await TezosNodeReader.estimateBranchTimeout(tezosUrl, g.branch)))
-        );
+        const pendingOperations = await Promise.all(pendingGroups.map(
+                async (g) => processNodeOperationGroup(g, await TezosNodeReader.estimateBranchTimeout(tezosUrl, g.branch))
+              ));
         const transactions = pendingOperations.filter((o) => !o.delegate);
         const delegations = pendingOperations.filter((o) => o.delegate);
         dispatch(setPendingOperations(transactions, delegations))
@@ -291,6 +289,7 @@ export const getPendingOperations = () => async (dispatch: Dispatch, getState: (
         console.log('error-pending-transactions', e);
     }
 }
+
 export const validateBakerAddress = async (address: string) => {
     if (!(['tz1', 'tz2', 'tz3'].includes(address.substring(0, 3)))) {
         throw new Error('Baker address must start with tz1, tz2 or tz3');

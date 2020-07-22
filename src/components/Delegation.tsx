@@ -1,5 +1,6 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {StyleSheet} from 'react-native';
+import Modal from 'react-native-modal';
 import {View, Text, Button} from 'native-base';
 import {useSelector} from 'react-redux';
 import moment from 'moment';
@@ -16,15 +17,27 @@ interface DelegationProps {
 
 const Delegation = ({onDelegate}: DelegationProps) => {
     const delegation = useSelector((state: State) => state.app.delegation);
-    const pendingDelegations = useSelector(
-        (state: State) => state.app.pendingDelegations,
-    );
+    const pendingDelegations = useSelector((state: State) => state.app.pendingDelegations);
     const balance = useSelector((state: State) => state.app.balance);
-    const expectedPaymentDate = useSelector(
-        (state: State) => state.app.expectedPaymentDate,
-    );
-    const lastPendingDelegation =
-        pendingDelegations[0];
+    const expectedPaymentDate = useSelector((state: State) => state.app.expectedPaymentDate);
+    const hasPendingOperations = useSelector((state: State) => (state.app.pendingDelegations.length > 0 || state.app.pendingTransactions.length > 0));
+
+    const [isPendingModalVisible, setPendingModalVisible] = useState(false);
+
+    const lastPendingDelegation = pendingDelegations[0];
+
+    const togglePendingModal = () => {
+        setPendingModalVisible(!isPendingModalVisible);
+    };
+
+    const onPress = (value: string) => {
+        if (hasPendingOperations) {
+            togglePendingModal();
+        } else {
+            onDelegate();
+        }
+    };
+
     return (
         <View style={styles.container}>
             {/* TODO: need something for not currently delegating, but delegation cancellation is < 5 cycles old */}
@@ -38,9 +51,22 @@ const Delegation = ({onDelegate}: DelegationProps) => {
                         <Text style={[styles.subtitle, styles.typo2]}>
                             Delegate XTZ to earn returns.
                         </Text>
-                        <Button style={styles.btn} onPress={onDelegate}>
+                        <Button style={styles.btn} onPress={onPress}>
                             <Text style={styles.typo3}>Delegate Now</Text>
                         </Button>
+
+                        <Modal isVisible={isPendingModalVisible}>
+                            <View style={styles.warningModal}>
+                                <Text style={{marginBottom: 5}}>
+                                    There is a pending operation awaiting processing on the chain. It must be included in a block or time out. New operations cannot be submitted until then.
+                                </Text>
+                                <Button
+                                    onPress={togglePendingModal}
+                                    style={styles.warningModalButton}>
+                                    <Text>OK</Text>
+                                </Button>
+                            </View>
+                        </Modal>
                     </>
                 ))}
             {(delegation.length > 0 || lastPendingDelegation) && (
@@ -67,8 +93,7 @@ const Delegation = ({onDelegate}: DelegationProps) => {
                                     size={16}
                                     color="#f5942a"
                                 />
-                                <Text
-                                    style={[styles.pendingText, styles.typo8]}>
+                                <Text style={[styles.pendingText, styles.typo8]}>
                                     Delegation Transaction Pending…
                                 </Text>
                             </View>
@@ -132,6 +157,23 @@ const Delegation = ({onDelegate}: DelegationProps) => {
 };
 
 const styles = StyleSheet.create({
+    warningModal: {
+        borderRadius: 26,
+        height: 155,
+        padding: 15,
+        backgroundColor: '#ffffff',
+        alignItems: 'center',
+    },
+    warningModalButton: {
+        width: 160,
+        height: 50,
+        borderColor: '#4b4b4b',
+        borderWidth: 1,
+        borderRadius: 25,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#4b4b4b',
+    },
     container: {
         width: '90%',
         alignItems: 'center',

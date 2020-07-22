@@ -79,9 +79,9 @@ const PendingTransactions = () => {
                                     <Text style={styles.typo1}>{getAddress(t.destination, t.source)}</Text>
                                 </View>
                             </View>
-                            <View style={styles.linkIcon}>
+                            {/*<View style={styles.linkIcon}>
                                 <CustomIcon name="New-Window" size={16} />
-                            </View>
+                            </View>*/}
                         </View>
                     </TouchableOpacity>
                 ))}
