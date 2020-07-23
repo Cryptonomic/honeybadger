@@ -35,11 +35,11 @@ const Welcome = ({navigation}: WelcomeProps) => {
 
     return (
         <Container>
-            <View style={styles.wave}>
-                <View style={styles.waveBg} />
-                <Wave />
-            </View>
+            <View style={styles.waveBg} />
             <SafeContainer>
+                <View style={styles.wave}>
+                    <Wave />
+                </View>
                 <View style={styles.logo}>
                     <Logo />
                 </View>
