@@ -290,30 +290,36 @@ export const getPendingOperations = () => async (dispatch: Dispatch, getState: (
     }
 }
 
-export const validateBakerAddress = async (address: string) => {
-    if (!(['tz1', 'tz2', 'tz3'].includes(address.substring(0, 3)))) {
+export const validateBakerAddress = async (to: string, from: string) => {
+    if (to === from) {
+        throw new Error('Can not send to yourself');
+    }
+
+    if (!(['tz1', 'tz2', 'tz3'].includes(to.substring(0, 3)))) {
         throw new Error('Baker address must start with tz1, tz2 or tz3');
     }
 
-    if (address.match(/[^1-9A-HJ-NP-Za-km-z]/)) {
+    if (to.match(/[^1-9A-HJ-NP-Za-km-z]/)) {
         throw new Error('Address contains invalid characters');
     }
 
-    if (address.length < 36) {
+    if (to.length < 36) {
         throw new Error('Address too short');
     }
 
-    if (address.length > 36) {
+    if (to.length > 36) {
         throw new Error('Address too long');
     }
 
-    /*try { // TODO: for some reason this dies
-        const account = await TezosNodeReader.getAccountForBlock(config[0].nodeUrl, 'head', address);
-        if (account.balance) { throw new Error('Address not found on chain'); }
-    } catch (err) {
+    try {
+        await TezosNodeReader.getAccountForBlock(config[0].nodeUrl, 'head', to);
+    } catch (error) {
+        if (error.httpStatus === 400) {
+            throw new Error('Address not found on chain');
+        }
         throw new Error('Could not query chain for address');
-    }*/
-}
+    }
+};
 
 export const getBakerDetails = async (address: string): Promise<BakerInfo> => { // TODO: needs return type
     try {
@@ -329,7 +335,7 @@ export const getBakerDetails = async (address: string): Promise<BakerInfo> => { 
         insuranceCoverage: 2.97
         logo: "https://services.tzkt.io/v1/logos/tezgate.png"
         maxStakingBalance: 9181010.777211
-        minDelegation: 100  
+        minDelegation: 100
         name: "Tezgate"
         openForDelegation: true
         payoutAccuracy: "precise"

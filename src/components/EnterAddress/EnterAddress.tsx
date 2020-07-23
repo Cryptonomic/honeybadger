@@ -38,7 +38,6 @@ const EnterAddress: FunctionComponent<EnterAddressProps> = ({
 
         try {
             await validateAddress(value);
-
             setIsValid(true);
             setIsError(false);
             setErrorMessage('');
