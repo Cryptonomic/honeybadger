@@ -29,9 +29,7 @@ import {AccountProps} from './types';
 
 const Account = ({navigation}: AccountProps) => {
     const dispatch = useDispatch();
-    const publicKeyHash = useSelector(
-        (state: State) => state.app.publicKeyHash,
-    );
+    const publicKeyHash = useSelector((state: State) => state.app.publicKeyHash);
     const balance = useSelector((state: State) => state.app.balance);
     const [tab, setTab] = useState(0);
     const [openSettings, setOpenSettings] = useState(false);
@@ -39,6 +37,8 @@ const Account = ({navigation}: AccountProps) => {
     const [isModalVisible, setModalVisible] = useState(false);
     const [modalWasShown, setModalWasShown] = useState(false);
     const [modalNext, setModalNext] = useState('');
+    const hasPendingOperations = useSelector((state: State) => (state.app.pendingDelegations.length > 0 || state.app.pendingTransactions.length > 0));
+    const [isPendingModalVisible, setPendingModalVisible] = useState(false);
 
     const changeTab = (newTab: number) => {
         if (newTab === tab) {
@@ -68,7 +68,9 @@ const Account = ({navigation}: AccountProps) => {
     }, []);
 
     const onPress = (value: string) => {
-        if ((value === 'SendAddress' || value === 'Receive') && !modalWasShown) {
+        if (value === 'SendAddress' && hasPendingOperations){
+            togglePendingModal();
+        } else if ((value === 'SendAddress' || value === 'Receive') && !modalWasShown) {
             setModalNext(value);
             toggleModal();
         } else {
@@ -89,6 +91,10 @@ const Account = ({navigation}: AccountProps) => {
         if (modalNext) {
             navigation.navigate(modalNext);
         }
+    };
+
+    const togglePendingModal = () => {
+        setPendingModalVisible(!isPendingModalVisible);
     };
 
     const onLogout = (item: any) => {
@@ -256,6 +262,19 @@ const Account = ({navigation}: AccountProps) => {
                     </Text>
                     <Button
                         onPress={toggleModal}
+                        style={styles.warningModalButton}>
+                        <Text>OK</Text>
+                    </Button>
+                </View>
+            </Modal>
+
+            <Modal isVisible={isPendingModalVisible}>
+                <View style={styles.warningModal}>
+                    <Text style={{marginBottom: 5}}>
+                        There is a pending operation awaiting processing on the chain. It must be included in a block or time out. New operations cannot be submitted until then.
+                    </Text>
+                    <Button
+                        onPress={togglePendingModal}
                         style={styles.warningModalButton}>
                         <Text>OK</Text>
                     </Button>
