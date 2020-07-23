@@ -1,10 +1,10 @@
 import React, {useState, FunctionComponent} from 'react';
 import {StyleSheet, Clipboard} from 'react-native';
 import {Text, View, Input, Item, Icon} from 'native-base';
-import {RNCamera} from 'react-native-camera';
 
-import CustomButton from '../components/CustomButton';
-import CustomHeader from '../components/CustomHeader';
+import CustomButton from '../CustomButton';
+import CustomHeader from '../CustomHeader';
+import EnterAddressCamera from './EnterAddressCamera';
 
 interface EnterAddressProps {
     headerTitle: string;
@@ -31,7 +31,9 @@ const EnterAddress: FunctionComponent<EnterAddressProps> = ({
     const onAddressTextChange = async (value: string) => {
         setAddress(value);
 
-        if (value.trim().length === 0) { return; }
+        if (value.trim().length === 0) {
+            return;
+        }
 
         try {
             await validateAddress(value);
@@ -58,26 +60,13 @@ const EnterAddress: FunctionComponent<EnterAddressProps> = ({
             setShowCamera(false);
         }
     };
-    const cameraBtnProps = {
-        size: 30,
-        color: '#ffffff',
-    };
     return (
         <>
-            {showCamera && (
-                <>
-                    <RNCamera
-                        captureAudio={false}
-                        style={styles.camera}
-                        onBarCodeRead={onBarcodeRecognized}>
-                        <CustomHeader
-                            onBack={() => setShowCamera(false)}
-                            leftIconName="Cancel"
-                            backIconCustomStyles={cameraBtnProps}
-                        />
-                    </RNCamera>
-                </>
-            )}
+            <EnterAddressCamera
+                open={showCamera}
+                onBarcodeRecognized={onBarcodeRecognized}
+                onBack={() => setShowCamera(false)}
+            />
             {!showCamera && (
                 <>
                     <CustomHeader title={headerTitle} onBack={goBack} />
@@ -110,9 +99,7 @@ const EnterAddress: FunctionComponent<EnterAddressProps> = ({
                                 </Text>
                             </View>
                             <View style={styles.errorText}>
-                                <Text style={styles.typo4}>
-                                    {errorMessage}
-                                </Text>
+                                <Text style={styles.typo4}>{errorMessage}</Text>
                             </View>
                         </View>
                     )}
