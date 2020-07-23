@@ -3,4 +3,12 @@ import ReduxThunk from 'redux-thunk';
 
 import rootReducer from './reducers';
 
-export default createStore(rootReducer, applyMiddleware(ReduxThunk));
+const middlewares = [ReduxThunk];
+
+// Redux Debugger Plugin for Flipper
+if (__DEV__) {
+    const createDebugger = require('redux-flipper').default;
+    middlewares.push(createDebugger());
+}
+
+export default createStore(rootReducer, applyMiddleware(...middlewares));

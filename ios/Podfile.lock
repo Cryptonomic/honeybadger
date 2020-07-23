@@ -245,6 +245,8 @@ PODS:
     - React
   - react-native-camera/RN (3.32.0):
     - React
+  - react-native-flipper (0.50.0):
+    - React
   - react-native-pdf (6.2.0):
     - React
   - react-native-progress-bar-android (1.0.3):
@@ -384,6 +386,7 @@ DEPENDENCIES:
   - React-jsiexecutor (from `../node_modules/react-native/ReactCommon/jsiexecutor`)
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - react-native-camera (from `../node_modules/react-native-camera`)
+  - react-native-flipper (from `../node_modules/react-native-flipper`)
   - react-native-pdf (from `../node_modules/react-native-pdf`)
   - "react-native-progress-bar-android (from `../node_modules/@react-native-community/progress-bar-android`)"
   - "react-native-progress-view (from `../node_modules/@react-native-community/progress-view`)"
@@ -464,6 +467,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/jsinspector"
   react-native-camera:
     :path: "../node_modules/react-native-camera"
+  react-native-flipper:
+    :path: "../node_modules/react-native-flipper"
   react-native-pdf:
     :path: "../node_modules/react-native-pdf"
   react-native-progress-bar-android:
@@ -552,6 +557,7 @@ SPEC CHECKSUMS:
   React-jsiexecutor: 7ab9cdcdd18d57652fb041f8a147fe9658d4e00a
   React-jsinspector: 2e28bb487e42dda6c94dbfa0c648d1343767a0fb
   react-native-camera: 4e47bcac13263ef3cde5bbb4daa3c72703d6e256
+  react-native-flipper: b7340d18f1bf088de47fed2d77a729f2aa533854
   react-native-pdf: 909cd849e6a806731b2135263189fea39494b55e
   react-native-progress-bar-android: d1b109b86c699d36f6a7099dab1a117dc1d66d3c
   react-native-progress-view: 3fb787b0db1af2a368453eac6696d12f1785d2c0
