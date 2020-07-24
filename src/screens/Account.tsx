@@ -13,7 +13,7 @@ import {
 } from 'react-native-popup-menu';
 
 import {syncAccount} from '../reducers/app/thunks';
-
+import {setMessage} from '../reducers/messages/actions';
 import Transactions from '../components/Transactions';
 import Delegation from '../components/Delegation';
 import SecurityLevelButton from '../components/SecurityLevelButton';
@@ -68,6 +68,10 @@ const Account = ({navigation}: AccountProps) => {
     }, []);
 
     const onPress = (value: string) => {
+        if (balance === 0) {
+            dispatch(setMessage('Can not send tez if balance 0', 'info'));
+            return;
+        }
         if (value === 'SendAddress' && hasPendingOperations){
             togglePendingModal();
         } else if ((value === 'SendAddress' || value === 'Receive') && !modalWasShown) {
