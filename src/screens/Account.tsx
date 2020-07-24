@@ -68,7 +68,7 @@ const Account = ({navigation}: AccountProps) => {
     }, []);
 
     const onPress = (value: string) => {
-        if (balance === 0) {
+        if (balance === 0 && value === 'SendAddress') {
             dispatch(setMessage('Can not send tez if balance 0', 'info'));
             return;
         }
