@@ -5,6 +5,7 @@ import SplashScreen from 'react-native-splash-screen';
 import {MenuProvider} from 'react-native-popup-menu';
 
 import MainNavigator from './navigation/MainNavigator';
+import MessageModal from './components/MessageModal';
 import store from './store';
 
 export default function App() {
@@ -18,6 +19,7 @@ export default function App() {
             <MenuProvider>
                 <Root>
                     <MainNavigator />
+                    <MessageModal />
                 </Root>
             </MenuProvider>
         </Provider>

@@ -2,9 +2,10 @@ import React, {useState} from 'react';
 import {StyleSheet} from 'react-native';
 import Modal from 'react-native-modal';
 import {View, Text, Button} from 'native-base';
-import {useSelector} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 import moment from 'moment';
 
+import {setMessage} from '../reducers/messages/actions';
 import DelegationIllustration from '../../assets/delegation-illustration.svg';
 import CustomIcon from '../components/CustomIcon';
 import {formatAmount} from '../utils/currency';
@@ -21,8 +22,8 @@ const Delegation = ({onDelegate}: DelegationProps) => {
     const balance = useSelector((state: State) => state.app.balance);
     const expectedPaymentDate = useSelector((state: State) => state.app.expectedPaymentDate);
     const hasPendingOperations = useSelector((state: State) => (state.app.pendingDelegations.length > 0 || state.app.pendingTransactions.length > 0));
-
     const [isPendingModalVisible, setPendingModalVisible] = useState(false);
+    const dispatch = useDispatch();
 
     const lastPendingDelegation = pendingDelegations[0];
 
@@ -31,6 +32,10 @@ const Delegation = ({onDelegate}: DelegationProps) => {
     };
 
     const onPress = (value: string) => {
+        if (balance === 0) {
+            dispatch(setMessage('Can not delegate if balane 0', 'info'));
+            return;
+        }
         if (hasPendingOperations) {
             togglePendingModal();
         } else {

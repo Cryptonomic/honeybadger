@@ -12,11 +12,10 @@ import {State, Operation} from '../reducers/types';
 import {SendAddressProps} from './types';
 
 const SendAddress = ({navigation}: SendAddressProps) => {
-    const dispatch = useDispatch();
     const transactions = useSelector((state: State) => state.app.transactions);
     const publicKeyHash = useSelector((state: State) => state.app.publicKeyHash);
-
     const [isValidAddress, setValidAddress] = useState(false);
+    const dispatch = useDispatch();
 
     const goNext = () => {
         const isSomeSendTransaction = transactions.find(
@@ -30,7 +29,6 @@ const SendAddress = ({navigation}: SendAddressProps) => {
 
     const onValidAddress = (value: string, valid: boolean) => {
         dispatch(setSendAddress(value));
-
         setValidAddress(valid);
     };
 
@@ -40,7 +38,7 @@ const SendAddress = ({navigation}: SendAddressProps) => {
                 headerTitle="Send"
                 addressTitle="Enter Recipient Address"
                 goBack={() => navigation.goBack()}
-                validateAddress={validateBakerAddress}
+                validateAddress={(to) => validateBakerAddress(to, publicKeyHash)}
                 onValidAddress={onValidAddress}>
                 {isValidAddress && (
                 <View style={styles.bakerDetails}>

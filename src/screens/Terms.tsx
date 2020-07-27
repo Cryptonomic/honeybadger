@@ -7,6 +7,8 @@ import Pdf from 'react-native-pdf';
 
 import {setTermsDate} from '../reducers/app/actions';
 
+import SafeContainer from '../components/SafeContainer';
+import BottomCover from '../components/BottomCover';
 import CustomHeader from '../components/CustomHeader';
 import {colors} from '../theme';
 import {WelcomeProps} from './types';
@@ -44,78 +46,87 @@ const Terms = ({navigation}: WelcomeProps) => {
 
     return (
         <Container style={styles.container}>
-            <CustomHeader title="Accept Terms" />
-            <View style={styles.content}>
-                <View style={styles.tabs}>
-                    <View
-                        style={[
-                            styles.tab,
-                            tab === 0
-                                ? styles.tabBorderActive
-                                : styles.tabBorderInactive,
-                        ]}>
-                        <Button
-                            style={styles.center}
-                            transparent
-                            onPress={() => changeTab(0)}>
-                            <Text
-                                style={[
-                                    styles.typo1,
-                                    tab === 0
-                                        ? styles.tabActive
-                                        : styles.tabInactive,
-                                ]}>
-                                Terms of Service
-                            </Text>
-                        </Button>
+            <SafeContainer>
+                <CustomHeader title="Accept Terms" />
+                <View style={styles.content}>
+                    <View style={styles.tabs}>
+                        <View
+                            style={[
+                                styles.tab,
+                                tab === 0
+                                    ? styles.tabBorderActive
+                                    : styles.tabBorderInactive,
+                            ]}>
+                            <Button
+                                style={styles.center}
+                                transparent
+                                onPress={() => changeTab(0)}>
+                                <Text
+                                    style={[
+                                        styles.typo1,
+                                        tab === 0
+                                            ? styles.tabActive
+                                            : styles.tabInactive,
+                                    ]}>
+                                    Terms of Service
+                                </Text>
+                            </Button>
+                        </View>
+                        <View
+                            style={[
+                                styles.tab,
+                                tab === 1
+                                    ? styles.tabBorderActive
+                                    : styles.tabBorderInactive,
+                            ]}>
+                            <Button
+                                style={styles.center}
+                                transparent
+                                onPress={() => changeTab(1)}>
+                                <Text
+                                    style={[
+                                        styles.typo1,
+                                        tab === 1
+                                            ? styles.tabActive
+                                            : styles.tabInactive,
+                                    ]}>
+                                    Privacy Policy
+                                </Text>
+                            </Button>
+                        </View>
                     </View>
-                    <View
-                        style={[
-                            styles.tab,
-                            tab === 1
-                                ? styles.tabBorderActive
-                                : styles.tabBorderInactive,
-                        ]}>
-                        <Button
-                            style={styles.center}
-                            transparent
-                            onPress={() => changeTab(1)}>
-                            <Text
-                                style={[
-                                    styles.typo1,
-                                    tab === 1
-                                        ? styles.tabActive
-                                        : styles.tabInactive,
-                                ]}>
-                                Privacy Policy
-                            </Text>
-                        </Button>
+                    <Pdf
+                        source={sources[tab]}
+                        scale={1.0}
+                        onLoadComplete={(numberOfPages, filePath) => {
+                            console.log(`number of pages: ${numberOfPages}`);
+                        }}
+                        onError={(error) => {
+                            console.log(error);
+                        }}
+                        style={styles.pdf}
+                    />
+                    <View style={styles.actionsWrapper}>
+                        <View style={styles.actions}>
+                            <Button transparent onPress={onCancel}>
+                                <View style={styles.btn}>
+                                    <Text style={styles.cancelText}>
+                                        Cancel
+                                    </Text>
+                                </View>
+                            </Button>
+                            <Button transparent onPress={getStarted}>
+                                <View style={[styles.btn, styles.accept]}>
+                                    <Text style={styles.acceptText}>
+                                        Accept
+                                    </Text>
+                                </View>
+                            </Button>
+                        </View>
                     </View>
                 </View>
-                <Pdf
-                    source={sources[tab]}
-                    scale={1.0}
-                    onLoadComplete={(numberOfPages, filePath) => {
-                        console.log(`number of pages: ${numberOfPages}`);
-                    }}
-                    onError={(error) => {
-                        console.log(error);
-                    }}
-                    style={styles.pdf}
-                />
-                <View style={styles.actions}>
-                    <Button transparent onPress={onCancel}>
-                        <View style={styles.btn}>
-                            <Text style={styles.cancelText}>Cancel</Text>
-                        </View>
-                    </Button>
-                    <Button transparent onPress={getStarted}>
-                        <View style={[styles.btn, styles.accept]}>
-                            <Text style={styles.acceptText}>Accept</Text>
-                        </View>
-                    </Button>
-                </View>
-            </View>
+            </SafeContainer>
+            <BottomCover />
         </Container>
     );
 };
@@ -168,14 +179,17 @@ const styles = StyleSheet.create({
     center: {
         alignSelf: 'center',
     },
+    actionsWrapper: {
+        width: '100%',
+        height: 70,
+        backgroundColor: '#ffffff',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
     actions: {
         width: '90%',
-        height: 125,
-        backgroundColor: '#ffffff',
         flexDirection: 'row',
         justifyContent: 'space-between',
-        alignItems: 'center',
-        paddingTop: 15,
     },
     btn: {
         width: 160,
