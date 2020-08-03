@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {StyleSheet} from 'react-native';
 import Modal from 'react-native-modal';
 import {View, Text, Button} from 'native-base';
@@ -6,6 +6,7 @@ import {useSelector, useDispatch} from 'react-redux';
 import moment from 'moment';
 
 import {setMessage} from '../reducers/messages/actions';
+import {getBakerDetails} from '../reducers/app/thunks';
 import DelegationIllustration from '../../assets/delegation-illustration.svg';
 import CustomIcon from '../components/CustomIcon';
 import {formatAmount} from '../utils/currency';
@@ -14,6 +15,15 @@ import {State} from '../reducers/types';
 
 interface DelegationProps {
     onDelegate: () => void;
+}
+
+enum DelegationState {
+    Clear,
+    Delegated,
+    Setting,
+    Switching,
+    //Canceling,
+    //PendingClear
 }
 
 const Delegation = ({onDelegate}: DelegationProps) => {
@@ -27,21 +37,51 @@ const Delegation = ({onDelegate}: DelegationProps) => {
 
     const lastPendingDelegation = pendingDelegations[0];
 
+    const [delegationState, setDelegationState] = useState(DelegationState.Clear);
+    const [bakerName, setBakerName] = useState('');
+
+    useEffect(() => {
+        if (delegation.length === 0) { return; }
+
+        setBakerName(truncateHash(delegation));
+
+        (async function anyNameFunction() {
+            const bakerDetails = await getBakerDetails(delegation);
+
+            if (bakerDetails.name.length > 0) {
+                setBakerName(bakerDetails.name);
+            }
+          })();
+    }, []);
+
     const togglePendingModal = () => {
         setPendingModalVisible(!isPendingModalVisible);
     };
 
     const onPress = (value: string) => {
         if (balance === 0) {
-            dispatch(setMessage('Can not delegate if balane 0', 'info'));
+            dispatch(setMessage('Delegation requires a non-zero balance', 'info'));
             return;
         }
+
         if (hasPendingOperations) {
             togglePendingModal();
         } else {
             onDelegate();
         }
     };
+
+    /*
+
+    - not delegating & not pending
+        -- grow your stash
+    - not delegating & pending
+        -- setting delegate to...
+    - delegating & not pending
+        -- pending rewards in
+    - delegating & pending
+        -- switching delegate view
+    */
 
     return (
         <View style={styles.container}>
@@ -78,7 +118,7 @@ const Delegation = ({onDelegate}: DelegationProps) => {
                 <>
                     <View style={styles.delegationHeader}>
                         {!lastPendingDelegation && (
-                            <View style={styles.currnetDelegationHeader}>
+                            <View style={styles.currentDelegationHeader}>
                                 <View style={styles.dot} />
                                 <Text style={styles.typo4}>
                                     Currently Delegating
@@ -138,10 +178,7 @@ const Delegation = ({onDelegate}: DelegationProps) => {
                                         styles.paperTextMargin,
                                         styles.typo7,
                                     ]}>
-                                    {truncateHash(
-                                        lastPendingDelegation?.delegate ||
-                                            delegation,
-                                    )}
+                                    {bakerName}
                                 </Text>
                             </View>
                         </View>
@@ -202,7 +239,7 @@ const styles = StyleSheet.create({
     pendingText: {
         marginLeft: 10,
     },
-    currnetDelegationHeader: {
+    currentDelegationHeader: {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',

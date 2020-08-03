@@ -15,9 +15,11 @@ const CustomButton = ({
 }: CustomButtonProps) => {
     return (
         <View style={styles.container}>
-            <Button style={styles.button} onPress={onPress} transparent>
-                <CustomIcon name={icon} size={size} color={color} />
-            </Button>
+            <View style={styles.container}>
+                <Button style={styles.button} onPress={onPress} transparent>
+                    <CustomIcon name={icon} size={size} color={color} />
+                </Button>
+            </View>
             <Text style={styles.text}>{label}</Text>
         </View>
     );
@@ -25,8 +27,8 @@ const CustomButton = ({
 
 const styles = StyleSheet.create({
     container: {
-        alignItems: 'center',
         justifyContent: 'center',
+        alignItems: 'center',
     },
     button: {
         width: 84,

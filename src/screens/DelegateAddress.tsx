@@ -160,6 +160,7 @@ const DelegateAddress = ({navigation}: DelegateAddressProps) => {
                         </View>
                     )*/}
             </EnterAddress>
+
             <Modal isVisible={isUndelegateModal} style={styles.modal}>
                 <View style={styles.undelegateModalContent}>
                     <Text style={styles.typo1}>Terminate Delegation</Text>
@@ -180,6 +181,7 @@ const DelegateAddress = ({navigation}: DelegateAddressProps) => {
                     </View>
                 </View>
             </Modal>
+
             <Modal
                 isVisible={isModal}
                 style={styles.modal}

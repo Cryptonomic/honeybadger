@@ -39,6 +39,7 @@ const Account = ({navigation}: AccountProps) => {
     const [modalNext, setModalNext] = useState('');
     const hasPendingOperations = useSelector((state: State) => (state.app.pendingDelegations.length > 0 || state.app.pendingTransactions.length > 0));
     const [isPendingModalVisible, setPendingModalVisible] = useState(false);
+    const [refreshTimer, setRefreshTimer] = useState(undefined as any);
 
     const changeTab = (newTab: number) => {
         if (newTab === tab) {
@@ -54,9 +55,9 @@ const Account = ({navigation}: AccountProps) => {
                 const wallet = await Keychain.getGenericPassword();
                 if (wallet) {
                     dispatch(syncAccount());
-                    setTimeout(() => {
-                        load();
-                    }, 60000);
+                    if (!refreshTimer) {
+                        setRefreshTimer(setInterval(() => { dispatch(syncAccount()); }, 60000));
+                    }
                 } else {
                     navigation.replace('Welcome');
                 }
@@ -69,7 +70,7 @@ const Account = ({navigation}: AccountProps) => {
 
     const onPress = (value: string) => {
         if (balance === 0 && value === 'SendAddress') {
-            dispatch(setMessage('Can not send tez if balance 0', 'info'));
+            dispatch(setMessage('Balance too low', 'info'));
             return;
         }
         if (value === 'SendAddress' && hasPendingOperations){

@@ -3,11 +3,12 @@ import {useSelector, useDispatch} from 'react-redux';
 import {StyleSheet, Platform} from 'react-native';
 import {Container, Text, Input, View, Button} from 'native-base';
 
+import constants from '../utils/constants.json';
 import {setSendAmount} from '../reducers/app/actions';
 import CustomHeader from '../components/CustomHeader';
 import CustomIcon from '../components/CustomIcon';
 import {truncateHash} from '../utils/general';
-import {formatAmount} from '../utils/currency';
+import {formatAmount, utezToTez} from '../utils/currency';
 import {colors} from '../theme';
 
 import {State} from '../reducers/types';
@@ -19,7 +20,7 @@ const SendAmount = ({navigation}: SendAmountProps) => {
     const balance = useSelector((state: State) => state.app.balance);
     const [amount, setAmount] = useState('');
     const [currency] = useState('0');
-    const [fee] = useState(0.001423);
+    const [fee] = useState(utezToTez(constants.fees.simpleTransaction));
     const title = `Sending to ${truncateHash(address)}`;
 
     const onChange = (value: string) => {

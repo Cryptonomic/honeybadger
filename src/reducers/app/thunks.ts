@@ -201,10 +201,7 @@ export const sendDelegation = () => async (
         const keyStore = await KeyStoreUtils.restoreIdentityFromSecretKey(
             secretKey,
         );
-        const signer = new SoftSigner(
-            TezosMessageUtils.writeKeyWithHint(keyStore.secretKey, 'edsk'),
-        );
-
+        const signer = new SoftSigner(TezosMessageUtils.writeKeyWithHint(keyStore.secretKey, 'edsk'));
         await TezosNodeWriter.sendDelegationOperation(
             tezosUrl,
             signer,
@@ -282,17 +279,17 @@ export const getPendingOperations = () => async (dispatch: Dispatch, getState: (
         const pendingOperations = await Promise.all(pendingGroups.map(
                 async (g) => processNodeOperationGroup(g, await TezosNodeReader.estimateBranchTimeout(tezosUrl, g.branch))
               ));
-        const transactions = pendingOperations.filter((o) => !o.delegate);
-        const delegations = pendingOperations.filter((o) => o.delegate);
-        dispatch(setPendingOperations(transactions, delegations))
-    } catch(e) {
+        const transactions = pendingOperations.filter((o) => o.kind === 'transaction');
+        const delegations = pendingOperations.filter((o) => o.kind === 'delegation');
+        dispatch(setPendingOperations(transactions, delegations));
+    } catch (e) {
         console.log('error-pending-transactions', e);
     }
 }
 
 export const validateBakerAddress = async (to: string, from: string) => {
     if (to === from) {
-        throw new Error('Can not send to yourself');
+        throw new Error('Sending to yourself is not allowed');
     }
 
     if (!(['tz1', 'tz2', 'tz3'].includes(to.substring(0, 3)))) {
