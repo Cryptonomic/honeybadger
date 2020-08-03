@@ -12,11 +12,11 @@
 		036FAB56C9B6473DA3CD2A7A /* Fontisto.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5173C2C50DD443569D2A6E74 /* Fontisto.ttf */; };
 		138762D5191E4BCBBADD06D5 /* Roboto.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C38ABCD4738D4FCA8AA861EB /* Roboto.ttf */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
-		27E2E5BC24AE3F0E005D29D0 /* main.jsbundle in Resources */ = {isa = PBXBuildFile; fileRef = 27E2E5BB24AE3F0E005D29D0 /* main.jsbundle */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		166B72863BBB496A916020CF /* Roboto-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3FD09BC95CFE4B64B7CABB3B /* Roboto-Medium.ttf */; };
 		16A1A6CAD84C4B9EA0385743 /* Foundation.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0521E44AAF5A47B59260362C /* Foundation.ttf */; };
+		27E2E5BC24AE3F0E005D29D0 /* main.jsbundle in Resources */ = {isa = PBXBuildFile; fileRef = 27E2E5BB24AE3F0E005D29D0 /* main.jsbundle */; };
 		2D02E4BC1E0B4A80006451C7 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		2D02E4BD1E0B4A84006451C7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		2D02E4BF1E0B4AB3006451C7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
@@ -76,7 +76,7 @@
 		09D29E40AC3D8217F55FFE13 /* Pods-honeybadger-tvOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-honeybadger-tvOSTests.release.xcconfig"; path = "Target Support Files/Pods-honeybadger-tvOSTests/Pods-honeybadger-tvOSTests.release.xcconfig"; sourceTree = "<group>"; };
 		0A91C5C53E2391768A84E7B4 /* Pods-honeybadger.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-honeybadger.release.xcconfig"; path = "Target Support Files/Pods-honeybadger/Pods-honeybadger.release.xcconfig"; sourceTree = "<group>"; };
 		13862986CE4B062F2E4352B1 /* libPods-honeybadger-tvOSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-honeybadger-tvOSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		13B07F961A680F5B00A75B9A /* honeybadger.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = honeybadger.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		13B07F961A680F5B00A75B9A /* Galleon Mobile.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Galleon Mobile.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = honeybadger/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = honeybadger/AppDelegate.m; sourceTree = "<group>"; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = honeybadger/Images.xcassets; sourceTree = "<group>"; };
@@ -769,13 +769,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CURRENT_PROJECT_VERSION = 34;
+				CURRENT_PROJECT_VERSION = 37;
 				DEVELOPMENT_TEAM = G7QQMG8Q65;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = honeybadger/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 1.4;
+				MARKETING_VERSION = 1.5;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -796,12 +796,12 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CURRENT_PROJECT_VERSION = 34;
+				CURRENT_PROJECT_VERSION = 37;
 				DEVELOPMENT_TEAM = G7QQMG8Q65;
 				INFOPLIST_FILE = honeybadger/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 1.4;
+				MARKETING_VERSION = 1.5;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
