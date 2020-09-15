@@ -1,6 +1,6 @@
-import React, {useState} from 'react';
+import React, {useState, useRef} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
-import {StyleSheet, Platform} from 'react-native';
+import {StyleSheet, Platform, TextInput} from 'react-native';
 import {Container, Text, Input, View, Button} from 'native-base';
 
 import constants from '../utils/constants.json';
@@ -22,6 +22,7 @@ const SendAmount = ({navigation}: SendAmountProps) => {
     const [currency] = useState('0');
     const [fee] = useState(utezToTez(constants.fees.simpleTransaction));
     const title = `Sending to ${truncateHash(address)}`;
+    const textInput = useRef(null);
 
     const onChange = (value: string) => {
         if (value.length === 1 && value.charAt(0) === '.') {
@@ -44,17 +45,18 @@ const SendAmount = ({navigation}: SendAmountProps) => {
         setAmount(value);
     };
 
-    const onKeyPress = (e) => {
+    const onKeyPress = (e: any) => {
         const value = e.nativeEvent.key;
         if (e.nativeEvent.key === 'Backspace') {
-            const val =
-                amount.length > 1 ? amount.slice(0, amount.length - 1) : '';
+            const val = amount.length > 1 ? amount.slice(0, amount.length - 1) : '';
             setAmount(val);
             return;
         }
+
         if (!Number(value) && value !== '.') {
             return;
         }
+
         const newValue = amount + value;
         onChange(newValue);
     };
@@ -80,14 +82,17 @@ const SendAmount = ({navigation}: SendAmountProps) => {
                 onClose={() => navigation.navigate('Account')}
             />
             <Text style={styles.title}>{title}</Text>
-            <View style={styles.amount}>
-                {Platform.OS === 'android' && (
-                    <Input
-                        autoFocus
-                        style={styles.input}
-                        value={amount}
-                        onKeyPress={onKeyPress}
-                    />
+            {Platform.OS === 'android' && (
+                <View style={styles.input}>
+                <TextInput
+                    autoFocus={true}
+                    value={amount}
+                    onKeyPress={onKeyPress}
+                    onChangeText={onChange}
+                    keyboardType="numeric"
+                    ref={textInput}
+                />
+                </View>
                 )}
                 {Platform.OS === 'ios' && (
                     <Input
@@ -98,6 +103,7 @@ const SendAmount = ({navigation}: SendAmountProps) => {
                         keyboardType="numeric"
                     />
                 )}
+            <View style={styles.amount}>
                 <Text style={styles.typo1}>
                     {formatAmount(Number(amount) * 1000000)}
                 </Text>
@@ -157,7 +163,9 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
     },
     input: {
-        display: 'none',
+        display: 'flex',
+        top: -300,
+        left: -300,
     },
     currency: {
         marginTop: 10,
