@@ -41,7 +41,7 @@ const Settings = ({navigation}: SettingsProps) => {
         if(securitySetup) {
             const setup = {
                 securitySetup: false,
-                isBiometric: false,
+                isBiometric: data.isBiometric,
                 pin: data.pin
             }
             await Keychain.setInternetCredentials(
@@ -53,7 +53,7 @@ const Settings = ({navigation}: SettingsProps) => {
         } else {
             const setup = {
                 securitySetup: true,
-                isBiometric: true,
+                isBiometric: data.isBiometric,
                 pin: data.pin
             }
             await Keychain.setInternetCredentials(

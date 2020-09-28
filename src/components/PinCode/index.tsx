@@ -266,6 +266,7 @@ const styles = StyleSheet.create({
         borderTopLeftRadius: 26,
         borderTopRightRadius: 26,
         paddingHorizontal: 20,
+        zIndex: 10
     },
     containerFlex: {
       alignItems: 'center',

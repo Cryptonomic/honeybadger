@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {StyleSheet} from 'react-native';
+import {Alert, StyleSheet} from 'react-native';
 import {Container, Text, Button, View} from 'native-base';
 import * as Keychain from 'react-native-keychain';
 import {useDispatch} from 'react-redux';
@@ -8,6 +8,7 @@ import {setKeysAction} from '../reducers/app/actions';
 import TouchID from "react-native-touch-id";
 
 import SafeContainer from '../components/SafeContainer';
+import PinCode from '../components/PinCode';
 
 import Logo from '../../assets/galleon-logo.svg';
 import Cryptonomic from '../../assets/cryptonomic-icon.svg';
@@ -18,6 +19,9 @@ import {WelcomeProps} from './types';
 const Welcome = ({navigation}: WelcomeProps) => {
     const dispatch = useDispatch();
     const [isAccountSetup, setIsAccountSetup] = useState(false);
+    const [isBiometricSupported, setIsBiometricSupported] = useState(false);
+    const [isPin, setIsPin] = useState(false);
+
     useEffect(() => {
         async function load() {
             try {
@@ -31,6 +35,16 @@ const Welcome = ({navigation}: WelcomeProps) => {
                     } else {
                         navigation.replace('Account');
                     }
+
+                    TouchID.isSupported().then((isSupported) => {
+                        if(isSupported) {
+                            setIsBiometricSupported(true);
+                        } else {
+                            setIsBiometricSupported(false);
+                        }
+                    }).catch((error) => {
+                        setIsBiometricSupported(false);
+                    })
                 }
             } catch (error) {
                 console.log("Keychain couldn't be accessed!", error);
@@ -71,7 +85,24 @@ const Welcome = ({navigation}: WelcomeProps) => {
             });
     }
 
+    const showPin = () => {
+        setIsPin(true);
+    }
+
+    const handlePin = async(pinEntered: string) => {
+        let data: any= await Keychain.getInternetCredentials('securitySetup');
+        data = JSON.parse(data.password);
+        if(data.pin === pinEntered) {
+            setIsPin(false);
+            navigation.replace('Account');
+        } else {
+            setIsPin(false);
+            Alert.alert("Incorrect PIN.")
+        }
+    }
+
     return (
+        !isPin ? 
         <Container>
             <View style={styles.waveBg} />
             <SafeContainer>
@@ -92,9 +123,17 @@ const Welcome = ({navigation}: WelcomeProps) => {
                     <View style={styles.item}>
                         {
                             isAccountSetup ? 
-                            <Button style={styles.btn} onPress={showAppLock}>
-                                <Text style={styles.typo3}>Enter Pin</Text>
-                            </Button>
+                            <React.Fragment>
+                                <Button style={styles.btn} onPress={showPin}>
+                                    <Text style={styles.typo3}>Enter Pin</Text>
+                                </Button>
+                                {
+                                    isBiometricSupported && 
+                                    <Button style={styles.btn} onPress={showAppLock}>
+                                        <Text style={styles.typo3}>Enter TouchID</Text>
+                                    </Button>
+                                }
+                            </React.Fragment>
                             :
                             <Button style={styles.btn} onPress={getStarted}>
                                 <Text style={styles.typo3}>Get Started</Text>
@@ -102,7 +141,13 @@ const Welcome = ({navigation}: WelcomeProps) => {
                         }
                     </View>
                 </View>
+                
+                
             </SafeContainer>
+        </Container>
+        :
+        <Container>
+            <PinCode key="pin" text='Please Choose a 6 Digit Pin' handlePin={handlePin}/>
         </Container>
     );
 };
@@ -139,6 +184,7 @@ const styles = StyleSheet.create({
         borderRadius: 25,
         backgroundColor: '#4b4b4b',
         alignSelf: 'center',
+        marginTop: 10
     },
     text: {
         flexDirection: 'row',
