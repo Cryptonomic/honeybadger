@@ -65,11 +65,11 @@ const AccountSetup = ({navigation}: AccountSettingsProps) => {
             <CustomHeader title="Enable App Lock" onBack={() => navigation.goBack()} />
             {
                 step === "PIN" &&
-                <PinCode key="pin" text='Please Choose a 6 Digit Pin' handlePin={handlePin}/>
+                <PinCode key="pin" text='Please Choose a 6 Digit Pin' handlePin={handlePin} isResetNeeded={true} />
             }
             {
                 step === "CONFIRM_PIN" &&
-                <PinCode key="confirm-pin" text='Please confirm a 6 Digit Pin' handlePin={handleConfirmPin}/>
+                <PinCode key="confirm-pin" text='Please confirm a 6 Digit Pin' handlePin={handleConfirmPin} isResetNeeded={true} />
             }
             {
                 step === "ENABLE_BIOMETRIC" &&

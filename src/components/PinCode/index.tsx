@@ -25,7 +25,7 @@ const PinCode = (props: any) => {
         const newPin = `${pin}${pinCode}`;
         if(position === 6) {
             // redirect to next screen
-            resetForm();
+            props.isResetNeeded && resetForm();
             props.handlePin(newPin)
         } else {
             setPin(newPin);

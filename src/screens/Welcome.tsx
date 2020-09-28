@@ -93,7 +93,7 @@ const Welcome = ({navigation}: WelcomeProps) => {
         let data: any= await Keychain.getInternetCredentials('securitySetup');
         data = JSON.parse(data.password);
         if(data.pin === pinEntered) {
-            setIsPin(false);
+            //setIsPin(false);
             navigation.replace('Account');
         } else {
             setIsPin(false);
@@ -147,7 +147,7 @@ const Welcome = ({navigation}: WelcomeProps) => {
         </Container>
         :
         <Container>
-            <PinCode key="pin" text='Please Choose a 6 Digit Pin' handlePin={handlePin}/>
+            <PinCode key="pin" text='Please Choose a 6 Digit Pin' handlePin={handlePin} isResetNeeded={false}/>
         </Container>
     );
 };
