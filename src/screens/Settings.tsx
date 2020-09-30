@@ -1,7 +1,8 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {StyleSheet, Linking} from 'react-native';
-import {Text, View, Button, Container} from 'native-base';
+import {Text, View, Button, Container, Switch, Toast} from 'native-base';
 import DeviceInfo from 'react-native-device-info';
+import * as Keychain from 'react-native-keychain';
 
 import CustomHeader from '../components/CustomHeader';
 import CustomIcon from '../components/CustomIcon';
@@ -11,6 +12,65 @@ import config from '../config';
 import {SettingsProps} from './types';
 
 const Settings = ({navigation}: SettingsProps) => {
+    const [isAppLockSet, setIsAppLockSet] = useState(false);
+    const [securitySetup, setSecuritySetup] = useState(false);
+
+    useEffect(() => {
+        async function load() {
+            try {
+                let data: any= await Keychain.getInternetCredentials('securitySetup');
+                data = JSON.parse(data.password);
+                if(data.hasOwnProperty('securitySetup')) {
+                    setIsAppLockSet(true);
+                    setSecuritySetup(data.securitySetup)
+                } else {
+                    setIsAppLockSet(false);
+                }
+                
+            } catch (error) {
+                setIsAppLockSet(false);
+            }
+        }
+        load();
+    }, []);
+
+    const toggleAppLock = async () => {
+        let data: any= await Keychain.getInternetCredentials('securitySetup');
+        data = JSON.parse(data.password);
+
+        if(securitySetup) {
+            const setup = {
+                securitySetup: false,
+                isBiometric: data.isBiometric,
+                pin: data.pin
+            }
+            await Keychain.setInternetCredentials(
+                'securitySetup',
+                'userName',
+                JSON.stringify(setup)
+            );
+            setSecuritySetup(false);
+        } else {
+            const setup = {
+                securitySetup: true,
+                isBiometric: data.isBiometric,
+                pin: data.pin
+            }
+            await Keychain.setInternetCredentials(
+                'securitySetup',
+                'userName',
+                JSON.stringify(setup)
+            );
+            setSecuritySetup(true);
+        }
+
+        Toast.show({
+            text: "Settings Updated",
+            buttonText: "Okay",
+            duration: 3000
+        })
+    }
+
     const list = [
         {
             title: 'App',
@@ -27,6 +87,11 @@ const Settings = ({navigation}: SettingsProps) => {
                 {
                     name: 'Show Recovery Phrase',
                     action: () => navigation.navigate('SeedPhrase'),
+                },
+                {
+                    name: 'Enable App Lock',
+                    isSwitch: true,
+                    action: () => navigation.navigate('AccountSetup'),
                 },
             ],
         },
@@ -79,13 +144,13 @@ const Settings = ({navigation}: SettingsProps) => {
             <CustomHeader title="Settings" onBack={() => navigation.goBack()} />
             <View style={styles.content}>
                 {list.map(({title, items}) => (
-                    <View style={styles.section}>
+                    <View style={styles.section} key={title}>
                         <View style={styles.item}>
                             <View style={styles.title}>
                                 <Text style={styles.titleText}>{title}</Text>
                             </View>
                         </View>
-                        {items.map(({name, action}) => {
+                        {items.map(({name, action, isSwitch}) => {
                             const children = (
                                 <>
                                     <View>
@@ -94,16 +159,26 @@ const Settings = ({navigation}: SettingsProps) => {
                                         </Text>
                                     </View>
                                     {action && (
+                                        isSwitch && isAppLockSet ?
+                                        <Switch
+                                            trackColor={{ false: "#333333", true: "#0dbd8b" }}
+                                            thumbColor={true ? "#FFFFFF" : "#f4f3f4"}
+                                            ios_backgroundColor="#3e3e3e"
+                                            onValueChange={toggleAppLock}
+                                            value={securitySetup}
+                                        />
+                                        :
                                         <CustomIcon
                                             name="Caret-Left"
                                             size={15}
                                             color="#909090"
                                         />
+                                        
                                     )}
                                 </>
                             );
                             return (
-                                <View style={styles.item}>
+                                <View style={styles.item} key={name}>
                                     {action ? (
                                         <Button
                                             transparent
