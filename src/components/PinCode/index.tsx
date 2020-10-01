@@ -301,7 +301,7 @@ const styles = StyleSheet.create({
         height: 20,
         margin:15,
         backgroundColor: '#000',
-        borderRadius: 50
+        borderRadius: 20/2
     }
   });
 
