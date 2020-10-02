@@ -28,13 +28,13 @@ const EnableBiometric = (props: any) => {
                         <Button style={styles.btn} onPress={handleBiometric}>
                             <Text style={styles.typo3}>Enable Biometric</Text>
                         </Button>
-                        <Text style={{marginBottom: 20}} onPress={props.skipBiometric}>Back to wallet</Text>
+                        <Text style={{marginBottom: 20}} onPress={props.skipBiometric}>Go to wallet</Text>
                     </React.Fragment>
                 }
                 {
                     isSuccess &&
                     <Button style={styles.btn} onPress={props.skipBiometric}>
-                        <Text style={styles.typo3}>Back to wallet</Text>
+                        <Text style={styles.typo3}>Go to wallet</Text>
                     </Button>
                 }
             </View>
