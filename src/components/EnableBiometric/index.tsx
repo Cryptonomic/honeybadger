@@ -9,6 +9,7 @@ const EnableBiometric = (props: any) => {
         props.enableBiometric();
         setSuccess(true);
     }
+
     return (
         <Container>
             <View style={styles.mainContainer}>
@@ -16,17 +17,17 @@ const EnableBiometric = (props: any) => {
                     <Image style={{width: 100, height: 100,marginBottom:10}} source={require('../../../assets/check.png')} />
                     { 
                         props.isBiometric ?
-                        <Text style={styles.title}>App Lock Enabed with a Pin</Text>
+                        <Text style={styles.title}>App Lock Enabled with Biometrics</Text>
                         :
-                        <Text style={styles.title}>App Lock Enabed with a Pin</Text>
+                        <Text style={styles.title}>App Lock Enabled with a Pin</Text>
                     }
-                    <Text style={styles.paragraph}>Every extra protection measure you take matters. It's all part of being responsible crypto owner.</Text>
+                    <Text style={styles.paragraph}>Every extra protective measure you take matters. It's all part of being a responsible crypto owner.</Text>
                 </View>
                 {
                     !isSuccess &&
                     <React.Fragment>
                         <Button style={styles.btn} onPress={handleBiometric}>
-                            <Text style={styles.typo3}>Enable Biometric</Text>
+                            <Text style={styles.typo3}>Enable Biometrics</Text>
                         </Button>
                         <Text style={{marginBottom: 20}} onPress={props.skipBiometric}>Go to wallet</Text>
                     </React.Fragment>

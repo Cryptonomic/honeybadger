@@ -20,6 +20,7 @@ const Welcome = ({navigation}: WelcomeProps) => {
     const dispatch = useDispatch();
     const [isAccountSetup, setIsAccountSetup] = useState(false);
     const [isBiometricSupported, setIsBiometricSupported] = useState(false);
+    const [isBiometricEnabled, setIsBiometricEnabled] = useState(false);
     const [isPin, setIsPin] = useState(false);
 
     useEffect(() => {
@@ -27,24 +28,31 @@ const Welcome = ({navigation}: WelcomeProps) => {
             try {
                 const keys = await Keychain.getGenericPassword();
                 if (keys) {
-                    let data: any= await Keychain.getInternetCredentials('securitySetup');
+                    let data: any = await Keychain.getInternetCredentials('securitySetup');
                     data = JSON.parse(data.password);
                     dispatch(setKeysAction(JSON.parse(keys.password)));
-                    if(data.hasOwnProperty('securitySetup') && data.securitySetup) {
+                    if (data.hasOwnProperty('securitySetup') && data.securitySetup) {
                         setIsAccountSetup(true);
                     } else {
                         navigation.replace('Account');
                     }
 
-                    TouchID.isSupported().then((isSupported) => {
-                        if(isSupported) {
+                    await TouchID.isSupported().then((isSupported) => {
+                        if(isSupported) { // 'FaceID' | 'TouchID'
                             setIsBiometricSupported(true);
                         } else {
                             setIsBiometricSupported(false);
                         }
+                        setIsBiometricEnabled(data.isBiometric);
                     }).catch((error) => {
+                        console.log(`failed`)
                         setIsBiometricSupported(false);
-                    })
+                        setIsBiometricEnabled(false);
+                    });
+
+                    if (isBiometricEnabled) {
+                        showAppLock();
+                    }
                 }
             } catch (error) {
                 console.log("Keychain couldn't be accessed!", error);
@@ -92,7 +100,7 @@ const Welcome = ({navigation}: WelcomeProps) => {
     const handlePin = async(pinEntered: string) => {
         let data: any= await Keychain.getInternetCredentials('securitySetup');
         data = JSON.parse(data.password);
-        if(data.pin === pinEntered) {
+        if (data.pin === pinEntered) {
             //setIsPin(false);
             navigation.replace('Account');
         } else {
@@ -117,7 +125,7 @@ const Welcome = ({navigation}: WelcomeProps) => {
                         <View style={styles.text}>
                             <Text style={styles.typo1}>A product of</Text>
                             <Cryptonomic style={styles.logoCrytponomic} />
-                            <Text style={styles.typo2}>Cryptonomic</Text>
+                            <Text style={styles.typo2}>Cryptonomic Inc</Text>
                         </View>
                     </View>
                     <View style={styles.item}>
@@ -128,9 +136,9 @@ const Welcome = ({navigation}: WelcomeProps) => {
                                     <Text style={styles.typo3}>Enter Pin</Text>
                                 </Button>
                                 {
-                                    isBiometricSupported && 
+                                    (isBiometricSupported && isBiometricEnabled) &&
                                     <Button style={styles.btn} onPress={showAppLock}>
-                                        <Text style={styles.typo3}>Enter TouchID</Text>
+                                        <Text style={styles.typo3}>Use Biometrics</Text>
                                     </Button>
                                 }
                             </React.Fragment>

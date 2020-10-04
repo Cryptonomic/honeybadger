@@ -41,7 +41,6 @@ const AccountSetup = ({navigation}: AccountSettingsProps) => {
             setBack(false);
             setStep('ENABLE_BIOMETRIC');
         }
-        
     }
 
     const setBiometric = async() => {
@@ -71,10 +70,9 @@ const AccountSetup = ({navigation}: AccountSettingsProps) => {
                 :
                 <CustomHeader title="Enable App Lock" />
             }
-            
             {
                 step === "PIN" &&
-                <PinCode key="pin" text='Please Choose a 6 Digit Pin' handlePin={handlePin} isResetNeeded={true} isSkipAllowed={true} skipBiometric={skipBiometric} />
+                <PinCode key="pin" text='Please Choose a 6 Digit Pin' handlePin={handlePin} isResetNeeded={true} isSkipAllowed={false} skipBiometric={skipBiometric} />
             }
             {
                 step === "CONFIRM_PIN" &&
