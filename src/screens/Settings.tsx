@@ -12,27 +12,28 @@ import config from '../config';
 import {SettingsProps} from './types';
 
 const Settings = ({navigation}: SettingsProps) => {
-    const [isAppLockSet, setIsAppLockSet] = useState(false);
     const [securitySetup, setSecuritySetup] = useState(false);
 
     useEffect(() => {
-        async function load() {
-            try {
-                let data: any= await Keychain.getInternetCredentials('securitySetup');
-                data = JSON.parse(data.password);
-                if(data.hasOwnProperty('securitySetup')) {
-                    setIsAppLockSet(true);
-                    setSecuritySetup(data.securitySetup)
-                } else {
-                    setIsAppLockSet(false);
+        debugger;
+        navigation.addListener(
+            'didFocus', async (payload: any) => {
+                try {
+                    let data: any= await Keychain.getInternetCredentials('securitySetup');
+                    data = JSON.parse(data.password);
+                    if(data.hasOwnProperty('securitySetup') && data.securitySetup) {
+                        setSecuritySetup(data.securitySetup)
+                    } else {
+                        setSecuritySetup(false);
+                    }
+                        
+                } catch (error) {
+                    // error
                 }
-                
-            } catch (error) {
-                setIsAppLockSet(false);
             }
-        }
-        load();
-    }, []);
+        )
+
+    }, [navigation]);
 
     const toggleAppLock = async () => {
         let data: any= await Keychain.getInternetCredentials('securitySetup');
@@ -41,8 +42,8 @@ const Settings = ({navigation}: SettingsProps) => {
         if(securitySetup) {
             const setup = {
                 securitySetup: false,
-                isBiometric: data.isBiometric,
-                pin: data.pin
+                isBiometric: false,
+                pin: ''
             }
             await Keychain.setInternetCredentials(
                 'securitySetup',
@@ -51,17 +52,8 @@ const Settings = ({navigation}: SettingsProps) => {
             );
             setSecuritySetup(false);
         } else {
-            const setup = {
-                securitySetup: true,
-                isBiometric: data.isBiometric,
-                pin: data.pin
-            }
-            await Keychain.setInternetCredentials(
-                'securitySetup',
-                'userName',
-                JSON.stringify(setup)
-            );
-            setSecuritySetup(true);
+            // setSecuritySetup(true);
+            navigation.navigate('AccountSetup');
         }
 
         Toast.show({
@@ -159,7 +151,7 @@ const Settings = ({navigation}: SettingsProps) => {
                                         </Text>
                                     </View>
                                     {action && (
-                                        isSwitch && isAppLockSet ?
+                                        isSwitch ?
                                         <Switch
                                             trackColor={{ false: "#333333", true: "#0dbd8b" }}
                                             thumbColor={true ? "#FFFFFF" : "#f4f3f4"}

@@ -251,8 +251,13 @@ const PinCode = (props: any) => {
                     :
                     <Text style={styles.circle}></Text>
                 }
-                
             </View>
+            {
+                props.isSkipAllowed && 
+                <View>
+                    <Text style={{marginTop: 50}} onPress={props.skipBiometric}>Skip</Text>
+                </View>
+            }
         </View>
     )
 }
@@ -301,7 +306,7 @@ const styles = StyleSheet.create({
         height: 20,
         margin:15,
         backgroundColor: '#000',
-        borderRadius: 50
+        borderRadius: 20/2
     }
   });
 

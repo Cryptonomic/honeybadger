@@ -15,6 +15,7 @@ const AccountSetup = ({navigation}: AccountSettingsProps) => {
     const [pin, setPin] = useState('');
     const [confirmPin, setConfirmPin] = useState('');
     const [step, setStep] = useState('PIN');
+    const [back, setBack] = useState(true);
 
     const handlePin = (pinCode: string) => {
         setPin(pinCode);
@@ -36,6 +37,8 @@ const AccountSetup = ({navigation}: AccountSettingsProps) => {
                 JSON.stringify(setup)
             );
             setConfirmPin(pin);
+            // Disable back btn
+            setBack(false);
             setStep('ENABLE_BIOMETRIC');
         }
         
@@ -62,14 +65,20 @@ const AccountSetup = ({navigation}: AccountSettingsProps) => {
     
     return (
         <Container style={styles.containerWrapper}>
-            <CustomHeader title="Enable App Lock" onBack={() => navigation.goBack()} />
+            {
+                back ?
+                <CustomHeader title="Enable App Lock" onBack={() => navigation.goBack()} />
+                :
+                <CustomHeader title="Enable App Lock" />
+            }
+            
             {
                 step === "PIN" &&
-                <PinCode key="pin" text='Please Choose a 6 Digit Pin' handlePin={handlePin} isResetNeeded={true} />
+                <PinCode key="pin" text='Please Choose a 6 Digit Pin' handlePin={handlePin} isResetNeeded={true} isSkipAllowed={true} skipBiometric={skipBiometric} />
             }
             {
                 step === "CONFIRM_PIN" &&
-                <PinCode key="confirm-pin" text='Please confirm a 6 Digit Pin' handlePin={handleConfirmPin} isResetNeeded={true} />
+                <PinCode key="confirm-pin" text='Please confirm a 6 Digit Pin' handlePin={handleConfirmPin} isResetNeeded={true} isSkipAllowed={false} />
             }
             {
                 step === "ENABLE_BIOMETRIC" &&
