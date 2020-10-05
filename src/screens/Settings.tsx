@@ -53,7 +53,7 @@ const Settings = ({navigation}: SettingsProps) => {
             setSecuritySetup(false);
         } else {
             // setSecuritySetup(true);
-            navigation.navigate('AccountSetup');
+            navigation.navigate('AccountSetup', { fromSetting: true });
         }
 
         Toast.show({

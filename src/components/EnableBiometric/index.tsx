@@ -29,7 +29,7 @@ const EnableBiometric = (props: any) => {
                         <Button style={styles.btn} onPress={handleBiometric}>
                             <Text style={styles.typo3}>Enable Biometrics</Text>
                         </Button>
-                        <Text style={{marginBottom: 20}} onPress={props.skipBiometric}>Go to wallet</Text>
+                        <Text style={{marginBottom: 40}} onPress={props.skipBiometric}>Go to wallet</Text>
                     </React.Fragment>
                 }
                 {
@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
     },
     container: {
         backgroundColor: '#FFF',
-        flex: 1,
+        flex: .8,
         alignItems: 'center',
         justifyContent: 'center',
         padding: 40,
