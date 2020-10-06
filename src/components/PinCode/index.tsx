@@ -2,6 +2,7 @@
 import React, {useState, useRef, useReducer} from 'react';
 import { Text } from 'native-base';
 import { StyleSheet, View, TextInput } from "react-native";
+import { stat } from 'react-native-fs';
 
 const PinCode = (props: any) => {
     const input1Ref = useRef(null);
@@ -18,6 +19,22 @@ const PinCode = (props: any) => {
 
     const onChangePin = (pinCode: any, position: number) => {
         pinCode = pinCode.charAt(0);
+        
+        // To make sure that all previous positions are filled
+        const tmpPosition = position;
+        for(let i = position; i > 1; i--) {
+            if(!state[`input${position-1}`]) {
+                position = position-1;
+                
+            }   
+        }
+        
+        if(tmpPosition !== position) {
+            setState({[`input${position}`]: pinCode, [`input${tmpPosition}`]: ''});
+        }
+
+        allowAutoFocus(position)
+
         const newPin = `${state.pin}${pinCode}`;
         if(position === 6) {
             // redirect to next screen
