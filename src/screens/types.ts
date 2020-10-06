@@ -1,8 +1,9 @@
 export interface NavigationProps {
     navigation: {
         goBack: () => void;
-        navigate: (target: string) => void;
+        navigate: (target: string, params?: any) => void;
         replace: (target: string) => void;
+        getParam: (key: String) => boolean
     };
 }
 
