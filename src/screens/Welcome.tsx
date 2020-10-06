@@ -50,7 +50,7 @@ const Welcome = ({navigation}: WelcomeProps) => {
                         setIsBiometricEnabled(false);
                     });
 
-                    if (isBiometricEnabled) {
+                    if (data.isBiometric) {
                         showAppLock();
                     }
                 }

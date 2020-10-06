@@ -15,7 +15,6 @@ const Settings = ({navigation}: SettingsProps) => {
     const [securitySetup, setSecuritySetup] = useState(false);
 
     useEffect(() => {
-        debugger;
         navigation.addListener(
             'didFocus', async (payload: any) => {
                 try {
