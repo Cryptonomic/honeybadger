@@ -78,7 +78,7 @@ const AccountSetup = ({navigation, }: AccountSettingsProps) => {
             }
             {
                 step === "CONFIRM_PIN" &&
-                <PinCode key="confirm-pin" text='Please confirm a 6 Digit Pin' handlePin={handleConfirmPin} isResetNeeded={true} isSkipAllowed={false} />
+                <PinCode key="confirm-pin" text='Please Confirm Your Pin' handlePin={handleConfirmPin} isResetNeeded={true} isSkipAllowed={false} />
             }
             {
                 step === "ENABLE_BIOMETRIC" &&

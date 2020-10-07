@@ -155,7 +155,7 @@ const Welcome = ({navigation}: WelcomeProps) => {
         </Container>
         :
         <Container>
-            <PinCode key="pin" text='Please Choose a 6 Digit Pin' handlePin={handlePin} isResetNeeded={false} isSkipAllowed={false} />
+            <PinCode key="pin" text='Please Enter Your Pin' handlePin={handlePin} isResetNeeded={false} isSkipAllowed={false} />
         </Container>
     );
 };
