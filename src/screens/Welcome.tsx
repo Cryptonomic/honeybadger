@@ -18,7 +18,8 @@ import {WelcomeProps} from './types';
 
 const Welcome = ({navigation}: WelcomeProps) => {
     const dispatch = useDispatch();
-    const [isAccountSetup, setIsAccountSetup] = useState(false);
+    const [isAccountPresent, setIsAccountPresent] = useState(false);
+    const [isPinEnabled, setIsPinEnabled] = useState(false);
     const [isBiometricSupported, setIsBiometricSupported] = useState(false);
     const [isBiometricEnabled, setIsBiometricEnabled] = useState(false);
     const [isPin, setIsPin] = useState(false);
@@ -28,29 +29,30 @@ const Welcome = ({navigation}: WelcomeProps) => {
             try {
                 const keys = await Keychain.getGenericPassword();
                 if (keys) {
-                    let data: any = await Keychain.getInternetCredentials('securitySetup');
-                    data = JSON.parse(data.password);
+                    setIsAccountPresent(true);
+                    const keychainData: any = await Keychain.getInternetCredentials('securitySetup'); // TODO: use GenericPassword
+                    const securityConfig = JSON.parse(keychainData.password);
                     dispatch(setKeysAction(JSON.parse(keys.password)));
-                    if (data.hasOwnProperty('securitySetup') && data.securitySetup) {
-                        setIsAccountSetup(true);
+
+                    if (securityConfig.hasOwnProperty('securitySetup') && securityConfig.securitySetup) {
+                        setIsPinEnabled(true);
                     } else {
                         navigation.replace('Account');
+                        return;
                     }
 
-                    await TouchID.isSupported().then((isSupported) => {
-                        if(isSupported) { // 'FaceID' | 'TouchID'
+                    await TouchID.isSupported().then((biometryType: any) => {
+                        console.log(biometryType)
+                        if (biometryType == 'FaceID' || biometryType == 'TouchID') {
                             setIsBiometricSupported(true);
-                        } else {
-                            setIsBiometricSupported(false);
                         }
-                        setIsBiometricEnabled(data.isBiometric);
+                        setIsBiometricEnabled(securityConfig.isBiometric);
                     }).catch((error) => {
-                        console.log(`failed`)
                         setIsBiometricSupported(false);
                         setIsBiometricEnabled(false);
                     });
 
-                    if (data.isBiometric) {
+                    if (securityConfig.isBiometric) {
                         showAppLock();
                     }
                 }
@@ -130,7 +132,7 @@ const Welcome = ({navigation}: WelcomeProps) => {
                     </View>
                     <View style={styles.item}>
                         {
-                            isAccountSetup ? 
+                            (isAccountPresent && isPinEnabled) && 
                             <React.Fragment>
                                 <Button style={styles.btn} onPress={showPin}>
                                     <Text style={styles.typo3}>Enter Pin</Text>
@@ -142,15 +144,15 @@ const Welcome = ({navigation}: WelcomeProps) => {
                                     </Button>
                                 }
                             </React.Fragment>
-                            :
+                        }
+                        {
+                            (!isAccountPresent) &&
                             <Button style={styles.btn} onPress={getStarted}>
                                 <Text style={styles.typo3}>Get Started</Text>
                             </Button>
                         }
                     </View>
                 </View>
-                
-                
             </SafeContainer>
         </Container>
         :

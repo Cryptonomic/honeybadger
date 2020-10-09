@@ -10,8 +10,7 @@ import PinCode from '../components/PinCode';
 import EnableBiometric from '../components/EnableBiometric';
 import {colors} from '../theme';
 
-const AccountSetup = ({navigation, }: AccountSettingsProps) => {
-
+const AccountSetup = ({ navigation }: AccountSettingsProps) => {
     const [pin, setPin] = useState('');
     const [confirmPin, setConfirmPin] = useState('');
     const [step, setStep] = useState('PIN');
@@ -21,9 +20,9 @@ const AccountSetup = ({navigation, }: AccountSettingsProps) => {
         setPin(pinCode);
         setStep('CONFIRM_PIN');
     }
-    
-    const handleConfirmPin =async (pinCode: string) => {
-        if(pin !== pinCode) {
+
+    const handleConfirmPin = async (pinCode: string) => {
+        if (pin !== pinCode) {
             Alert.alert("Pin and confirm pin did not match");
         } else {
             const setup = {
@@ -51,19 +50,14 @@ const AccountSetup = ({navigation, }: AccountSettingsProps) => {
             isBiometric: true,
             pin: data.pin
         }
-        await Keychain.setInternetCredentials(
-            'securitySetup',
-            'userName',
-            JSON.stringify(setup)
-        );
+        await Keychain.setInternetCredentials('securitySetup', 'userName', JSON.stringify(setup));
     }
 
     const skipBiometric = () => {
         navigation.replace('Account');
     }
-    
+
     return (
-        
         <Container style={styles.containerWrapper}>
             {
                 back ?
@@ -72,7 +66,6 @@ const AccountSetup = ({navigation, }: AccountSettingsProps) => {
                 <CustomHeader title="Enable App Lock" />
             }
             {
-                
                 step === "PIN" &&
                 <PinCode key="pin" text='Please Choose a 6 Digit Pin' handlePin={handlePin} isResetNeeded={true} isSkipAllowed={!navigation.getParam('fromSetting')} skipBiometric={skipBiometric} />
             }
