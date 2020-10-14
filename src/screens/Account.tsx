@@ -102,15 +102,16 @@ const Account = ({navigation}: AccountProps) => {
         setPendingModalVisible(!isPendingModalVisible);
     };
 
-    const onLogout = (item: any) => {
+    const onClearData = (item: any) => {
         setOpenSettings(false);
         Keychain.resetGenericPassword();
+        Keychain.resetInternetCredentials('securitySetup');
         navigation.navigate('Welcome');
     };
 
     const menuItems = [
-        {title: 'Settings', action: onSettingsSelect},
-        //{title: 'Clear Data', action: onLogout}
+        { title: 'Settings', action: onSettingsSelect },
+        //{ title: 'Clear Data', action: onClearData }
     ];
 
     return (

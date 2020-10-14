@@ -27,7 +27,7 @@ import {
 } from './actions';
 
 export const syncAccount = () => async (
-    dispatch,
+    dispatch: any,
     getState: () => State,
 ) => {
     try {
@@ -162,7 +162,7 @@ export const getLastDelegation = async (accountHash: string) => {
 }
 
 export const sendTransaction = () => async (
-    dispatch,
+    dispatch: any,
     getState: () => State,
 ) => {
     try {
@@ -190,7 +190,7 @@ export const sendTransaction = () => async (
 };
 
 export const sendDelegation = () => async (
-    dispatch,
+    dispatch: any,
     getState: () => State,
 ) => {
     try {
@@ -198,9 +198,7 @@ export const sendDelegation = () => async (
         const address = getState().app.delegateAddress; // TODO do not use state, use parameters
         const secretKey = getState().app.secretKey;
         const isRevealed = getState().app.revealed;
-        const keyStore = await KeyStoreUtils.restoreIdentityFromSecretKey(
-            secretKey,
-        );
+        const keyStore = await KeyStoreUtils.restoreIdentityFromSecretKey(secretKey);
         const signer = new SoftSigner(TezosMessageUtils.writeKeyWithHint(keyStore.secretKey, 'edsk'));
         await TezosNodeWriter.sendDelegationOperation(
             tezosUrl,

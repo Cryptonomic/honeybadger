@@ -22,21 +22,20 @@ const PinCode = (props: any) => {
         
         // To make sure that all previous positions are filled
         const tmpPosition = position;
-        for(let i = position; i > 1; i--) {
-            if(!state[`input${position-1}`]) {
+        for (let i = position; i > 1; i--) {
+            if (!state[`input${position-1}`]) {
                 position = position-1;
-                
-            }   
+            }
         }
-        
-        if(tmpPosition !== position) {
+
+        if (tmpPosition !== position) {
             setState({[`input${position}`]: pinCode, [`input${tmpPosition}`]: ''});
         }
 
         allowAutoFocus(position)
 
         const newPin = `${state.pin}${pinCode}`;
-        if(position === 6) {
+        if (position === 6) {
             // redirect to next screen
             props.isResetNeeded && resetForm();
             props.handlePin(newPin)
@@ -51,7 +50,7 @@ const PinCode = (props: any) => {
     }
 
     const getPinStyle = function(position: number) {
-        if(position < state.pinCodePosition) {
+        if (position < state.pinCodePosition) {
             return styles.noBorder;
         } 
         return styles.input
@@ -81,7 +80,7 @@ const PinCode = (props: any) => {
     }
 
     const handleBackspace = (key: string, position: number) => {
-        if(key === 'Backspace') {
+        if (key === 'Backspace') {
             const newPin = state.pin.slice(0, position-2);
             setState({pin: newPin});
             switch(position-1) {
@@ -107,7 +106,7 @@ const PinCode = (props: any) => {
                     setTimeout(()=> {
                         allowAutoFocus(3);
                         setState({pinCodePosition: 3});
-                    }, 10)
+                    }, 10);
                     break;
                 case 4:
                     setState({input4: ''});
@@ -123,7 +122,7 @@ const PinCode = (props: any) => {
                     setTimeout(()=> {
                         allowAutoFocus(5);
                         setState({pinCodePosition: 5});
-                    }, 10)
+                    }, 10);
                     break;
                 case 6:
                     setState({input6: ''});
@@ -156,12 +155,11 @@ const PinCode = (props: any) => {
                             onChangePin(text, 1)
                         }}
                         onKeyPress={({ nativeEvent }) => handleBackspace(nativeEvent.key , 1)}
-                        
                     />
                     :
                     <Text style={styles.circle}></Text>
                 }
-                
+
                 {
                     state.input2 === '' ?
                     <TextInput secureTextEntry={true}
@@ -180,7 +178,7 @@ const PinCode = (props: any) => {
                     :
                     <Text style={styles.circle}></Text>
                 }
-                
+
                 {
                     state.input3 === '' ?
                     <TextInput secureTextEntry={true}
@@ -199,7 +197,7 @@ const PinCode = (props: any) => {
                     :
                     <Text style={styles.circle}></Text>
                 }
-                
+
                 {
                     state.input4 === '' ?
                     <TextInput secureTextEntry={true}
@@ -217,7 +215,7 @@ const PinCode = (props: any) => {
                     :
                     <Text style={styles.circle}></Text>
                 }
-                
+
                 {
                     state.input5 === '' ?
                     <TextInput secureTextEntry={true}
@@ -236,7 +234,7 @@ const PinCode = (props: any) => {
                     :
                     <Text style={styles.circle}></Text>
                 }
-                
+
                 {
                     state.input6 === '' ?
                     <TextInput 
