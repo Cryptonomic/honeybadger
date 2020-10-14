@@ -20,12 +20,11 @@ const Settings = ({navigation}: SettingsProps) => {
                 try {
                     let data: any= await Keychain.getInternetCredentials('securitySetup');
                     data = JSON.parse(data.password);
-                    if(data.hasOwnProperty('securitySetup') && data.securitySetup) {
+                    if (data.hasOwnProperty('securitySetup') && data.securitySetup) {
                         setSecuritySetup(data.securitySetup)
                     } else {
                         setSecuritySetup(false);
                     }
-                        
                 } catch (error) {
                     // error
                 }
@@ -35,10 +34,7 @@ const Settings = ({navigation}: SettingsProps) => {
     }, [navigation]);
 
     const toggleAppLock = async () => {
-        let data: any= await Keychain.getInternetCredentials('securitySetup');
-        data = JSON.parse(data.password);
-
-        if(securitySetup) {
+        if (securitySetup) {
             const setup = {
                 securitySetup: false,
                 isBiometric: false,
@@ -51,7 +47,6 @@ const Settings = ({navigation}: SettingsProps) => {
             );
             setSecuritySetup(false);
         } else {
-            // setSecuritySetup(true);
             navigation.navigate('AccountSetup', { fromSetting: true });
         }
 
