@@ -61,7 +61,7 @@ const Welcome = ({navigation}: WelcomeProps) => {
                 console.log("Security configuration not found in the Keychain", error);
             }
 
-            if (keys !== undefined && (securityConfig === undefined || !securityConfig.securitySetup)) {
+            if (keys !== false && (securityConfig === undefined || !securityConfig.securitySetup)) {
                 navigation.replace('Account');
                 return
             }
