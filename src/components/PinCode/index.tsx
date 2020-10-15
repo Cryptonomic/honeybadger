@@ -1,8 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, {useState, useRef, useReducer} from 'react';
 import { Text } from 'native-base';
-import { StyleSheet, View, TextInput } from "react-native";
-import { stat } from 'react-native-fs';
+import { StyleSheet, View, TextInput, KeyboardAvoidingView, Platform, SafeAreaView, Image } from "react-native";
+import Logo from '../../../assets/galleon-logo.svg';
 
 const PinCode = (props: any) => {
     const input1Ref = useRef(null);
@@ -137,131 +137,138 @@ const PinCode = (props: any) => {
     }
 
     return (
-        <View style={styles.container}>
-            <Text style={styles.title}>{props.text} </Text>
-            <View style={styles.containerFlex}>
-                {
-                    state.input1 === '' ?
-                    <TextInput secureTextEntry={true}
-                        ref={input1Ref}
-                        caretHidden={true}
-                        keyboardType="numeric"
-                        maxLength={1}
-                        autoFocus={true}
-                        style={getPinStyle(1)}
-                        value={state.input1}
-                        onChangeText={text => {
-                            setState({input1: text.toString()});
-                            onChangePin(text, 1)
-                        }}
-                        onKeyPress={({ nativeEvent }) => handleBackspace(nativeEvent.key , 1)}
-                    />
-                    :
-                    <Text style={styles.circle}></Text>
-                }
+        <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={{ flex: 1 }}>
+            <SafeAreaView style={styles.areaContainer}>
+                <View style={styles.container}>
+                    <View style={styles.logo}>
+                        <Logo />
+                    </View>
+                    <Text style={styles.title}>{props.text} </Text>
+                    <View style={styles.containerFlex}>
+                        {
+                            state.input1 === '' ?
+                            <TextInput secureTextEntry={true}
+                                ref={input1Ref}
+                                caretHidden={true}
+                                keyboardType="numeric"
+                                maxLength={1}
+                                autoFocus={true}
+                                style={getPinStyle(1)}
+                                value={state.input1}
+                                onChangeText={text => {
+                                    setState({input1: text.toString()});
+                                    onChangePin(text, 1)
+                                }}
+                                onKeyPress={({ nativeEvent }) => handleBackspace(nativeEvent.key , 1)}
+                            />
+                            :
+                            <Text style={styles.circle}></Text>
+                        }
 
-                {
-                    state.input2 === '' ?
-                    <TextInput secureTextEntry={true}
-                        ref={input2Ref}
-                        caretHidden={true}
-                        keyboardType="numeric"
-                        maxLength={1}
-                        style={getPinStyle(2)}
-                        value={state.input2}
-                        onChangeText={text => {
-                            setState({input2: text.toString()});
-                            onChangePin(text, 2)
-                        }}
-                        onKeyPress={({ nativeEvent }) => handleBackspace(nativeEvent.key , 2)}
-                    />
-                    :
-                    <Text style={styles.circle}></Text>
-                }
+                        {
+                            state.input2 === '' ?
+                            <TextInput secureTextEntry={true}
+                                ref={input2Ref}
+                                caretHidden={true}
+                                keyboardType="numeric"
+                                maxLength={1}
+                                style={getPinStyle(2)}
+                                value={state.input2}
+                                onChangeText={text => {
+                                    setState({input2: text.toString()});
+                                    onChangePin(text, 2)
+                                }}
+                                onKeyPress={({ nativeEvent }) => handleBackspace(nativeEvent.key , 2)}
+                            />
+                            :
+                            <Text style={styles.circle}></Text>
+                        }
 
-                {
-                    state.input3 === '' ?
-                    <TextInput secureTextEntry={true}
-                        ref={input3Ref}
-                        keyboardType="numeric"
-                        maxLength={1}
-                        caretHidden={true}
-                        style={getPinStyle(3)}
-                        value={state.input3}
-                        onChangeText={text => {
-                            setState({input3: text.toString()});
-                            onChangePin(text, 3)
-                        }}
-                        onKeyPress={({ nativeEvent }) => handleBackspace(nativeEvent.key , 3)}
-                    />
-                    :
-                    <Text style={styles.circle}></Text>
-                }
+                        {
+                            state.input3 === '' ?
+                            <TextInput secureTextEntry={true}
+                                ref={input3Ref}
+                                keyboardType="numeric"
+                                maxLength={1}
+                                caretHidden={true}
+                                style={getPinStyle(3)}
+                                value={state.input3}
+                                onChangeText={text => {
+                                    setState({input3: text.toString()});
+                                    onChangePin(text, 3)
+                                }}
+                                onKeyPress={({ nativeEvent }) => handleBackspace(nativeEvent.key , 3)}
+                            />
+                            :
+                            <Text style={styles.circle}></Text>
+                        }
 
-                {
-                    state.input4 === '' ?
-                    <TextInput secureTextEntry={true}
-                        ref={input4Ref}
-                        keyboardType="numeric"
-                        caretHidden={true}
-                        style={getPinStyle(4)}
-                        value={state.input4}
-                        onChangeText={text => {
-                            setState({input4: text.toString()});
-                            onChangePin(text, 4)
-                        }}
-                        onKeyPress={({ nativeEvent }) => handleBackspace(nativeEvent.key , 4)}
-                    />
-                    :
-                    <Text style={styles.circle}></Text>
-                }
+                        {
+                            state.input4 === '' ?
+                            <TextInput secureTextEntry={true}
+                                ref={input4Ref}
+                                keyboardType="numeric"
+                                caretHidden={true}
+                                style={getPinStyle(4)}
+                                value={state.input4}
+                                onChangeText={text => {
+                                    setState({input4: text.toString()});
+                                    onChangePin(text, 4)
+                                }}
+                                onKeyPress={({ nativeEvent }) => handleBackspace(nativeEvent.key , 4)}
+                            />
+                            :
+                            <Text style={styles.circle}></Text>
+                        }
 
-                {
-                    state.input5 === '' ?
-                    <TextInput secureTextEntry={true}
-                        ref={input5Ref}
-                        keyboardType="numeric"
-                        maxLength={1}
-                        caretHidden={true}
-                        style={getPinStyle(5)}
-                        value={state.input5}
-                        onChangeText={text => {
-                            setState({input5: text.toString()});
-                            onChangePin(text, 5)
-                        }}
-                        onKeyPress={({ nativeEvent }) => handleBackspace(nativeEvent.key , 5)}
-                    />
-                    :
-                    <Text style={styles.circle}></Text>
-                }
+                        {
+                            state.input5 === '' ?
+                            <TextInput secureTextEntry={true}
+                                ref={input5Ref}
+                                keyboardType="numeric"
+                                maxLength={1}
+                                caretHidden={true}
+                                style={getPinStyle(5)}
+                                value={state.input5}
+                                onChangeText={text => {
+                                    setState({input5: text.toString()});
+                                    onChangePin(text, 5)
+                                }}
+                                onKeyPress={({ nativeEvent }) => handleBackspace(nativeEvent.key , 5)}
+                            />
+                            :
+                            <Text style={styles.circle}></Text>
+                        }
 
-                {
-                    state.input6 === '' ?
-                    <TextInput 
-                        ref={input6Ref}
-                        secureTextEntry={true}
-                        keyboardType="numeric"
-                        maxLength={1}
-                        caretHidden={true}
-                        style={getPinStyle(6)}
-                        value={state.input6}
-                        onChangeText={text => {
-                            setState({input6: text.toString()});
-                            onChangePin(text, 6)
-                        }}
-                        onKeyPress={({ nativeEvent }) => handleBackspace(nativeEvent.key , 6)}
-                    />
-                    :
-                    <Text style={styles.circle}></Text>
-                }
-            </View>
-            {
-                props.isSkipAllowed && 
-                <View>
-                    <Text style={{marginTop: 50}} onPress={props.skipBiometric}>Skip</Text>
+                        {
+                            state.input6 === '' ?
+                            <TextInput 
+                                ref={input6Ref}
+                                secureTextEntry={true}
+                                keyboardType="numeric"
+                                maxLength={1}
+                                caretHidden={true}
+                                style={getPinStyle(6)}
+                                value={state.input6}
+                                onChangeText={text => {
+                                    setState({input6: text.toString()});
+                                    onChangePin(text, 6)
+                                }}
+                                onKeyPress={({ nativeEvent }) => handleBackspace(nativeEvent.key , 6)}
+                            />
+                            :
+                            <Text style={styles.circle}></Text>
+                        }
+                    </View>
+                    {
+                        props.isSkipAllowed && 
+                        <View>
+                            <Text style={{marginTop: 50}} onPress={props.skipBiometric}>Skip</Text>
+                        </View>
+                    }
                 </View>
-            }
-        </View>
+            </SafeAreaView>
+        </KeyboardAvoidingView>
     )
 }
 
@@ -270,11 +277,12 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: '#ffffff',
-        borderTopLeftRadius: 26,
-        borderTopRightRadius: 26,
         paddingHorizontal: 20,
-        zIndex: 10
+        zIndex: 10,
+        backgroundColor: '#F9CC48'
+    },
+    areaContainer: {
+        flex: 1
     },
     containerFlex: {
       alignItems: 'center',
@@ -287,9 +295,9 @@ const styles = StyleSheet.create({
     input: {
       fontSize:36,
       borderWidth: 2,
-      borderTopColor:'#fff',
-      borderLeftColor:'#fff',
-      borderRightColor:'#fff',
+      borderTopColor:'#F9CC48',
+      borderLeftColor:'#F9CC48',
+      borderRightColor:'#F9CC48',
       width:20,
       margin:15,
       height: 25,
@@ -311,7 +319,12 @@ const styles = StyleSheet.create({
         backgroundColor: '#000',
         borderRadius: 20/2,
         overflow: 'hidden'
-    }
+    },
+    logo: {
+        height: '40%',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
   });
 
 export default PinCode;

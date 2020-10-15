@@ -1,14 +1,35 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import { Container, Text, View, Button } from 'native-base';
 import { StyleSheet, Image } from 'react-native';
+import TouchID from "react-native-touch-id";
 
 const EnableBiometric = (props: any) => {
     const [isSuccess, setSuccess] = useState(false);
+    const [isBiometricSupported, setBiometricSupported] = useState(false);
 
     const handleBiometric = () => {
         props.enableBiometric();
         setSuccess(true);
     }
+
+    useEffect(() => {
+        async function load() {
+            try {
+                await TouchID.isSupported().then((biometryType: any) => {
+                    if(biometryType) {
+                        setBiometricSupported(true);
+                    } else {
+                        setBiometricSupported(false);
+                    }
+                })
+            } catch(error) {
+                setBiometricSupported(false);
+            }
+        }
+
+        load();
+        
+    }, [])
 
     return (
         <Container>
@@ -24,7 +45,7 @@ const EnableBiometric = (props: any) => {
                     <Text style={styles.paragraph}>Every extra protective measure you take matters. It's all part of being a responsible crypto owner.</Text>
                 </View>
                 {
-                    !isSuccess &&
+                    !isSuccess && isBiometricSupported &&
                     <React.Fragment>
                         <Button style={styles.btn} onPress={handleBiometric}>
                             <Text style={styles.typo3}>Enable Biometrics</Text>
@@ -33,7 +54,7 @@ const EnableBiometric = (props: any) => {
                     </React.Fragment>
                 }
                 {
-                    isSuccess &&
+                    (isSuccess ||  !isBiometricSupported) &&
                     <Button style={styles.btn} onPress={props.skipBiometric}>
                         <Text style={styles.typo3}>Go to wallet</Text>
                     </Button>
