@@ -1,14 +1,18 @@
 import React, {useEffect, useState} from 'react';
 import { Container, Text, View, Button } from 'native-base';
-import { StyleSheet, Image } from 'react-native';
+import { StyleSheet } from 'react-native';
 import TouchID from "react-native-touch-id";
+
+import Checkmark from '../../../assets/checkmark.svg';
 
 const EnableBiometric = (props: any) => {
     const [isSuccess, setSuccess] = useState(false);
     const [isBiometricSupported, setBiometricSupported] = useState(false);
+    const [isBiometricEnabled, setIsBiometricEnabled] = useState(false);
 
     const handleBiometric = () => {
         props.enableBiometric();
+        setIsBiometricEnabled(true);
         setSuccess(true);
     }
 
@@ -28,17 +32,18 @@ const EnableBiometric = (props: any) => {
         }
 
         load();
-        
     }, [])
 
     return (
         <Container>
             <View style={styles.mainContainer}>
                 <View style={styles.container}>
-                    <Image style={{width: 100, height: 100,marginBottom:10}} source={require('../../../assets/check.png')} />
+                    <View style={styles.icon}>
+                        <Checkmark />
+                    </View>
                     { 
-                        props.isBiometric ?
-                        <Text style={styles.title}>App Lock Enabled with Biometrics</Text>
+                        isBiometricEnabled ?
+                        <Text style={styles.title}>App Lock Enabled with Biometrics &amp; Pin</Text>
                         :
                         <Text style={styles.title}>App Lock Enabled with a Pin</Text>
                     }
@@ -55,9 +60,12 @@ const EnableBiometric = (props: any) => {
                 }
                 {
                     (isSuccess ||  !isBiometricSupported) &&
-                    <Button style={styles.btn} onPress={props.skipBiometric}>
-                        <Text style={styles.typo3}>Go to wallet</Text>
-                    </Button>
+                    <React.Fragment>
+                        <Button style={styles.btn} onPress={props.skipBiometric}>
+                            <Text style={styles.typo3}>Go to wallet</Text>
+                        </Button>
+                        <Text style={{marginBottom: 40}}></Text>
+                    </React.Fragment>
                 }
             </View>
         </Container>
@@ -93,6 +101,9 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 20,
         fontWeight: 'bold',
+        textAlign: 'center',
+        marginLeft: -10, // hack
+        marginRight: -10,
     },
     separator: {
         marginVertical: 30,
@@ -119,6 +130,11 @@ const styles = StyleSheet.create({
         fontWeight: '500',
         letterSpacing: 0.85,
         textTransform: 'capitalize',
+    },
+    icon: {
+        width: 81,
+        height: 65,
+        marginBottom: 10
     },
 });
 

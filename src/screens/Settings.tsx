@@ -49,12 +49,6 @@ const Settings = ({navigation}: SettingsProps) => {
         } else {
             navigation.navigate('AccountSetup', { fromSetting: true });
         }
-
-        Toast.show({
-            text: "Settings Updated",
-            buttonText: "Okay",
-            duration: 3000
-        })
     }
 
     const list = [
