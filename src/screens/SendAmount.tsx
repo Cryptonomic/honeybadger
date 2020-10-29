@@ -3,6 +3,8 @@ import {useSelector, useDispatch} from 'react-redux';
 import {StyleSheet, Platform, TextInput} from 'react-native';
 import {Container, Text, Input, View, Button} from 'native-base';
 
+import EnterAddressErrors from '../components/EnterAddress/EnterAddressErrors';
+
 import constants from '../utils/constants.json';
 import {setSendAmount} from '../reducers/app/actions';
 import CustomHeader from '../components/CustomHeader';
@@ -23,25 +25,34 @@ const SendAmount = ({navigation}: SendAmountProps) => {
     const [fee] = useState(utezToTez(constants.fees.simpleTransaction));
     const title = `Sending to ${truncateHash(address)}`;
     const textInput = useRef(null);
+    const [isError, setIsError] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
 
     const onChange = (value: string) => {
         if (value.length === 1 && value.charAt(0) === '.') {
             setAmount('0.');
+            setIsError(false);
             return;
         }
 
         if (value.indexOf('.') > -1 && value.split('.')[1].length > 3) {
+            setIsError(false);
             return;
         }
 
         if (isNaN(Number(value))) {
+            setIsError(true);
+            setErrorMessage('Please enter a valid number');
             return;
         }
 
         if (Number(value) * 1000000 >= balance) {
+            setIsError(true);
+            setErrorMessage('Insufficient balance');
             return;
         }
 
+        setIsError(false);
         setAmount(value);
     };
 
@@ -109,6 +120,7 @@ const SendAmount = ({navigation}: SendAmountProps) => {
                 </Text>
                 <CustomIcon name="XTZ" size={30} color="#1a1919" />
             </View>
+            <EnterAddressErrors isVisible={isError} title="Invalid Amount" message={errorMessage} />
             {/*<View style={styles.currency}>
                 <Text style={styles.typo2}>$</Text>
                 <Text style={styles.typo2}>{currency}</Text>
