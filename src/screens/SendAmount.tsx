@@ -95,14 +95,14 @@ const SendAmount = ({navigation}: SendAmountProps) => {
             <Text style={styles.title}>{title}</Text>
             {Platform.OS === 'android' && (
                 <View style={styles.input}>
-                <TextInput
-                    autoFocus={true}
-                    value={amount}
-                    onKeyPress={onKeyPress}
-                    onChangeText={onChange}
-                    keyboardType="numeric"
-                    ref={textInput}
-                />
+                    <TextInput
+                        autoFocus={true}
+                        value={amount}
+                        onKeyPress={onKeyPress}
+                        onChangeText={onChange}
+                        keyboardType="numeric"
+                        ref={textInput}
+                    />
                 </View>
                 )}
                 {Platform.OS === 'ios' && (
@@ -162,22 +162,20 @@ const styles = StyleSheet.create({
         backgroundColor: colors.bg,
     },
     title: {
-        marginTop: 64,
+        marginTop: 5,
         fontFamily: 'Roboto-Regular',
         fontSize: 16,
         fontWeight: 'normal',
         textAlign: 'center',
     },
     amount: {
-        marginTop: 23.5,
+        marginTop: -230,
         alignItems: 'center',
         justifyContent: 'center',
         flexDirection: 'row',
     },
     input: {
-        display: 'flex',
-        top: -300,
-        left: -300,
+        opacity:0
     },
     currency: {
         marginTop: 10,
