@@ -79,6 +79,10 @@ const Settings = ({navigation}: SettingsProps) => {
                     isSwitch: true,
                     action: () => navigation.navigate('AccountSetup'),
                 },
+                {
+                    name: 'Reset Pin',
+                    action: () => navigation.navigate('ResetPin'),
+                },
             ],
         },
         {
