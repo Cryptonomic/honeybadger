@@ -1,7 +1,9 @@
 import {State as AppState} from './app/types';
+import {MessagesState} from './messages/types';
 
 export interface State {
     app: AppState;
+    messages: MessagesState;
 }
 
 export interface Operation {

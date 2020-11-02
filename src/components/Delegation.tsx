@@ -1,10 +1,12 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {StyleSheet} from 'react-native';
 import Modal from 'react-native-modal';
 import {View, Text, Button} from 'native-base';
-import {useSelector} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 import moment from 'moment';
 
+import {setMessage} from '../reducers/messages/actions';
+import {getBakerDetails} from '../reducers/app/thunks';
 import DelegationIllustration from '../../assets/delegation-illustration.svg';
 import CustomIcon from '../components/CustomIcon';
 import {formatAmount} from '../utils/currency';
@@ -15,28 +17,71 @@ interface DelegationProps {
     onDelegate: () => void;
 }
 
+enum DelegationState {
+    Clear,
+    Delegated,
+    Setting,
+    Switching,
+    //Canceling,
+    //PendingClear
+}
+
 const Delegation = ({onDelegate}: DelegationProps) => {
     const delegation = useSelector((state: State) => state.app.delegation);
     const pendingDelegations = useSelector((state: State) => state.app.pendingDelegations);
     const balance = useSelector((state: State) => state.app.balance);
     const expectedPaymentDate = useSelector((state: State) => state.app.expectedPaymentDate);
     const hasPendingOperations = useSelector((state: State) => (state.app.pendingDelegations.length > 0 || state.app.pendingTransactions.length > 0));
-
     const [isPendingModalVisible, setPendingModalVisible] = useState(false);
+    const dispatch = useDispatch();
 
     const lastPendingDelegation = pendingDelegations[0];
+
+    const [delegationState, setDelegationState] = useState(DelegationState.Clear);
+    const [bakerName, setBakerName] = useState('');
+
+    useEffect(() => {
+        if (delegation.length === 0) { return; }
+
+        setBakerName(truncateHash(delegation));
+
+        (async function anyNameFunction() {
+            const bakerDetails = await getBakerDetails(delegation);
+
+            if (bakerDetails.name.length > 0) {
+                setBakerName(bakerDetails.name);
+            }
+          })();
+    }, []);
 
     const togglePendingModal = () => {
         setPendingModalVisible(!isPendingModalVisible);
     };
 
     const onPress = (value: string) => {
+        if (balance === 0) {
+            dispatch(setMessage('Delegation requires a non-zero balance', 'info'));
+            return;
+        }
+
         if (hasPendingOperations) {
             togglePendingModal();
         } else {
             onDelegate();
         }
     };
+
+    /*
+
+    - not delegating & not pending
+        -- grow your stash
+    - not delegating & pending
+        -- setting delegate to...
+    - delegating & not pending
+        -- pending rewards in
+    - delegating & pending
+        -- switching delegate view
+    */
 
     return (
         <View style={styles.container}>
@@ -73,7 +118,7 @@ const Delegation = ({onDelegate}: DelegationProps) => {
                 <>
                     <View style={styles.delegationHeader}>
                         {!lastPendingDelegation && (
-                            <View style={styles.currnetDelegationHeader}>
+                            <View style={styles.currentDelegationHeader}>
                                 <View style={styles.dot} />
                                 <Text style={styles.typo4}>
                                     Currently Delegating
@@ -133,10 +178,7 @@ const Delegation = ({onDelegate}: DelegationProps) => {
                                         styles.paperTextMargin,
                                         styles.typo7,
                                     ]}>
-                                    {truncateHash(
-                                        lastPendingDelegation?.delegate ||
-                                            delegation,
-                                    )}
+                                    {bakerName}
                                 </Text>
                             </View>
                         </View>
@@ -197,7 +239,7 @@ const styles = StyleSheet.create({
     pendingText: {
         marginLeft: 10,
     },
-    currnetDelegationHeader: {
+    currentDelegationHeader: {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
@@ -259,6 +301,7 @@ const styles = StyleSheet.create({
         borderRadius: 25,
         backgroundColor: '#4b4b4b',
         justifyContent: 'center',
+        alignSelf: 'center',
     },
     edit: {
         width: 40,
@@ -288,6 +331,7 @@ const styles = StyleSheet.create({
         fontSize: 17,
         fontWeight: '500',
         letterSpacing: 0.85,
+        textTransform: 'capitalize',
     },
     typo4: {
         fontFamily: 'Roboto-Regular',

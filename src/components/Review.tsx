@@ -75,7 +75,7 @@ const Review: FunctionComponent<ReviewProps> = ({
                 </View>
             </View>
             <Button style={styles.button} onPress={onSend}>
-                <Text>{actionTitle}</Text>
+                <Text style={styles.btnText}>{actionTitle}</Text>
             </Button>
         </View>
     );
@@ -155,6 +155,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         borderRadius: 30.5,
         backgroundColor: '#4b4b4b',
+        alignSelf: 'center',
     },
     info: {
         marginVertical: 20,
@@ -165,6 +166,9 @@ const styles = StyleSheet.create({
     },
     infoText: {
         textAlign: 'center',
+    },
+    btnText: {
+        textTransform: 'capitalize',
     },
     typo1: {
         fontFamily: 'Roboto-Regular',

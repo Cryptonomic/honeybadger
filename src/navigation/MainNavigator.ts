@@ -13,6 +13,7 @@ import SettingsScreen from '../screens/Settings';
 import SeedPhraseScreen from '../screens/SeedPhrase';
 import DelegateAddressScreen from '../screens/DelegateAddress';
 import DelegateReviewScreen from '../screens/DelegateReview';
+import AccountSetup from '../screens/AccountSetup';
 
 const MainNavigator = createStackNavigator(
     {
@@ -20,6 +21,7 @@ const MainNavigator = createStackNavigator(
         Terms: TermsScreen,
         Loading: LoadingScreen,
         Account: AccountScreen,
+        AccountSetup: AccountSetup,
         Receive: ReceiveScreen,
         SendAddress: SendAddressScreen,
         SendAmount: SendAmountScreen,

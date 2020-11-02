@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
         lineHeight: 24,
         letterSpacing: 0.83,
         color: '#000000',
-        alignSelf: 'center'
+        alignSelf: 'center',
     },
 });
 

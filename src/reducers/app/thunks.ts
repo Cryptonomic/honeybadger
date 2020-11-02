@@ -27,7 +27,7 @@ import {
 } from './actions';
 
 export const syncAccount = () => async (
-    dispatch,
+    dispatch: any,
     getState: () => State,
 ) => {
     try {
@@ -162,7 +162,7 @@ export const getLastDelegation = async (accountHash: string) => {
 }
 
 export const sendTransaction = () => async (
-    dispatch,
+    dispatch: any,
     getState: () => State,
 ) => {
     try {
@@ -190,7 +190,7 @@ export const sendTransaction = () => async (
 };
 
 export const sendDelegation = () => async (
-    dispatch,
+    dispatch: any,
     getState: () => State,
 ) => {
     try {
@@ -198,13 +198,8 @@ export const sendDelegation = () => async (
         const address = getState().app.delegateAddress; // TODO do not use state, use parameters
         const secretKey = getState().app.secretKey;
         const isRevealed = getState().app.revealed;
-        const keyStore = await KeyStoreUtils.restoreIdentityFromSecretKey(
-            secretKey,
-        );
-        const signer = new SoftSigner(
-            TezosMessageUtils.writeKeyWithHint(keyStore.secretKey, 'edsk'),
-        );
-
+        const keyStore = await KeyStoreUtils.restoreIdentityFromSecretKey(secretKey);
+        const signer = new SoftSigner(TezosMessageUtils.writeKeyWithHint(keyStore.secretKey, 'edsk'));
         await TezosNodeWriter.sendDelegationOperation(
             tezosUrl,
             signer,
@@ -282,38 +277,44 @@ export const getPendingOperations = () => async (dispatch: Dispatch, getState: (
         const pendingOperations = await Promise.all(pendingGroups.map(
                 async (g) => processNodeOperationGroup(g, await TezosNodeReader.estimateBranchTimeout(tezosUrl, g.branch))
               ));
-        const transactions = pendingOperations.filter((o) => !o.delegate);
-        const delegations = pendingOperations.filter((o) => o.delegate);
-        dispatch(setPendingOperations(transactions, delegations))
-    } catch(e) {
+        const transactions = pendingOperations.filter((o) => o.kind === 'transaction');
+        const delegations = pendingOperations.filter((o) => o.kind === 'delegation');
+        dispatch(setPendingOperations(transactions, delegations));
+    } catch (e) {
         console.log('error-pending-transactions', e);
     }
 }
 
-export const validateBakerAddress = async (address: string) => {
-    if (!(['tz1', 'tz2', 'tz3'].includes(address.substring(0, 3)))) {
+export const validateBakerAddress = async (to: string, from: string) => {
+    if (to === from) {
+        throw new Error('Sending to yourself is not allowed');
+    }
+
+    if (!(['tz1', 'tz2', 'tz3'].includes(to.substring(0, 3)))) {
         throw new Error('Baker address must start with tz1, tz2 or tz3');
     }
 
-    if (address.match(/[^1-9A-HJ-NP-Za-km-z]/)) {
+    if (to.match(/[^1-9A-HJ-NP-Za-km-z]/)) {
         throw new Error('Address contains invalid characters');
     }
 
-    if (address.length < 36) {
+    if (to.length < 36) {
         throw new Error('Address too short');
     }
 
-    if (address.length > 36) {
+    if (to.length > 36) {
         throw new Error('Address too long');
     }
 
-    /*try { // TODO: for some reason this dies
-        const account = await TezosNodeReader.getAccountForBlock(config[0].nodeUrl, 'head', address);
-        if (account.balance) { throw new Error('Address not found on chain'); }
-    } catch (err) {
+    try {
+        await TezosNodeReader.getAccountForBlock(config[0].nodeUrl, 'head', to);
+    } catch (error) {
+        if (error.httpStatus === 400) {
+            throw new Error('Address not found on chain');
+        }
         throw new Error('Could not query chain for address');
-    }*/
-}
+    }
+};
 
 export const getBakerDetails = async (address: string): Promise<BakerInfo> => { // TODO: needs return type
     try {
@@ -329,7 +330,7 @@ export const getBakerDetails = async (address: string): Promise<BakerInfo> => { 
         insuranceCoverage: 2.97
         logo: "https://services.tzkt.io/v1/logos/tezgate.png"
         maxStakingBalance: 9181010.777211
-        minDelegation: 100  
+        minDelegation: 100
         name: "Tezgate"
         openForDelegation: true
         payoutAccuracy: "precise"

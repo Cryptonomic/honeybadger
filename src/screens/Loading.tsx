@@ -29,8 +29,8 @@ const Loading = ({navigation}: LoadingProps) => {
                         'newwallet',
                         JSON.stringify({...keys, termsDate}),
                     );
-                        dispatch(setKeysAction(keys));
-                        setReady(true);
+                    dispatch(setKeysAction(keys));
+                    setReady(true);
                 }
             } catch (e) {
                 console.log('[ERROR]', e);
@@ -42,7 +42,7 @@ const Loading = ({navigation}: LoadingProps) => {
     useEffect(() => {
         if (ready && progress === 100) {
             setTimeout(() => {
-                navigation.replace('Account');
+                navigation.replace('AccountSetup');
             }, 2000);
         }
 

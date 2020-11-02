@@ -1,13 +1,16 @@
-import React, {useState} from 'react';
+import React, {useState, useRef} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
-import {StyleSheet} from 'react-native';
+import {StyleSheet, Platform, TextInput} from 'react-native';
 import {Container, Text, Input, View, Button} from 'native-base';
 
+import EnterAddressErrors from '../components/EnterAddress/EnterAddressErrors';
+
+import constants from '../utils/constants.json';
 import {setSendAmount} from '../reducers/app/actions';
 import CustomHeader from '../components/CustomHeader';
 import CustomIcon from '../components/CustomIcon';
 import {truncateHash} from '../utils/general';
-import {formatAmount} from '../utils/currency';
+import {formatAmount, utezToTez} from '../utils/currency';
 import {colors} from '../theme';
 
 import {State} from '../reducers/types';
@@ -19,36 +22,60 @@ const SendAmount = ({navigation}: SendAmountProps) => {
     const balance = useSelector((state: State) => state.app.balance);
     const [amount, setAmount] = useState('');
     const [currency] = useState('0');
-    const [fee] = useState(0.001423);
+    const [fee] = useState(utezToTez(constants.fees.simpleTransaction));
     const title = `Sending to ${truncateHash(address)}`;
+    const textInput = useRef(null);
+    const [isError, setIsError] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
 
     const onChange = (value: string) => {
         if (value.length === 1 && value.charAt(0) === '.') {
             setAmount('0.');
+            setIsError(false);
             return;
         }
 
         if (value.indexOf('.') > -1 && value.split('.')[1].length > 3) {
+            setIsError(false);
             return;
         }
 
         if (isNaN(Number(value))) {
+            setIsError(true);
+            setErrorMessage('Please enter a valid number');
+            setAmount(value);
             return;
         }
 
         if (Number(value) * 1000000 >= balance) {
+            setIsError(true);
+            setErrorMessage('Insufficient balance');
+            setAmount(value);
             return;
         }
 
+        setIsError(false);
         setAmount(value);
     };
 
-    const goNext = () => {
-        if (!amount.length) {
+    const onKeyPress = (e: any) => {
+        const value = e.nativeEvent.key;
+        if (e.nativeEvent.key === 'Backspace') {
+            const val = amount.length > 1 ? amount.slice(0, amount.length - 1) : '';
+            setAmount(val);
             return;
         }
 
-        if (Number(amount) === 0) {
+        if (!Number(value) && value !== '.') {
+            return;
+        }
+
+        const newValue = amount + value;
+        onChange(newValue);
+    };
+
+    const goNext = () => {
+        if (!amount.length || Number(amount) === 0 || isError) {
             return;
         }
 
@@ -64,18 +91,35 @@ const SendAmount = ({navigation}: SendAmountProps) => {
                 onClose={() => navigation.navigate('Account')}
             />
             <Text style={styles.title}>{title}</Text>
+            {Platform.OS === 'android' && (
+                <View style={styles.input}>
+                    <TextInput
+                        autoFocus={true}
+                        value={amount}
+                        onKeyPress={onKeyPress}
+                        onChangeText={onChange}
+                        keyboardType="numeric"
+                        ref={textInput}
+                    />
+                </View>
+                )}
+                {Platform.OS === 'ios' && (
+                    <Input
+                        autoFocus
+                        style={styles.input}
+                        value={amount}
+                        onChangeText={onChange}
+                        keyboardType="numeric"
+                    />
+                )}
             <View style={styles.amount}>
-                <Input
-                    autoFocus
-                    style={styles.input}
-                    value={amount}
-                    onChangeText={onChange}
-                    keyboardType="numeric"
-                />
                 <Text style={styles.typo1}>
                     {formatAmount(Number(amount) * 1000000)}
                 </Text>
                 <CustomIcon name="XTZ" size={30} color="#1a1919" />
+            </View>
+            <View style={styles.errorContainer}>
+                <EnterAddressErrors isVisible={isError} title="Invalid Amount" message={errorMessage} />
             </View>
             {/*<View style={styles.currency}>
                 <Text style={styles.typo2}>$</Text>
@@ -118,20 +162,20 @@ const styles = StyleSheet.create({
         backgroundColor: colors.bg,
     },
     title: {
-        marginTop: 64,
+        marginTop: 5,
         fontFamily: 'Roboto-Regular',
         fontSize: 16,
         fontWeight: 'normal',
         textAlign: 'center',
     },
     amount: {
-        marginTop: 23.5,
+        marginTop: -230,
         alignItems: 'center',
         justifyContent: 'center',
         flexDirection: 'row',
     },
     input: {
-        display: 'none',
+        opacity:0
     },
     currency: {
         marginTop: 10,
@@ -167,11 +211,13 @@ const styles = StyleSheet.create({
     },
     button: {
         marginTop: 48,
+        width: 213,
         height: 50,
         alignItems: 'center',
         justifyContent: 'center',
         borderRadius: 25,
         backgroundColor: '#4b4b4b',
+        alignSelf: 'center',
     },
     typo1: {
         fontFamily: 'Roboto-Medium',
@@ -208,7 +254,11 @@ const styles = StyleSheet.create({
         fontSize: 17,
         fontWeight: '500',
         letterSpacing: 0.85,
+        textTransform: 'capitalize',
     },
+    errorContainer: {
+        height: 70
+    }
 });
 
 export default SendAmount;

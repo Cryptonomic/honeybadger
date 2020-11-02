@@ -3,4 +3,6 @@ import ReduxThunk from 'redux-thunk';
 
 import rootReducer from './reducers';
 
-export default createStore(rootReducer, applyMiddleware(ReduxThunk));
+const middlewares = [ReduxThunk];
+
+export default createStore(rootReducer, applyMiddleware(...middlewares));

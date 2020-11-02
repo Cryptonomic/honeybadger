@@ -18,6 +18,7 @@ import CustomIcon from '../components/CustomIcon';
 
 const DelegateAddress = ({navigation}: DelegateAddressProps) => {
     const delegation = useSelector((state: State) => state.app.delegation);
+    const publicKeyHash = useSelector((state: State) => state.app.publicKeyHash);
     const [isModal, setIsModal] = useState(false);
     const [isUndelegateModal, setIsUndelegateModal] = useState(false);
     const [modalPage, setModalPage] = useState(0);
@@ -105,7 +106,7 @@ const DelegateAddress = ({navigation}: DelegateAddressProps) => {
                 headerTitle={headerTitle}
                 addressTitle={addressTitle}
                 goBack={() => navigation.goBack()}
-                validateAddress={validateBakerAddress}
+                validateAddress={(to) => validateBakerAddress(to, publicKeyHash)}
                 onValidAddress={onValidAddress}>
                     {isValidAddress && bakerName != undefined && bakerName.length > 0 && (
                         <View>
@@ -146,7 +147,7 @@ const DelegateAddress = ({navigation}: DelegateAddressProps) => {
                         <View style={styles.bakerDetails}>
                             <View>
                                 <Button style={styles.nextButton} onPress={goNext}>
-                                    <Text style={styles.typo2}>Next</Text>
+                                    <Text style={[styles.typo2, styles.goNext]}>Next</Text>
                                 </Button>
                             </View>
                         </View>
@@ -159,6 +160,7 @@ const DelegateAddress = ({navigation}: DelegateAddressProps) => {
                         </View>
                     )*/}
             </EnterAddress>
+
             <Modal isVisible={isUndelegateModal} style={styles.modal}>
                 <View style={styles.undelegateModalContent}>
                     <Text style={styles.typo1}>Terminate Delegation</Text>
@@ -179,6 +181,7 @@ const DelegateAddress = ({navigation}: DelegateAddressProps) => {
                     </View>
                 </View>
             </Modal>
+
             <Modal
                 isVisible={isModal}
                 style={styles.modal}
@@ -364,6 +367,9 @@ const styles = StyleSheet.create({
     undelegateCancelText: {
         color: '#4b4b4b'
     },
+    goNext: {
+        textTransform: 'capitalize',
+    },
     typo1: {
         fontFamily: 'Roboto-Medium',
         fontSize: 24,
@@ -380,6 +386,7 @@ const styles = StyleSheet.create({
     typo3: {
         fontFamily: 'Roboto-Regular',
         fontSize: 16,
+        textTransform: 'capitalize',
     },
 });
 

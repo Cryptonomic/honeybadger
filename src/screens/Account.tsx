@@ -13,7 +13,7 @@ import {
 } from 'react-native-popup-menu';
 
 import {syncAccount} from '../reducers/app/thunks';
-
+import {setMessage} from '../reducers/messages/actions';
 import Transactions from '../components/Transactions';
 import Delegation from '../components/Delegation';
 import SecurityLevelButton from '../components/SecurityLevelButton';
@@ -39,6 +39,7 @@ const Account = ({navigation}: AccountProps) => {
     const [modalNext, setModalNext] = useState('');
     const hasPendingOperations = useSelector((state: State) => (state.app.pendingDelegations.length > 0 || state.app.pendingTransactions.length > 0));
     const [isPendingModalVisible, setPendingModalVisible] = useState(false);
+    const [refreshTimer, setRefreshTimer] = useState(undefined as any);
 
     const changeTab = (newTab: number) => {
         if (newTab === tab) {
@@ -54,9 +55,9 @@ const Account = ({navigation}: AccountProps) => {
                 const wallet = await Keychain.getGenericPassword();
                 if (wallet) {
                     dispatch(syncAccount());
-                    setTimeout(() => {
-                        load();
-                    }, 60000);
+                    if (!refreshTimer) {
+                        setRefreshTimer(setInterval(() => { dispatch(syncAccount()); }, 60000));
+                    }
                 } else {
                     navigation.replace('Welcome');
                 }
@@ -68,6 +69,10 @@ const Account = ({navigation}: AccountProps) => {
     }, []);
 
     const onPress = (value: string) => {
+        if (balance === 0 && value === 'SendAddress') {
+            dispatch(setMessage('Balance too low', 'info'));
+            return;
+        }
         if (value === 'SendAddress' && hasPendingOperations){
             togglePendingModal();
         } else if ((value === 'SendAddress' || value === 'Receive') && !modalWasShown) {
@@ -97,15 +102,16 @@ const Account = ({navigation}: AccountProps) => {
         setPendingModalVisible(!isPendingModalVisible);
     };
 
-    const onLogout = (item: any) => {
+    const onClearData = (item: any) => {
         setOpenSettings(false);
         Keychain.resetGenericPassword();
+        Keychain.resetInternetCredentials('securitySetup');
         navigation.navigate('Welcome');
     };
 
     const menuItems = [
-        {title: 'Settings', action: onSettingsSelect},
-        //{title: 'Clear Data', action: onLogout}
+        { title: 'Settings', action: onSettingsSelect },
+        //{ title: 'Clear Data', action: onClearData }
     ];
 
     return (
@@ -210,7 +216,7 @@ const Account = ({navigation}: AccountProps) => {
                                 : styles.tabBorderInactive,
                         ]}>
                         <Button
-                            style={styles.center}
+                            style={styles.tabBtn}
                             transparent
                             onPress={() => changeTab(0)}>
                             <Text
@@ -232,7 +238,7 @@ const Account = ({navigation}: AccountProps) => {
                                 : styles.tabBorderInactive,
                         ]}>
                         <Button
-                            style={styles.center}
+                            style={styles.tabBtn}
                             transparent
                             onPress={() => changeTab(1)}>
                             <Text
@@ -287,7 +293,6 @@ const Account = ({navigation}: AccountProps) => {
 const styles = StyleSheet.create({
     warningModal: {
         borderRadius: 26,
-        height: 155,
         padding: 15,
         backgroundColor: '#ffffff',
         alignItems: 'center',
@@ -301,6 +306,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: '#4b4b4b',
+        alignSelf: 'center',
+        marginTop: 10,
     },
     container: {
         backgroundColor: '#fcd104',
@@ -389,6 +396,9 @@ const styles = StyleSheet.create({
         width: '50%',
         justifyContent: 'center',
     },
+    tabBtn: {
+        alignSelf: 'center',
+    },
     tabContainer: {
         width: '100%',
     },
@@ -433,6 +443,7 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: '500',
         lineHeight: 27,
+        textTransform: 'capitalize',
     },
     typo4: {
         fontFamily: 'Roboto-Regular',
