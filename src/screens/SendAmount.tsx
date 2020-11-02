@@ -43,12 +43,14 @@ const SendAmount = ({navigation}: SendAmountProps) => {
         if (isNaN(Number(value))) {
             setIsError(true);
             setErrorMessage('Please enter a valid number');
+            setAmount(value);
             return;
         }
 
         if (Number(value) * 1000000 >= balance) {
             setIsError(true);
             setErrorMessage('Insufficient balance');
+            setAmount(value);
             return;
         }
 
@@ -73,11 +75,7 @@ const SendAmount = ({navigation}: SendAmountProps) => {
     };
 
     const goNext = () => {
-        if (!amount.length) {
-            return;
-        }
-
-        if (Number(amount) === 0) {
+        if (!amount.length || Number(amount) === 0 || isError) {
             return;
         }
 
@@ -120,7 +118,9 @@ const SendAmount = ({navigation}: SendAmountProps) => {
                 </Text>
                 <CustomIcon name="XTZ" size={30} color="#1a1919" />
             </View>
-            <EnterAddressErrors isVisible={isError} title="Invalid Amount" message={errorMessage} />
+            <View style={styles.errorContainer}>
+                <EnterAddressErrors isVisible={isError} title="Invalid Amount" message={errorMessage} />
+            </View>
             {/*<View style={styles.currency}>
                 <Text style={styles.typo2}>$</Text>
                 <Text style={styles.typo2}>{currency}</Text>
@@ -256,6 +256,9 @@ const styles = StyleSheet.create({
         letterSpacing: 0.85,
         textTransform: 'capitalize',
     },
+    errorContainer: {
+        height: 70
+    }
 });
 
 export default SendAmount;
