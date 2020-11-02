@@ -1,0 +1,20 @@
+export interface NavigationProps {
+    navigation: {
+        goBack: () => void;
+        navigate: (target: string) => void;
+        replace: (target: string) => void;
+    };
+}
+
+export type ReceiveProps = NavigationProps;
+export type SendAddressProps = NavigationProps;
+export type WelcomeProps = NavigationProps;
+export type LoadingProps = NavigationProps;
+export type AccountProps = NavigationProps;
+export type SendAmountProps = NavigationProps;
+export type SendFirstTimeProps = NavigationProps;
+export type SendReviewProps = NavigationProps;
+export type SettingsProps = NavigationProps;
+export type SeedPhraseProps = NavigationProps;
+export type DelegateAddressProps = NavigationProps;
+export type DelegateReviewProps = NavigationProps;
