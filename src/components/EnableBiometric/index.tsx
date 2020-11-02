@@ -6,7 +6,7 @@ import TouchID from "react-native-touch-id";
 import Checkmark from '../../../assets/checkmark.svg';
 
 const EnableBiometric = (props: any) => {
-    const [isSuccess, setSuccess] = useState(false);
+    const [isSuccess, setSuccess] = useState(props.success ? true : false);
     const [isBiometricSupported, setBiometricSupported] = useState(false);
     const [isBiometricEnabled, setIsBiometricEnabled] = useState(false);
 

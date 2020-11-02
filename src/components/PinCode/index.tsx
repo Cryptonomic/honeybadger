@@ -143,6 +143,14 @@ const PinCode = (props: any) => {
     return (
         <Container style={styles.containerWrapper}>
         <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={{ flex: 1 }}>
+            <View>
+                {
+                    props.allowChange &&
+                    <View style={styles.containerForgotPin}>
+                        <Text onPress={()=> props.redirectToResetPin()} style={styles.forgotPassword}>Forgot Pin?</Text>
+                    </View>
+                }
+            </View>
             <SafeAreaView style={styles.areaContainer}>
                 <View style={styles.container}>
                     <View style={styles.logo}>
@@ -290,6 +298,10 @@ const styles = StyleSheet.create({
         zIndex: 10,
         backgroundColor: colors.bg,
     },
+    containerForgotPin: {
+        backgroundColor: '#F9CC48',
+        paddingRight: 35
+    },
     areaContainer: {
         flex: 1
     },
@@ -334,6 +346,13 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
+    forgotPassword: {
+        color: '#F5942A',
+        fontStyle: 'normal',
+        fontWeight: '500',
+        fontSize: 16,
+        textAlign: 'right'
+    }
   });
 
 export default PinCode;

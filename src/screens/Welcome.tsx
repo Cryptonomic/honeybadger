@@ -118,8 +118,12 @@ const Welcome = ({navigation}: WelcomeProps) => {
             navigation.replace('Account');
         } else {
             setIsPin(false);
-            Alert.alert("Incorrect PIN.")
+            Alert.alert("Incorrect PIN.");
         }
+    }
+
+    const redirectToResetPin = () => {
+        navigation.replace("ResetPin");
     }
 
     return (
@@ -168,7 +172,7 @@ const Welcome = ({navigation}: WelcomeProps) => {
         </Container>
         :
         <Container>
-            <PinCode key="pin" text='Please Enter Your Pin' handlePin={handlePin} isResetNeeded={false} isSkipAllowed={false} />
+            <PinCode key="pin" text='Please Enter Your Pin' handlePin={handlePin} isResetNeeded={false} isSkipAllowed={false} allowChange={true} redirectToResetPin={redirectToResetPin}/>
         </Container>
     );
 };

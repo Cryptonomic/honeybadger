@@ -14,6 +14,7 @@ import SeedPhraseScreen from '../screens/SeedPhrase';
 import DelegateAddressScreen from '../screens/DelegateAddress';
 import DelegateReviewScreen from '../screens/DelegateReview';
 import AccountSetup from '../screens/AccountSetup';
+import ResetPin from '../screens/ResetPin';
 
 const MainNavigator = createStackNavigator(
     {
@@ -31,6 +32,7 @@ const MainNavigator = createStackNavigator(
         SeedPhrase: SeedPhraseScreen,
         DelegateAddress: DelegateAddressScreen,
         DelegateReview: DelegateReviewScreen,
+        ResetPin: ResetPin,
     },
     {
         headerMode: 'none',
