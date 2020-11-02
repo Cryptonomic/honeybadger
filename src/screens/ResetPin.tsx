@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {StyleSheet, TextInput, Clipboard, ScrollView, Alert} from 'react-native';
+import {StyleSheet, TextInput, Clipboard, ScrollView, Alert, KeyboardAvoidingView, Platform} from 'react-native';
 import {View, Text, Container, Button} from 'native-base';
 import {useSelector} from 'react-redux';
 import bip39 from 'react-native-bip39'
@@ -103,31 +103,29 @@ const ResetPin = ({navigation}: SeedPhraseProps) => {
             />
             {
                 step === "VARIFY" &&
-                <View style={styles.content}>
-                    <Text style={styles.typo1}>
-                    Enter the following four words from your recovery phrase to verify your ownership of this account.
-                    </Text>
-                    {
-                        phraseInputs.map((item, index) => {
-                            return (
-                                <React.Fragment key={index}>
-                                    <Text style={styles.typo2}>Word {item.key + 1}</Text>
-                                    <TextInput style={styles.inputField} placeholder="Recovery phrase word 5 " value={item.value}
-                                    onChangeText={text => {
-                                        onInputChange(text, index, item);
-                                    }}/>
-                                </React.Fragment> 
-                            )
-                        })
-                    }
-                    <Button style={styles.btn} onPress={validatePhrase}>
-                                    <Text>Reset PIN</Text>
-                    </Button>
-                </View>
-            }
-            {
-                back &&
-                <CustomHeader title="Enable App Lock" onBack={() => navigation.goBack()} />
+                <ScrollView contentContainerStyle={{flexGrow: 1}}>
+                    <View style={styles.content}>
+                        <Text style={styles.typo1}>
+                        Enter the following four words from your recovery phrase to verify your ownership of this account.
+                        </Text>
+                        {
+                            phraseInputs.map((item, index) => {
+                                return (
+                                    <React.Fragment key={index}>
+                                        <Text style={styles.typo2}>Word {item.key + 1}</Text>
+                                        <TextInput autoFocus={index === 0 ? true : false} style={styles.inputField} placeholder="Recovery phrase word 5 " value={item.value}
+                                        onChangeText={text => {
+                                            onInputChange(text, index, item);
+                                        }}/>
+                                    </React.Fragment> 
+                                )
+                            })
+                        }
+                        <Button style={styles.btn} onPress={validatePhrase}>
+                                        <Text>Reset PIN</Text>
+                        </Button>
+                    </View>
+                </ScrollView>
             }
             {
                 step === "PIN" &&
@@ -164,6 +162,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#4b4b4b',
         alignSelf: 'center',
         marginTop: 10,
+        marginBottom: 30
     },
     typo1: {
         fontFamily: 'Roboto',

@@ -4,7 +4,7 @@ import { StyleSheet, Image } from 'react-native';
 import TouchID from "react-native-touch-id";
 
 const EnableBiometric = (props: any) => {
-    const [isSuccess, setSuccess] = useState(false);
+    const [isSuccess, setSuccess] = useState(props.success ? true : false);
     const [isBiometricSupported, setBiometricSupported] = useState(false);
 
     const handleBiometric = () => {
