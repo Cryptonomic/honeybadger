@@ -1,7 +1,11 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, {useState, useRef, useReducer} from 'react';
+import React, { useRef, useReducer} from 'react';
 import { Text } from 'native-base';
 import { StyleSheet, View, TextInput, KeyboardAvoidingView, Platform, SafeAreaView, Image } from "react-native";
+import { Container } from 'native-base';
+
+import {colors} from '../../theme';
+
 import Logo from '../../../assets/galleon-logo.svg';
 
 const PinCode = (props: any) => {
@@ -137,6 +141,7 @@ const PinCode = (props: any) => {
     }
 
     return (
+        <Container style={styles.containerWrapper}>
         <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={{ flex: 1 }}>
             <View>
                 {
@@ -277,17 +282,21 @@ const PinCode = (props: any) => {
                 </View>
             </SafeAreaView>
         </KeyboardAvoidingView>
+        </Container>
     )
 }
 
 const styles = StyleSheet.create({
+    containerWrapper: {
+        backgroundColor: colors.bg,
+    },
     container: {
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
         paddingHorizontal: 20,
         zIndex: 10,
-        backgroundColor: '#F9CC48'
+        backgroundColor: colors.bg,
     },
     containerForgotPin: {
         backgroundColor: '#F9CC48',

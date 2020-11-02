@@ -3,6 +3,8 @@ import {useSelector, useDispatch} from 'react-redux';
 import {StyleSheet, Platform, TextInput} from 'react-native';
 import {Container, Text, Input, View, Button} from 'native-base';
 
+import EnterAddressErrors from '../components/EnterAddress/EnterAddressErrors';
+
 import constants from '../utils/constants.json';
 import {setSendAmount} from '../reducers/app/actions';
 import CustomHeader from '../components/CustomHeader';
@@ -23,25 +25,36 @@ const SendAmount = ({navigation}: SendAmountProps) => {
     const [fee] = useState(utezToTez(constants.fees.simpleTransaction));
     const title = `Sending to ${truncateHash(address)}`;
     const textInput = useRef(null);
+    const [isError, setIsError] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
 
     const onChange = (value: string) => {
         if (value.length === 1 && value.charAt(0) === '.') {
             setAmount('0.');
+            setIsError(false);
             return;
         }
 
         if (value.indexOf('.') > -1 && value.split('.')[1].length > 3) {
+            setIsError(false);
             return;
         }
 
         if (isNaN(Number(value))) {
+            setIsError(true);
+            setErrorMessage('Please enter a valid number');
+            setAmount(value);
             return;
         }
 
         if (Number(value) * 1000000 >= balance) {
+            setIsError(true);
+            setErrorMessage('Insufficient balance');
+            setAmount(value);
             return;
         }
 
+        setIsError(false);
         setAmount(value);
     };
 
@@ -62,11 +75,7 @@ const SendAmount = ({navigation}: SendAmountProps) => {
     };
 
     const goNext = () => {
-        if (!amount.length) {
-            return;
-        }
-
-        if (Number(amount) === 0) {
+        if (!amount.length || Number(amount) === 0 || isError) {
             return;
         }
 
@@ -84,14 +93,14 @@ const SendAmount = ({navigation}: SendAmountProps) => {
             <Text style={styles.title}>{title}</Text>
             {Platform.OS === 'android' && (
                 <View style={styles.input}>
-                <TextInput
-                    autoFocus={true}
-                    value={amount}
-                    onKeyPress={onKeyPress}
-                    onChangeText={onChange}
-                    keyboardType="numeric"
-                    ref={textInput}
-                />
+                    <TextInput
+                        autoFocus={true}
+                        value={amount}
+                        onKeyPress={onKeyPress}
+                        onChangeText={onChange}
+                        keyboardType="numeric"
+                        ref={textInput}
+                    />
                 </View>
                 )}
                 {Platform.OS === 'ios' && (
@@ -108,6 +117,9 @@ const SendAmount = ({navigation}: SendAmountProps) => {
                     {formatAmount(Number(amount) * 1000000)}
                 </Text>
                 <CustomIcon name="XTZ" size={30} color="#1a1919" />
+            </View>
+            <View style={styles.errorContainer}>
+                <EnterAddressErrors isVisible={isError} title="Invalid Amount" message={errorMessage} />
             </View>
             {/*<View style={styles.currency}>
                 <Text style={styles.typo2}>$</Text>
@@ -150,22 +162,20 @@ const styles = StyleSheet.create({
         backgroundColor: colors.bg,
     },
     title: {
-        marginTop: 64,
+        marginTop: 5,
         fontFamily: 'Roboto-Regular',
         fontSize: 16,
         fontWeight: 'normal',
         textAlign: 'center',
     },
     amount: {
-        marginTop: 23.5,
+        marginTop: -230,
         alignItems: 'center',
         justifyContent: 'center',
         flexDirection: 'row',
     },
     input: {
-        display: 'flex',
-        top: -300,
-        left: -300,
+        opacity:0
     },
     currency: {
         marginTop: 10,
@@ -246,6 +256,9 @@ const styles = StyleSheet.create({
         letterSpacing: 0.85,
         textTransform: 'capitalize',
     },
+    errorContainer: {
+        height: 70
+    }
 });
 
 export default SendAmount;

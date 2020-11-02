@@ -4,10 +4,11 @@ import {View, Text, Icon} from 'native-base';
 
 interface EnterAddressErrorsProps {
     isVisible: boolean;
+    title: string;
     message: string;
 }
 
-const EnterAddressErrors = ({isVisible, message}: EnterAddressErrorsProps) => {
+const EnterAddressErrors = ({isVisible, title, message}: EnterAddressErrorsProps) => {
     return (
         <>
             {isVisible && (
@@ -18,7 +19,7 @@ const EnterAddressErrors = ({isVisible, message}: EnterAddressErrorsProps) => {
                             type="AntDesign"
                             style={styles.icon}
                         />
-                        <Text style={styles.typo1}>Invalid Tezos Address</Text>
+                        <Text style={styles.typo1}>{title}</Text>
                     </View>
                     <View style={styles.text}>
                         <Text style={styles.typo2}>{message}</Text>

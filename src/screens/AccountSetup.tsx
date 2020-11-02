@@ -1,8 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, {useState, useRef} from 'react';
+import React, { useState } from 'react';
 import {AccountSettingsProps} from './types';
-import { Container, Header, Text, Toast } from 'native-base';
-import { StyleSheet, View, TextInput, Alert } from "react-native";
+import { Container } from 'native-base';
+import { StyleSheet, Alert } from "react-native";
 import * as Keychain from 'react-native-keychain';
 
 import CustomHeader from '../components/CustomHeader';

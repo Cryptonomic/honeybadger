@@ -88,6 +88,7 @@ const EnterAddress: FunctionComponent<EnterAddressProps> = ({
                     {children}
                     <EnterAddressErrors
                         isVisible={isError}
+                        title="Invalid Address"
                         message={errorMessage}
                     />
                     <EnterAddressButtons

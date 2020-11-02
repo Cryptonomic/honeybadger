@@ -66,7 +66,7 @@ const Welcome = ({navigation}: WelcomeProps) => {
                 return
             }
 
-            if (securityConfig.isBiometric) {
+            if (securityConfig !== undefined && securityConfig.isBiometric) {
                 showAppLock();
             }
         }
