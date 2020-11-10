@@ -1,8 +1,7 @@
 import React, {useState, useEffect} from 'react';
-import {StyleSheet, TextInput, Clipboard, ScrollView, Alert, KeyboardAvoidingView, Platform} from 'react-native';
+import {StyleSheet, TextInput, ScrollView, Alert, KeyboardAvoidingView, Platform} from 'react-native';
 import {View, Text, Container, Button} from 'native-base';
 import {useSelector} from 'react-redux';
-import bip39 from 'react-native-bip39'
 import * as Keychain from 'react-native-keychain';
 import {colors} from '../theme';
 import CustomHeader from '../components/CustomHeader';
@@ -15,50 +14,41 @@ import {State} from '../reducers/types';
 const ResetPin = ({navigation}: SeedPhraseProps) => {
     const seed = useSelector((state: State) => state.app.seed);
     const [phraseIndexes, setPhraseIndexes] = useState([0])
-    const [step, setStep] = useState('VARIFY');
+    const [step, setStep] = useState('VERIFY');
     const [pin, setPin] = useState('');
     const [confirmPin, setConfirmPin] = useState('');
     const [back, setBack] = useState(false);
-
     const [phraseInputs, setPhraseInputs] = useState([{key: 0, value: ''}]);
-    // Shuffle array
-    useEffect(() => { 
-        const arr = seed.split(' ');   
-        if(arr.length>1) {
-            const shuffled = [...arr].sort(() => 0.5 - Math.random());
-            let selected = shuffled.slice(0, 4);
 
-            const phrases = [];
-            phrases.push({ key: arr.indexOf(selected[0]), value: '' });
-            phrases.push({ key: arr.indexOf(selected[1]), value: '' });
-            phrases.push({ key: arr.indexOf(selected[2]), value: '' });
-            phrases.push({ key: arr.indexOf(selected[3]), value: '' });
-            setPhraseInputs(phrases)
+    useEffect(() => { 
+        const arr = seed.split(' ');
+        if (arr.length > 1) {
+            const shuffled = [...arr].sort(() => 0.5 - Math.random());
+            setPhraseInputs(shuffled.slice(0, 4).map(w => { return { key: arr.indexOf(w), value: '' }; }).sort((a, b) => a.key - b.key));
         }
     }, [seed]);
 
     const onInputChange = (text: any, index: number, actualIndex: any) => {
-
         let data: any = phraseInputs.map((item, arrIndex) => {
-            if(arrIndex == index) {
-                return {...item, value: text }
+            if (arrIndex == index) {
+                return { ...item, value: text };
             } else {
-                return item
+                return item;
             }
-        })  
+        });
+
         setPhraseInputs(data);
     }
 
     const validatePhrase = () => {
-        const arr = seed.split(' '); 
-        phraseInputs.forEach(item => {
-            arr[item.key] = item.value;
-        })
+        const seedWords = seed.split(' ');
+        const match = phraseInputs.reduce((o, i) => { return o && seedWords[i.key] === i.value.toLowerCase() }, true);
 
-        if (bip39.validateMnemonic(arr.join(" "))) {
+        if (match) {
             setBack(true);
             setStep('PIN');
         } else {
+            // TODO: reset state and generate new "selected" words
             Alert.alert("validation failed");
         }
     }
@@ -102,7 +92,7 @@ const ResetPin = ({navigation}: SeedPhraseProps) => {
                 onBack={() => navigation.goBack()}
             />
             {
-                step === "VARIFY" &&
+                step === "VERIFY" &&
                 <ScrollView contentContainerStyle={{flexGrow: 1}}>
                     <View style={styles.content}>
                         <Text style={styles.typo1}>
@@ -113,7 +103,7 @@ const ResetPin = ({navigation}: SeedPhraseProps) => {
                                 return (
                                     <React.Fragment key={index}>
                                         <Text style={styles.typo2}>Word {item.key + 1}</Text>
-                                        <TextInput autoFocus={index === 0 ? true : false} style={styles.inputField} placeholder="Recovery phrase word 5 " value={item.value}
+                                        <TextInput autoFocus={index === 0 ? true : false} style={styles.inputField} placeholder={`Recovery phrase word ${item.key + 1}`} value={item.value}
                                         onChangeText={text => {
                                             onInputChange(text, index, item);
                                         }}/>
