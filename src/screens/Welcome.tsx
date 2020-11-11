@@ -152,6 +152,7 @@ const Welcome = ({navigation}: WelcomeProps) => {
                                 <Button style={styles.btn} onPress={showPin}>
                                     <Text style={styles.typo3}>Enter Pin</Text>
                                 </Button>
+                                <Text style={{marginTop: 20}} onPress={() => navigation.replace('ResetPin')}>Reset Pin</Text>
                                 {
                                     (isBiometricSupported && isBiometricEnabled) &&
                                     <Button style={styles.btn} onPress={showAppLock}>

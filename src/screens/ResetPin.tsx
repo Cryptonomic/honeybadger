@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {StyleSheet, TextInput, ScrollView, Alert, KeyboardAvoidingView, Platform, Modal, TouchableHighlight} from 'react-native';
+import {StyleSheet, TextInput, ScrollView, Alert, KeyboardAvoidingView, Platform, Modal} from 'react-native';
 import {View, Text, Container, Button} from 'native-base';
 import {useSelector} from 'react-redux';
 import * as Keychain from 'react-native-keychain';
@@ -22,12 +22,16 @@ const ResetPin = ({navigation}: SeedPhraseProps) => {
     const [modalVisible, setModalVisible] = useState(false);
 
     useEffect(() => { 
+        generateNewPhrases();
+    }, [seed]);
+
+    const generatePhrases = () => {
         const arr = seed.split(' ');
         if (arr.length > 1) {
             const shuffled = [...arr].sort(() => 0.5 - Math.random());
             setPhraseInputs(shuffled.slice(0, 4).map(w => { return { key: arr.indexOf(w), value: '' }; }).sort((a, b) => a.key - b.key));
         }
-    }, [seed]);
+    }
 
     const onInputChange = (text: any, index: number, actualIndex: any) => {
         let data: any = phraseInputs.map((item, arrIndex) => {
@@ -43,15 +47,21 @@ const ResetPin = ({navigation}: SeedPhraseProps) => {
 
     const validatePhrase = () => {
         const seedWords = seed.split(' ');
-        const match = phraseInputs.reduce((o, i) => { return o && seedWords[i.key] === i.value.toLowerCase() }, true);
+        const match = phraseInputs.reduce((o, i) => { 
+            return o && seedWords[i.key] === i.value.toLowerCase() 
+        }, true);
 
         if (match) {
             setBack(true);
             setStep('PIN');
         } else {
-            // TODO: reset state and generate new "selected" words
             setModalVisible(true);
         }
+    }
+
+    const generateNewPhrases = () => {
+        setModalVisible(false);
+        generatePhrases();
     }
 
     const handlePin = (pinCode: string) => {
@@ -114,7 +124,7 @@ const ResetPin = ({navigation}: SeedPhraseProps) => {
                                 })
                             }
                             <Button style={styles.btn} onPress={validatePhrase}>
-                                            <Text>Reset PIN</Text>
+                                <Text>Reset PIN</Text>
                             </Button>
                         </View>
                     </ScrollView>
@@ -144,10 +154,8 @@ const ResetPin = ({navigation}: SeedPhraseProps) => {
                     <View style={styles.modalView}>
                         <Text style={styles.modalText}>Incorrect Entry</Text>
                         <Text style={styles.typo2}>Please try resetting your PIN again.</Text>
-                        <Button style={styles.modalBtn} onPress={() => {
-                            setModalVisible(false);
-                        }}>
-                                            <Text>Try Again</Text>
+                        <Button style={styles.modalBtn} onPress={generateNewPhrases}>
+                            <Text>Try Again</Text>
                         </Button>
                     </View>
                 </View>
