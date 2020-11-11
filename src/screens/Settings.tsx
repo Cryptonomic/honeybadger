@@ -72,11 +72,7 @@ const Settings = ({navigation}: SettingsProps) => {
                     name: 'Enable App Lock',
                     isSwitch: true,
                     action: () => navigation.navigate('AccountSetup'),
-                },
-                {
-                    name: 'Reset Pin',
-                    action: () => navigation.navigate('ResetPin'),
-                },
+                }
             ],
         },
         {
