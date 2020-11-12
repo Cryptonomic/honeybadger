@@ -96,14 +96,29 @@ const ResetPin = ({navigation}: SeedPhraseProps) => {
         navigation.replace('Account');
     }
 
+    const isBackAllowed = () => {
+        if(step === "VERIFY") {
+            return true;
+        } 
+        return false;
+    }
+
     return (
         <React.Fragment>
             <Container style={styles.container}>
-                <CustomHeader
-                    title="Reset PIN"
-                    onBack={() => navigation.goBack()}
-                />
                 {
+                    isBackAllowed() ? 
+                    <CustomHeader
+                        title="Reset PIN"
+                        onBack={() => navigation.replace("Welcome")}
+                    />
+                    :
+                    <CustomHeader
+                        title="Reset PIN"
+                    />
+                }
+                
+                { 
                     step === "VERIFY" &&
                     <ScrollView contentContainerStyle={{flexGrow: 1}}>
                         <View style={styles.content}>
