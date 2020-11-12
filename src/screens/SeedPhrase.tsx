@@ -43,7 +43,7 @@ const SeedPhrase = ({navigation}: SeedPhraseProps) => {
                 <View style={styles.seed}>
                     <View style={styles.column}>
                         {cols[0].map((value, index) => (
-                            <View style={styles.row}>
+                            <View style={styles.row} key={index}>
                                 <View style={styles.seedNumberWrapper}>
                                     <Text style={styles.seedNumber}>{`${
                                         index + 1
@@ -58,7 +58,7 @@ const SeedPhrase = ({navigation}: SeedPhraseProps) => {
                     <View style={styles.dividerVertical} />
                     <View style={styles.column}>
                         {cols[1].map((value, index) => (
-                            <View style={styles.row}>
+                            <View style={styles.row} key={index}>
                                 <View style={styles.seedNumberWrapper}>
                                     <Text style={styles.seedNumber}>{`${
                                         half + 1 + index
