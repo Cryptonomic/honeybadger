@@ -1,15 +1,16 @@
 import React, {useState, useEffect} from 'react';
-import {StyleSheet, TextInput, ScrollView, Alert, KeyboardAvoidingView, Platform, Modal} from 'react-native';
+import {StyleSheet, TextInput, ScrollView, Alert, Modal} from 'react-native';
 import {View, Text, Container, Button} from 'native-base';
 import {useSelector} from 'react-redux';
 import * as Keychain from 'react-native-keychain';
+
 import {colors} from '../theme';
 import CustomHeader from '../components/CustomHeader';
 import PinCode from '../components/PinCode';
 import EnableBiometric from '../components/EnableBiometric';
+import {State} from '../reducers/types';
 
 import {SeedPhraseProps} from './types';
-import {State} from '../reducers/types';
 
 const ResetPin = ({navigation}: SeedPhraseProps) => {
     const seed = useSelector((state: State) => state.app.seed);
@@ -161,9 +162,6 @@ const ResetPin = ({navigation}: SeedPhraseProps) => {
                 animationType="fade"
                 transparent={true}
                 visible={modalVisible}
-                onRequestClose={() => {
-                Alert.alert("Modal has been closed.");
-                }}
             >
                 <View style={styles.centeredView}>
                     <View style={styles.modalView}>
