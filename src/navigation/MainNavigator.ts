@@ -15,6 +15,7 @@ import DelegateAddressScreen from '../screens/DelegateAddress';
 import DelegateReviewScreen from '../screens/DelegateReview';
 import AccountSetup from '../screens/AccountSetup';
 import ResetPin from '../screens/ResetPin';
+import SecurityLevel from '../screens/SecurityLevel';
 
 const MainNavigator = createStackNavigator(
     {
@@ -33,6 +34,7 @@ const MainNavigator = createStackNavigator(
         DelegateAddress: DelegateAddressScreen,
         DelegateReview: DelegateReviewScreen,
         ResetPin: ResetPin,
+        SecurityLevel: SecurityLevel
     },
     {
         headerMode: 'none',

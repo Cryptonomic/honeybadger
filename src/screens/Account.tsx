@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, {useState, useEffect} from 'react';
-import {StyleSheet} from 'react-native';
+import {StyleSheet, Image} from 'react-native';
 import {Container, Button, Text, View, Header} from 'native-base';
 import * as Keychain from 'react-native-keychain';
 import Modal from 'react-native-modal';
@@ -207,6 +207,21 @@ const Account = ({navigation}: AccountProps) => {
                         <SecurityLevelButton />
                     </View>
                 )*/}
+                <View style={styles.security}>
+                    <View>
+                        <Image style={{width:47,height:35,marginRight:16}} source={require('../../assets/fish.png')} />
+                    </View>
+                    <View style={{width:'57%'}}>
+                        <Text style={styles.typo6}>Your Security Level</Text>
+                        <Text style={styles.typo3}>Level 1: Goldfish</Text>
+                    </View>
+                    <View>
+                        <Image style={{width:60,height:59,marginRight:16}} source={require('../../assets/circle.png')} />
+                    </View>
+                    <View>
+                        <Image style={{width:9,height:14}} source={require('../../assets/right-arrow.png')} />
+                    </View>
+                </View>
                 <View style={styles.tabs}>
                     <View
                         style={[
@@ -456,6 +471,30 @@ const styles = StyleSheet.create({
         fontSize: 16,
         letterSpacing: 0.67,
     },
+    typo6: {
+        fontFamily: 'Roboto-Light',
+        fontWeight: '300',
+        fontSize: 14,
+    },
+    security: {
+        borderRadius: 9,
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.10,
+        shadowRadius: 3.84,
+        elevation: 5,
+        padding: 16,
+        margin:20,
+        backgroundColor: '#fff',
+        width: '90%',
+        flexDirection: 'row',
+        alignItems:'center'
+    },
+    inlineElements: {
+    }
 });
 
 export default Account;
