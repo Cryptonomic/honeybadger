@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, {useState, useEffect} from 'react';
-import {StyleSheet, Image} from 'react-native';
+import {StyleSheet, Image, TouchableOpacity} from 'react-native';
 import {Container, Button, Text, View, Header} from 'native-base';
 import * as Keychain from 'react-native-keychain';
 import Modal from 'react-native-modal';
@@ -40,7 +40,7 @@ const Account = ({navigation}: AccountProps) => {
     const hasPendingOperations = useSelector((state: State) => (state.app.pendingDelegations.length > 0 || state.app.pendingTransactions.length > 0));
     const [isPendingModalVisible, setPendingModalVisible] = useState(false);
     const [refreshTimer, setRefreshTimer] = useState(undefined as any);
-
+    const [securityLevel, setSecurityLevel] = useState("0");
     const changeTab = (newTab: number) => {
         if (newTab === tab) {
             return;
@@ -60,6 +60,10 @@ const Account = ({navigation}: AccountProps) => {
                     }
                 } else {
                     navigation.replace('Welcome');
+                }
+                let securityLevel: any = await Keychain.getInternetCredentials('securityLevel');
+                if(securityLevel.password) {
+                    setSecurityLevel(securityLevel.password);
                 }
             } catch (error) {
                 console.log("Keychain couldn't be accessed!", error);
@@ -113,6 +117,10 @@ const Account = ({navigation}: AccountProps) => {
         { title: 'Settings', action: onSettingsSelect },
         //{ title: 'Clear Data', action: onClearData }
     ];
+
+    const navigateToSecurity = () => {
+        navigation.navigate("SecurityLevel")
+    }
 
     return (
         <Container style={styles.container}>
@@ -207,21 +215,62 @@ const Account = ({navigation}: AccountProps) => {
                         <SecurityLevelButton />
                     </View>
                 )*/}
-                <View style={styles.security}>
-                    <View>
-                        <Image style={{width:47,height:35,marginRight:16}} source={require('../../assets/fish.png')} />
-                    </View>
-                    <View style={{width:'57%'}}>
-                        <Text style={styles.typo6}>Your Security Level</Text>
-                        <Text style={styles.typo3}>Level 1: Goldfish</Text>
-                    </View>
-                    <View>
-                        <Image style={{width:60,height:59,marginRight:16}} source={require('../../assets/circle.png')} />
-                    </View>
-                    <View>
-                        <Image style={{width:9,height:14}} source={require('../../assets/right-arrow.png')} />
-                    </View>
-                </View>
+                {
+                    securityLevel === "0" &&
+                    <TouchableOpacity style={styles.security} onPress={() => navigateToSecurity()}>
+                        <View>
+                            <Image style={{width:47,height:35,marginRight:16}} source={require('../../assets/fish.png')} />
+                        </View>
+                        <View style={{width:'57%'}}>
+                            <Text style={styles.typo6}>Your Security Level</Text>
+                            <Text style={styles.typo3}>Level 1: Goldfish</Text>
+                        </View>
+                        <View>
+                            <Image style={{width:60,height:59,marginRight:16}} source={require('../../assets/circle.png')} />
+                        </View>
+                        <View>
+                            <Image style={{width:9,height:14}} source={require('../../assets/right-arrow.png')} />
+                        </View>
+                    </TouchableOpacity>
+                }
+                {
+                    securityLevel === "1" &&
+                    <TouchableOpacity style={styles.security} onPress={() => navigateToSecurity()}>
+                        <View>
+                            <Image style={{width:47,height:35,marginRight:16}} source={require('../../assets/salmon.png')} />
+                        </View>
+                        <View style={{width:'57%'}}>
+                            <Text style={styles.typo6}>Your Security Level</Text>
+                            <Text style={styles.typo3}>Level 2: Savvy Salmon</Text>
+                        </View>
+                        <View>
+                            <Image style={{width:60,height:59,marginRight:16}} source={require('../../assets/circle.png')} />
+                        </View>
+                        <View>
+                            <Image style={{width:9,height:14}} source={require('../../assets/right-arrow.png')} />
+                        </View>
+                    </TouchableOpacity>
+                }
+                {
+                    securityLevel === "2" &&
+                    <TouchableOpacity style={styles.security} onPress={() => navigateToSecurity()}>
+                        <View>
+                            <Image style={{width:47,height:35,marginRight:16}} source={require('../../assets/dolphin.png')} />
+                        </View>
+                        <View style={{width:'57%'}}>
+                            <Text style={styles.typo6}>Your Security Level</Text>
+                            <Text style={styles.typo3}>Level 3: Discreet Dolphin</Text>
+                        </View>
+                        <View>
+                            <Image style={{width:60,height:59,marginRight:16}} source={require('../../assets/circle.png')} />
+                        </View>
+                        <View>
+                            <Image style={{width:9,height:14}} source={require('../../assets/right-arrow.png')} />
+                        </View>
+                    </TouchableOpacity>
+                }
+                
+                
                 <View style={styles.tabs}>
                     <View
                         style={[

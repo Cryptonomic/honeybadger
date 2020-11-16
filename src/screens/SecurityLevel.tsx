@@ -1,12 +1,58 @@
-import React, {useState} from 'react';
-import {StyleSheet,  ScrollView, Image} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {StyleSheet,  ScrollView, Image, TouchableOpacity} from 'react-native';
 import {View, Text, Container, Button} from 'native-base';
 import {colors} from '../theme';
 import CustomHeader from '../components/CustomHeader';
+import * as Keychain from 'react-native-keychain';
 
 import {SeedPhraseProps} from './types';
 
 const SecurityLevel = ({navigation}: SeedPhraseProps) => {
+    const [securityLevel, setSecurityLevel] = useState("0");
+    useEffect(() => {
+        async function load() {
+            try {
+                let securityLevel: any = await Keychain.getInternetCredentials('securityLevel');
+                if(securityLevel.password) {
+                    setSecurityLevel(securityLevel.password);
+                }
+            } catch (error) {
+                console.log("Keychain couldn't be accessed!", error);
+            }
+        }
+        load();
+    }, []);
+
+    const getSecurityLevel = () => {
+        if(securityLevel === "0") {
+            return "Level 1: Goldfish";
+        } else if(securityLevel === "1") {
+            return "Level 2: Savvy Salmon";
+        } else {
+            return "Level 3: Discreet Dolphin";
+        }
+    }
+
+    const getSubText = () => {
+        if(securityLevel === "0") {
+            return "Your funds are not secure";
+        } else if(securityLevel === "1") {
+            return "Backed Up Recovery Phrase";
+        } else {
+            return "Enabled App Lock";
+        }
+    }
+
+    const getLevelText = () => {
+        if(securityLevel === "0") {
+            return "Your Security Level"
+        } else if(securityLevel === "1") {
+            return "Next Level";
+        } else {
+            return "";
+        }
+        
+    }
 
     return (
             <Container style={styles.container}>
@@ -17,33 +63,54 @@ const SecurityLevel = ({navigation}: SeedPhraseProps) => {
                 <View style={{alignItems:"center", paddingBottom:34}}>
                     <Image style={{width:91,height:68, marginTop:34, marginBottom:24}} source={require('../../assets/goldfish.png')} />
                     <Text style={styles.typo1}>
-                        Level 1: Goldfish
+                        { getSecurityLevel() }
                     </Text>
                     <Text style={styles.typo5}>
-                        Your funds are not secure
+                        {getSubText()}
                     </Text>
                 </View>
                 <ScrollView contentContainerStyle={{flexGrow: 1}}>
                     <View style={styles.content}>
                         <Text style={styles.typo3}>
-                            Level Up Your Security
+                            { 
+                                securityLevel === "2" ?
+                                "You Have Reached The Final Level! "
+                                :
+                                "Level Up Your Security"
+                            }
                         </Text>
-                        <View style={styles.security}>
+                        <TouchableOpacity style={styles.security} onPress={()=> navigation.navigate("AccountSetup")}>
                             <View>
-                                <Image style={{width:47,height:35,marginRight:16}} source={require('../../assets/fish.png')} />
+                                {
+                                    securityLevel === "0" &&
+                                    <Image style={{width:47,height:35,marginRight:16}} source={require('../../assets/fish.png')} />
+                                }
+                                {
+                                    securityLevel === "1" &&
+                                    <Image style={{width:47,height:35,marginRight:16}} source={require('../../assets/salmon.png')} />
+                                }
+                                {
+                                    securityLevel === "2" &&
+                                    <Image style={{width:47,height:35,marginRight:16}} source={require('../../assets/dolphin.png')} />
+                                }
                             </View>
                             <View style={{width:'57%'}}>
-                                <Text style={styles.typo6}>Your Security Level</Text>
-                                <Text style={styles.typo3}>Level 1: Goldfish</Text>
+                            <Text style={styles.typo6}>{getLevelText()}</Text>
+                                <Text style={styles.typo3}>{ getSecurityLevel() }</Text>
                             </View>
                             <View>
                                 <Image style={{width:40,height:42,marginRight:16}} source={require('../../assets/circle.png')} />
                             </View>
                             <View>
-                                <Image style={{width:9,height:14}} source={require('../../assets/right-arrow.png')} />
+                                {
+                                    securityLevel !== "2" &&
+                                    <Image style={{width:9,height:14}} source={require('../../assets/right-arrow.png')} />
+                                }
+                                
                             </View>
-                        </View>
+                        </TouchableOpacity>
                         {/* Levels Grid */}
+                        <ScrollView contentContainerStyle={{flexGrow: 1}}>
                         <View>
                             <Text style={styles.typo3}>
                                 Levels
@@ -51,19 +118,63 @@ const SecurityLevel = ({navigation}: SeedPhraseProps) => {
                             <View style={styles.levelMain}>
                                 <View style={{paddingTop:18}}>
                                     {/* Level 1 */}
-                                    <View style={styles.dotsContainer}>
-                                        <Text style={styles.greyDots1}></Text>
-                                        <Text style={styles.orangeDot1}></Text>
-                                        <Text style={styles.greyLine1}></Text>
-                                    </View>
-                                    <View style={styles.dotsContainer}>
-                                        <Text style={styles.greyDots1}></Text>
-                                        <Text style={styles.greyLine1}></Text>
-                                    </View>
-                                    <View >
-                                        <Text style={styles.greyDots3}></Text>
-                                        <Image style={{width:15,height:16,marginTop:-28,marginLeft:7}} source={require('../../assets/flag.png')} />
-                                    </View>
+                                    {
+                                        securityLevel === "0" &&
+                                        <React.Fragment>
+                                            <View style={styles.dotsContainer}>
+                                                <Text style={styles.greyDots1}></Text>
+                                                <Text style={styles.orangeDot1}></Text>
+                                                <Text style={styles.greyLine1}></Text>
+                                            </View>
+                                            <View style={styles.dotsContainer}>
+                                                <Text style={styles.greyDots1}></Text>
+                                                <Text style={styles.greyLine1}></Text>
+                                            </View>
+                                            <View >
+                                                <Text style={styles.greyDots3}></Text>
+                                                <Image style={{width:15,height:16,marginTop:-28,marginLeft:7}} source={require('../../assets/flag.png')} />
+                                            </View>
+                                        </React.Fragment>
+                                    }
+                                    {
+                                        securityLevel === "1" &&
+                                        <React.Fragment>
+                                            <View style={styles.dotsContainer}>
+                                                <Text style={styles.greyDots2}></Text>
+                                                <Text style={styles.orangeDot1}></Text>
+                                                <Text style={styles.orangeLine1}></Text>
+                                            </View>
+                                            <View style={styles.dotsContainer}>
+                                                <Text style={styles.greyDots1}></Text>
+                                                <Text style={styles.orangeDot1}></Text>
+                                                <Text style={styles.greyLine1}></Text>
+                                            </View>
+                                            <View >
+                                                <Text style={styles.greyDots3}></Text>
+                                                <Image style={{width:15,height:16,marginTop:-28,marginLeft:7}} source={require('../../assets/flag.png')} />
+                                            </View>
+                                        </React.Fragment>
+                                    }
+                                    {
+                                        securityLevel === "2" &&
+                                        <React.Fragment>
+                                            <View style={styles.dotsContainer}>
+                                                <Text style={styles.greyDots2}></Text>
+                                                <Text style={styles.orangeDot1}></Text>
+                                                <Text style={styles.orangeLine1}></Text>
+                                            </View>
+                                            <View style={styles.dotsContainer}>
+                                                <Text style={styles.greyDots2}></Text>
+                                                <Text style={styles.orangeDot1}></Text>
+                                                <Text style={styles.orangeLine1}></Text>
+                                            </View>
+                                            
+                                            <View >
+                                                <Text style={styles.orangeDot3}></Text>
+                                                <Image style={{width:15,height:16,marginTop:-28,marginLeft:7}} source={require('../../assets/whiteflag.png')} />
+                                            </View>
+                                        </React.Fragment>
+                                    }
                                     
                                     {/* Level 2
                                     <View style={styles.dotsContainer}>
@@ -130,6 +241,7 @@ const SecurityLevel = ({navigation}: SeedPhraseProps) => {
                                 </View>
                             </View>
                         </View>
+                        </ScrollView>
                         {/* Levels Grid */}
                     </View>
                 </ScrollView>
