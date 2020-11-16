@@ -74,10 +74,6 @@ const Settings = ({navigation}: SettingsProps) => {
                     action: () => navigation.navigate('AccountSetup'),
                 },
                 {
-                    name: 'Reset Pin',
-                    action: () => navigation.navigate('ResetPin'),
-                },
-                {
                     name: 'Security Level',
                     action: () => navigation.navigate('SecurityLevel'),
                 },
