@@ -53,14 +53,10 @@ const AccountSetup = ({ navigation }: AccountSettingsProps) => {
         await Keychain.setInternetCredentials('securitySetup', 'userName', JSON.stringify(setup));
         let securityLevel: any = await Keychain.getInternetCredentials('securityLevel');
         let currentLevel = 0;
-        if(!securityLevel.password) {
-            currentLevel = 1;
-        } else if(securityLevel.password === '1') {
+        if(securityLevel.password === '1') {
             currentLevel = 2;
-        } else {
-            currentLevel = securityLevel.password;
+            await Keychain.setInternetCredentials('securityLevel', 'userName', JSON.stringify(currentLevel));
         }
-        await Keychain.setInternetCredentials('securityLevel', 'userName', JSON.stringify(currentLevel));
     }
 
     const skipBiometric = () => {
