@@ -1,6 +1,6 @@
 import React, {useState, useRef} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
-import {StyleSheet, Platform, TextInput} from 'react-native';
+import {StyleSheet, Platform, TextInput, KeyboardAvoidingView} from 'react-native';
 import {Container, Text, Input, View, Button} from 'native-base';
 
 import EnterAddressErrors from '../components/EnterAddress/EnterAddressErrors';
@@ -125,34 +125,36 @@ const SendAmount = ({navigation}: SendAmountProps) => {
                 <Text style={styles.typo2}>$</Text>
                 <Text style={styles.typo2}>{currency}</Text>
             </View>*/}
-            <View style={styles.details}>
-                <View style={styles.row}>
-                    {/*<Text style={[styles.useMax, styles.typo3]}>Use Max</Text>*/}
-                    <View style={[styles.row, styles.available]}>
-                        <Text style={[styles.availableText, styles.typo4]}>
-                            Available
-                        </Text>
-                        <Text style={styles.typo4}>
-                            {formatAmount(balance)}
-                        </Text>
-                        <CustomIcon name="XTZ" size={16} color="#343434" />
+            <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={{ flex: 1 }}>
+                <View style={styles.details}>
+                    <View style={styles.row}>
+                        {/*<Text style={[styles.useMax, styles.typo3]}>Use Max</Text>*/}
+                        <View style={[styles.row, styles.available]}>
+                            <Text style={[styles.availableText, styles.typo4]}>
+                                Available
+                            </Text>
+                            <Text style={styles.typo4}>
+                                {formatAmount(balance)}
+                            </Text>
+                            <CustomIcon name="XTZ" size={16} color="#343434" />
+                        </View>
                     </View>
+                    <View
+                        style={{
+                            flexDirection: 'row',
+                            justifyContent: 'flex-end',
+                            alignItems: 'center',
+                        }}>
+                        <Text style={[styles.fee, styles.typo5]}>
+                            {`Operation fee ${fee}`}
+                        </Text>
+                        <CustomIcon name="XTZ" size={16} color="#7d7c7c" />
+                    </View>
+                    <Button style={styles.button} onPress={goNext}>
+                        <Text style={styles.typo6}>Next</Text>
+                    </Button>
                 </View>
-                <View
-                    style={{
-                        flexDirection: 'row',
-                        justifyContent: 'flex-end',
-                        alignItems: 'center',
-                    }}>
-                    <Text style={[styles.fee, styles.typo5]}>
-                        {`Operation fee ${fee}`}
-                    </Text>
-                    <CustomIcon name="XTZ" size={16} color="#7d7c7c" />
-                </View>
-                <Button style={styles.button} onPress={goNext}>
-                    <Text style={styles.typo6}>Next</Text>
-                </Button>
-            </View>
+            </KeyboardAvoidingView>
         </Container>
     );
 };
