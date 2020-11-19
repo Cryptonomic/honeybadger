@@ -2,6 +2,8 @@
 
 honeybadger is a sister project to [Tezori/Galleon](https://github.com/Cryptonomic/T2). It is a wallet framework targeting mobile platforms, written in TypeScript with react-native. Presently, honeybadger supports the Tezos blockchain and aims to provide deep support for that platform beyond simple transfers and staking operations. honeybadger is based on [ConseilJS](https://github.com/Cryptonomic/ConseilJS).
 
+honeybadger is packaged for release by [Cryptonomic Inc](https://cryptonomic.tech/) as [Galleon Mobile](https://apps.apple.com/us/app/galleon-mobile-wallet/id1521872814).
+
 ## Development on OSX
 
 ### Install development tools
