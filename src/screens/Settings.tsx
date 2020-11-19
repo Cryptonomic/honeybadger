@@ -77,6 +77,10 @@ const Settings = ({navigation}: SettingsProps) => {
                     name: 'Security Level',
                     action: () => navigation.navigate('SecurityLevel'),
                 },
+                {
+                    name: 'Recovery Phrase',
+                    action: () => navigation.navigate('RecoveryPhrase'),
+                },
             ],
         },
         {
