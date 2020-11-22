@@ -10,17 +10,30 @@ import {SeedPhraseProps} from './types';
 const SecurityLevel = ({navigation}: SeedPhraseProps) => {
     const [securityLevel, setSecurityLevel] = useState("0");
     useEffect(() => {
-        async function load() {
-            try {
-                let securityLevel: any = await Keychain.getInternetCredentials('securityLevel');
-                if(securityLevel.password) {
-                    setSecurityLevel(securityLevel.password);
+        // async function load() {
+        //     try {
+        //         let securityLevel: any = await Keychain.getInternetCredentials('securityLevel');
+        //         if(securityLevel.password) {
+        //             setSecurityLevel(securityLevel.password);
+        //         }
+        //     } catch (error) {
+        //         console.log("Keychain couldn't be accessed!", error);
+        //     }
+        // }
+        // load();
+        navigation.addListener(
+            'didFocus', async (payload: any) => {
+                try {
+                    let securityLevel: any = await Keychain.getInternetCredentials('securityLevel');
+                    if(securityLevel.password) {
+                        setSecurityLevel(securityLevel.password);
+                    }
+                } catch (error) {
+                    // error
+                    console.log("Keychain couldn't be accessed!", error);
                 }
-            } catch (error) {
-                console.log("Keychain couldn't be accessed!", error);
             }
-        }
-        load();
+        )
     }, []);
 
     const getSecurityLevel = () => {
@@ -54,6 +67,14 @@ const SecurityLevel = ({navigation}: SeedPhraseProps) => {
         
     }
 
+    const handleNavigation = () => {
+        if (securityLevel === '1') {
+            navigation.navigate("AccountSetup")
+        } else if(securityLevel === '0') {
+            navigation.navigate("RecoveryPhrase")
+        }
+    }
+
     return (
             <Container style={styles.container}>
                 <CustomHeader
@@ -79,7 +100,7 @@ const SecurityLevel = ({navigation}: SeedPhraseProps) => {
                                 "Level Up Your Security"
                             }
                         </Text>
-                        <TouchableOpacity style={styles.security} onPress={()=> navigation.navigate("AccountSetup")}>
+                        <TouchableOpacity style={styles.security} onPress={()=> handleNavigation()}>
                             <View>
                                 {
                                     securityLevel === "0" &&

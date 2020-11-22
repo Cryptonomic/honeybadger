@@ -61,16 +61,26 @@ const Account = ({navigation}: AccountProps) => {
                 } else {
                     navigation.replace('Welcome');
                 }
-                let securityLevel: any = await Keychain.getInternetCredentials('securityLevel');
-                if(securityLevel.password) {
-                    setSecurityLevel(securityLevel.password);
-                }
+                
             } catch (error) {
                 console.log("Keychain couldn't be accessed!", error);
             }
         }
         load();
-    }, []);
+        navigation.addListener(
+            'didFocus', async (payload: any) => {
+                try {
+                    let securityLevel: any = await Keychain.getInternetCredentials('securityLevel');
+                    if(securityLevel.password) {
+                        setSecurityLevel(securityLevel.password);
+                    }
+                } catch (error) {
+                    // error
+                }
+            }
+        )
+
+    }, [navigation]);
 
     const onPress = (value: string) => {
         if (balance === 0 && value === 'SendAddress') {
@@ -251,7 +261,7 @@ const Account = ({navigation}: AccountProps) => {
                         </View>
                     </TouchableOpacity>
                 }
-                {
+                {/* {
                     securityLevel === "2" &&
                     <TouchableOpacity style={styles.security} onPress={() => navigateToSecurity()}>
                         <View>
@@ -268,7 +278,7 @@ const Account = ({navigation}: AccountProps) => {
                             <Image style={{width:9,height:14}} source={require('../../assets/right-arrow.png')} />
                         </View>
                     </TouchableOpacity>
-                }
+                } */}
                 
                 
                 <View style={styles.tabs}>

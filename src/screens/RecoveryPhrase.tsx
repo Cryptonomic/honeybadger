@@ -12,6 +12,7 @@ import {SeedPhraseProps} from './types';
 
 const RecoveryPhrase = ({navigation}: SeedPhraseProps) => {
     const [securityLevel, setSecurityLevel] = useState("0");
+    const [step, setStep] = useState(0);
     useEffect(() => {
         async function load() {
             try {
@@ -28,81 +29,95 @@ const RecoveryPhrase = ({navigation}: SeedPhraseProps) => {
 
     return (
             <Container style={styles.container}>
-                <Image style={{width:'100%',height:249,marginTop:34,marginBottom:60}} source={require('../../assets/banner.png')} />
-                <View style={{alignItems:"center", paddingBottom:34, paddingTop:10, paddingLeft:60, paddingRight:60}}>
-                    
-                    <Text style={styles.typo1}>
-                        Are you away from snooping eyes?
-                    </Text>
-                    <Text style={styles.typo5}>
-                        Take a look arround. Make sure you have complete privacy and no one is looking over your shoulder.
-                    </Text>
-                    <Text style={styles.borderBottom}></Text>
-                    <Text style={styles.typo3}>
-                        Anyone with your recovery phrase can steal your funds.
-                    </Text>
-                    <Button
-                        style={styles.btn}>
-                        <Text>I am ready</Text>
-                    </Button>
-                    <Text style={styles.typo6}>
-                        No, I’ll do it later
-                    </Text>
-                </View>
-                    
-                {/* <Image style={styles.backgroundImage} source={require('../../assets/banner.png')} /> */}
-                {/* <View style={styles.content}>
-                    <Text style={styles.typo7}>
-                        Security Tips
-                    </Text>
-                    <Text style={styles.borderBottom}></Text>
-                    <MobileIllustration style={{marginTop:25,marginBottom:25,marginLeft:'auto',marginRight:'auto'}}></MobileIllustration>
-                    <Text style={styles.typo1}>
-                        Screenshots are not secure
-                    </Text>
-                    <Text style={styles.typo5}>
-                        Many apps have access to your media and can view your screenshots.
-                    </Text>
-                    <View style={styles.levelMain}>
-                        <View style={styles.levels}>
-                            <Text style={styles.orangeDot1}>
+                {
+                step ==0 &&
+                    <ScrollView contentContainerStyle={{flexGrow: 1}}>
+                        <Image style={{width:'100%',height:249,marginTop:34,marginBottom:60}} source={require('../../assets/banner.png')} />
+                        <View style={{alignItems:"center", paddingBottom:34, paddingTop:10, paddingLeft:60, paddingRight:60}}>
+                            
+                            <Text style={styles.typo1}>
+                                Are you away from snooping eyes?
                             </Text>
-                            <Text style={styles.greyDots1}>
+                            <Text style={styles.typo5}>
+                                Take a look arround. Make sure you have complete privacy and no one is looking over your shoulder.
+                            </Text>
+                            <Text style={styles.borderBottom}></Text>
+                            <Text style={styles.typo3}>
+                                Anyone with your recovery phrase can steal your funds.
+                            </Text>
+                            <Button style={styles.btn} onPress={() => setStep(1)}>
+                                <Text>I am ready</Text>
+                            </Button>
+                            <Text style={styles.typo6}>
+                                No, I’ll do it later
                             </Text>
                         </View>
-                        <Button
-                            style={styles.btnWhite}>
-                            <Text style={{color:'#333'}}>Next</Text> 
-                            <RightArrow></RightArrow>
-                        </Button>
-                    </View>
-                </View> */}
-
-                {/* <View style={styles.content}>
-                    <Text style={styles.typo7}>
-                        Security Tips
-                    </Text>
-                    <Text style={styles.borderBottom}></Text>
-                    <QuiteIllustration style={{marginTop:25,marginBottom:25,marginLeft:'auto',marginRight:'auto'}}></QuiteIllustration>
-                    <Text style={styles.typo1}>
-                        Don’t read your recovery phrase aloud
-                    </Text>
-                    <Text style={styles.typo5}>
-                    Keep in mind that someone might be listening (maybe Alexa?).
-                    </Text>
-                    <View style={styles.levelMain}>
-                        <View style={styles.levels}>
-                            <Text style={styles.greyDots2}>
+                    </ScrollView>
+                }
+                {
+                    step == 1 &&
+                    <ScrollView contentContainerStyle={{flexGrow: 1}}>
+                        <Image style={styles.backgroundImage} source={require('../../assets/banner.png')} />
+                        <View style={styles.content}>
+                            <Text style={styles.typo7}>
+                                Security Tips
                             </Text>
-                            <Text style={styles.orangeDot2}>
+                            <Text style={styles.borderBottom}></Text>
+                            <MobileIllustration style={{marginTop:25,marginBottom:25,marginLeft:'auto',marginRight:'auto'}}></MobileIllustration>
+                            <Text style={styles.typo1}>
+                                Screenshots are not secure
                             </Text>
+                            <Text style={styles.typo5}>
+                                Many apps have access to your media and can view your screenshots.
+                            </Text>
+                            <View style={styles.levelMain}>
+                                <View style={styles.levels}>
+                                    <Text style={styles.orangeDot1}>
+                                    </Text>
+                                    <Text style={styles.greyDots1}>
+                                    </Text>
+                                </View>
+                                <Button
+                                    onPress={() => setStep(2)}
+                                    style={styles.btnWhite}>
+                                    <Text style={{color:'#333'}}>Next</Text> 
+                                    <RightArrow></RightArrow>
+                                </Button>
+                            </View>
                         </View>
-                        <Button
-                            style={styles.btnBlack}>
-                            <Text>Got It</Text> 
-                        </Button>
-                    </View>
-                </View> */}
+                    </ScrollView>
+                }
+                {
+                    step == 2 &&
+                    <ScrollView contentContainerStyle={{flexGrow: 1}}>
+                        <View style={styles.content}>
+                            <Text style={styles.typo7}>
+                                Security Tips
+                            </Text>
+                            <Text style={styles.borderBottom}></Text>
+                            <QuiteIllustration style={{marginTop:25,marginBottom:25,marginLeft:'auto',marginRight:'auto'}}></QuiteIllustration>
+                            <Text style={styles.typo1}>
+                                Don’t read your recovery phrase aloud
+                            </Text>
+                            <Text style={styles.typo5}>
+                            Keep in mind that someone might be listening (maybe Alexa?).
+                            </Text>
+                            <View style={styles.levelMain}>
+                                <View style={styles.levels}>
+                                    <Text style={styles.greyDots2}>
+                                    </Text>
+                                    <Text style={styles.orangeDot2}>
+                                    </Text>
+                                </View>
+                                <Button
+                                    onPress={() => navigation.navigate("SeedPhrase")}
+                                    style={styles.btnBlack}>
+                                    <Text>Got It</Text> 
+                                </Button>
+                            </View>
+                        </View>
+                    </ScrollView>
+                }   
                 
             </Container>
     );
