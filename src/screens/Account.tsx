@@ -26,6 +26,10 @@ import {formatAmount} from '../utils/currency';
 
 import {State} from '../reducers/types';
 import {AccountProps} from './types';
+import Fish from '../../assets/fish.svg';
+import Circle from '../../assets/circle.svg';
+import RightArrow from '../../assets/right-arrow.svg';
+import Salmon from '../../assets/salmon.svg';
 
 const Account = ({navigation}: AccountProps) => {
     const dispatch = useDispatch();
@@ -229,17 +233,18 @@ const Account = ({navigation}: AccountProps) => {
                     securityLevel === "0" &&
                     <TouchableOpacity style={styles.security} onPress={() => navigateToSecurity()}>
                         <View>
-                            <Image style={{width:47,height:35,marginRight:16}} source={require('../../assets/fish.png')} />
+                            {/* <Image style={{width:47,height:35,marginRight:16}} source={require('../../assets/fish.png')} /> */}
+                            <Fish style={{width:47,height:35,marginRight:16}}/>
                         </View>
                         <View style={{width:'57%'}}>
                             <Text style={styles.typo6}>Your Security Level</Text>
                             <Text style={styles.typo3}>Level 1: Goldfish</Text>
                         </View>
                         <View>
-                            <Image style={{width:60,height:59,marginRight:16}} source={require('../../assets/circle.png')} />
+                            <Circle style={{width:60,height:59,marginRight:16}}/>
                         </View>
                         <View>
-                            <Image style={{width:9,height:14}} source={require('../../assets/right-arrow.png')} />
+                            <RightArrow style={{width:9,height:14}}/> 
                         </View>
                     </TouchableOpacity>
                 }
@@ -247,17 +252,17 @@ const Account = ({navigation}: AccountProps) => {
                     securityLevel === "1" &&
                     <TouchableOpacity style={styles.security} onPress={() => navigateToSecurity()}>
                         <View>
-                            <Image style={{width:47,height:35,marginRight:16}} source={require('../../assets/salmon.png')} />
+                            <Salmon style={{width:47,height:35,marginRight:16}}/>
                         </View>
                         <View style={{width:'57%'}}>
                             <Text style={styles.typo6}>Your Security Level</Text>
                             <Text style={styles.typo3}>Level 2: Savvy Salmon</Text>
                         </View>
                         <View>
-                            <Image style={{width:60,height:59,marginRight:16}} source={require('../../assets/circle.png')} />
+                        <Circle style={{width:60,height:59,marginRight:16}}/>
                         </View>
                         <View>
-                            <Image style={{width:9,height:14}} source={require('../../assets/right-arrow.png')} />
+                            <RightArrow style={{width:9,height:14}}/>
                         </View>
                     </TouchableOpacity>
                 }

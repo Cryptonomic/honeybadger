@@ -4,6 +4,17 @@ import {View, Text, Container, Button} from 'native-base';
 import {colors} from '../theme';
 import CustomHeader from '../components/CustomHeader';
 import * as Keychain from 'react-native-keychain';
+import Fish from '../../assets/fish.svg';
+import Circle from '../../assets/circle.svg';
+import RightArrow from '../../assets/right-arrow.svg';
+import Salmon from '../../assets/salmon.svg';
+import Dolphin from '../../assets/dolphin.svg';
+import Flag from '../../assets/flag.svg';
+import Whiteflag from '../../assets/whiteflag.svg';
+import GoldFishBlack from '../../assets/goldFish_black.svg';
+import SalmonBlack from '../../assets/salmon_black.svg';
+import DolphinBlack from '../../assets/dolphin_black.svg';
+
 
 import {SeedPhraseProps} from './types';
 
@@ -82,7 +93,18 @@ const SecurityLevel = ({navigation}: SeedPhraseProps) => {
                     onBack={() => navigation.goBack()}
                 />
                 <View style={{alignItems:"center", paddingBottom:34}}>
-                    <Image style={{width:91,height:68, marginTop:34, marginBottom:24}} source={require('../../assets/goldfish.png')} />
+                    {
+                        securityLevel === "0" &&
+                        <GoldFishBlack style={{width:91,height:68, marginTop:34, marginBottom:24}} />
+                    }
+                    {
+                        securityLevel === "1" &&
+                        <SalmonBlack style={{width:91,height:68, marginTop:34, marginBottom:24}} />
+                    }
+                    {
+                        securityLevel === "2" &&
+                        <DolphinBlack style={{width:91,height:68, marginTop:34, marginBottom:24}} />
+                    }
                     <Text style={styles.typo1}>
                         { getSecurityLevel() }
                     </Text>
@@ -104,15 +126,15 @@ const SecurityLevel = ({navigation}: SeedPhraseProps) => {
                             <View>
                                 {
                                     securityLevel === "0" &&
-                                    <Image style={{width:47,height:35,marginRight:16}} source={require('../../assets/fish.png')} />
+                                    <Fish style={{width:47,height:35,marginRight:16}}/>
                                 }
                                 {
                                     securityLevel === "1" &&
-                                    <Image style={{width:47,height:35,marginRight:16}} source={require('../../assets/salmon.png')} />
+                                    <Salmon style={{width:47,height:35,marginRight:16}} />
                                 }
                                 {
                                     securityLevel === "2" &&
-                                    <Image style={{width:47,height:35,marginRight:16}} source={require('../../assets/dolphin.png')} />
+                                    <Dolphin style={{width:47,height:35,marginRight:16}} />
                                 }
                             </View>
                             <View style={{width:'57%'}}>
@@ -120,12 +142,12 @@ const SecurityLevel = ({navigation}: SeedPhraseProps) => {
                                 <Text style={styles.typo3}>{ getSecurityLevel() }</Text>
                             </View>
                             <View>
-                                <Image style={{width:40,height:42,marginRight:16}} source={require('../../assets/circle.png')} />
+                                <Circle />
                             </View>
                             <View>
                                 {
                                     securityLevel !== "2" &&
-                                    <Image style={{width:9,height:14}} source={require('../../assets/right-arrow.png')} />
+                                    <RightArrow style={{width:9,height:14}} />
                                 }
                                 
                             </View>
@@ -153,7 +175,7 @@ const SecurityLevel = ({navigation}: SeedPhraseProps) => {
                                             </View>
                                             <View >
                                                 <Text style={styles.greyDots3}></Text>
-                                                <Image style={{width:15,height:16,marginTop:-28,marginLeft:7}} source={require('../../assets/flag.png')} />
+                                                <Flag style={{width:15,height:16,marginTop:-28,marginLeft:7}} />
                                             </View>
                                         </React.Fragment>
                                     }
@@ -172,7 +194,7 @@ const SecurityLevel = ({navigation}: SeedPhraseProps) => {
                                             </View>
                                             <View >
                                                 <Text style={styles.greyDots3}></Text>
-                                                <Image style={{width:15,height:16,marginTop:-28,marginLeft:7}} source={require('../../assets/flag.png')} />
+                                                <Flag style={{width:15,height:16,marginTop:-28,marginLeft:7}} />
                                             </View>
                                         </React.Fragment>
                                     }
@@ -192,7 +214,7 @@ const SecurityLevel = ({navigation}: SeedPhraseProps) => {
                                             
                                             <View >
                                                 <Text style={styles.orangeDot3}></Text>
-                                                <Image style={{width:15,height:16,marginTop:-28,marginLeft:7}} source={require('../../assets/whiteflag.png')} />
+                                                <Whiteflag style={{width:15,height:16,marginTop:-28,marginLeft:7}} />
                                             </View>
                                         </React.Fragment>
                                     }
@@ -234,7 +256,7 @@ const SecurityLevel = ({navigation}: SeedPhraseProps) => {
                                 <View>
                                     <View style={styles.levels}>
                                         <View>
-                                            <Image style={{width:47,height:35,marginRight:16}} source={require('../../assets/fish.png')} />
+                                            <Fish style={{width:47,height:35,marginRight:16}} />
                                         </View>
                                         <View>
                                             <Text style={styles.typo3}>Level 1: Goldfish</Text>
@@ -243,7 +265,7 @@ const SecurityLevel = ({navigation}: SeedPhraseProps) => {
                                     </View>
                                     <View style={styles.levels}>
                                         <View>
-                                            <Image style={{width:47,height:35,marginRight:16}} source={require('../../assets/salmon.png')} />
+                                            <Salmon style={{width:47,height:35,marginRight:16}} />
                                         </View>
                                         <View>
                                             <Text style={styles.typo3}>Level 2: Savvy Salmon</Text>
@@ -252,7 +274,7 @@ const SecurityLevel = ({navigation}: SeedPhraseProps) => {
                                     </View>
                                     <View style={styles.levels}>
                                         <View>
-                                            <Image style={{width:47,height:42,marginRight:16}} source={require('../../assets/dolphin.png')} />
+                                            <Dolphin style={{width:47,height:42,marginRight:16}} />
                                         </View>
                                         <View>
                                             <Text style={styles.typo3}>Level 3: Discreet Dolphin</Text>

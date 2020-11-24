@@ -90,6 +90,7 @@ const RecoveryPhrase = ({navigation}: SeedPhraseProps) => {
                 {
                     step == 2 &&
                     <ScrollView contentContainerStyle={{flexGrow: 1}}>
+                        <Image style={{width:'100%',height:249,marginTop:34,marginBottom:60}} source={require('../../assets/banner.png')} />
                         <View style={styles.content}>
                             <Text style={styles.typo7}>
                                 Security Tips
@@ -163,6 +164,7 @@ const styles = StyleSheet.create({
         borderColor:'#333',
         backgroundColor:'#fff',
         borderWidth: 1,
+        marginBottom: 20
     },
     btnBlack: {
         width: 156,
@@ -173,6 +175,7 @@ const styles = StyleSheet.create({
         borderColor:'#333',
         backgroundColor:'#4B4B4B',
         borderWidth: 1,
+        marginBottom: 20
     },
     typo1: {
         fontFamily: 'Roboto-Medium',
