@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, {useState, useEffect} from 'react';
-import {StyleSheet} from 'react-native';
+import {StyleSheet, Image, TouchableOpacity} from 'react-native';
 import {Container, Button, Text, View, Header} from 'native-base';
 import * as Keychain from 'react-native-keychain';
 import Modal from 'react-native-modal';
@@ -26,6 +26,10 @@ import {formatAmount} from '../utils/currency';
 
 import {State} from '../reducers/types';
 import {AccountProps} from './types';
+import Fish from '../../assets/fish.svg';
+import Circle from '../../assets/circle.svg';
+import RightArrow from '../../assets/right-arrow.svg';
+import Salmon from '../../assets/salmon.svg';
 
 const Account = ({navigation}: AccountProps) => {
     const dispatch = useDispatch();
@@ -40,7 +44,7 @@ const Account = ({navigation}: AccountProps) => {
     const hasPendingOperations = useSelector((state: State) => (state.app.pendingDelegations.length > 0 || state.app.pendingTransactions.length > 0));
     const [isPendingModalVisible, setPendingModalVisible] = useState(false);
     const [refreshTimer, setRefreshTimer] = useState(undefined as any);
-
+    const [securityLevel, setSecurityLevel] = useState("0");
     const changeTab = (newTab: number) => {
         if (newTab === tab) {
             return;
@@ -61,12 +65,26 @@ const Account = ({navigation}: AccountProps) => {
                 } else {
                     navigation.replace('Welcome');
                 }
+                
             } catch (error) {
                 console.log("Keychain couldn't be accessed!", error);
             }
         }
         load();
-    }, []);
+        navigation.addListener(
+            'didFocus', async (payload: any) => {
+                try {
+                    let securityLevel: any = await Keychain.getInternetCredentials('securityLevel');
+                    if(securityLevel.password) {
+                        setSecurityLevel(securityLevel.password);
+                    }
+                } catch (error) {
+                    // error
+                }
+            }
+        )
+
+    }, [navigation]);
 
     const onPress = (value: string) => {
         if (balance === 0 && value === 'SendAddress') {
@@ -113,6 +131,10 @@ const Account = ({navigation}: AccountProps) => {
         { title: 'Settings', action: onSettingsSelect },
         //{ title: 'Clear Data', action: onClearData }
     ];
+
+    const navigateToSecurity = () => {
+        navigation.navigate("SecurityLevel")
+    }
 
     return (
         <Container style={styles.container}>
@@ -207,6 +229,63 @@ const Account = ({navigation}: AccountProps) => {
                         <SecurityLevelButton />
                     </View>
                 )*/}
+                {
+                    securityLevel === "0" &&
+                    <TouchableOpacity style={styles.security} onPress={() => navigateToSecurity()}>
+                        <View>
+                            {/* <Image style={{width:47,height:35,marginRight:16}} source={require('../../assets/fish.png')} /> */}
+                            <Fish style={{width:47,height:35,marginRight:16}}/>
+                        </View>
+                        <View style={{width:'57%'}}>
+                            <Text style={styles.typo6}>Your Security Level</Text>
+                            <Text style={styles.typo3}>Level 1: Goldfish</Text>
+                        </View>
+                        <View>
+                            <Circle style={{width:60,height:59,marginRight:16}}/>
+                        </View>
+                        <View>
+                            <RightArrow style={{width:9,height:14}}/> 
+                        </View>
+                    </TouchableOpacity>
+                }
+                {
+                    securityLevel === "1" &&
+                    <TouchableOpacity style={styles.security} onPress={() => navigateToSecurity()}>
+                        <View>
+                            <Salmon style={{width:47,height:35,marginRight:16}}/>
+                        </View>
+                        <View style={{width:'57%'}}>
+                            <Text style={styles.typo6}>Your Security Level</Text>
+                            <Text style={styles.typo3}>Level 2: Savvy Salmon</Text>
+                        </View>
+                        <View>
+                        <Circle style={{width:60,height:59,marginRight:16}}/>
+                        </View>
+                        <View>
+                            <RightArrow style={{width:9,height:14}}/>
+                        </View>
+                    </TouchableOpacity>
+                }
+                {/* {
+                    securityLevel === "2" &&
+                    <TouchableOpacity style={styles.security} onPress={() => navigateToSecurity()}>
+                        <View>
+                            <Image style={{width:47,height:35,marginRight:16}} source={require('../../assets/dolphin.png')} />
+                        </View>
+                        <View style={{width:'57%'}}>
+                            <Text style={styles.typo6}>Your Security Level</Text>
+                            <Text style={styles.typo3}>Level 3: Discreet Dolphin</Text>
+                        </View>
+                        <View>
+                            <Image style={{width:60,height:59,marginRight:16}} source={require('../../assets/circle.png')} />
+                        </View>
+                        <View>
+                            <Image style={{width:9,height:14}} source={require('../../assets/right-arrow.png')} />
+                        </View>
+                    </TouchableOpacity>
+                } */}
+                
+                
                 <View style={styles.tabs}>
                     <View
                         style={[
@@ -456,6 +535,30 @@ const styles = StyleSheet.create({
         fontSize: 16,
         letterSpacing: 0.67,
     },
+    typo6: {
+        fontFamily: 'Roboto-Light',
+        fontWeight: '300',
+        fontSize: 14,
+    },
+    security: {
+        borderRadius: 9,
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.10,
+        shadowRadius: 3.84,
+        elevation: 5,
+        padding: 16,
+        margin:20,
+        backgroundColor: '#fff',
+        width: '90%',
+        flexDirection: 'row',
+        alignItems:'center'
+    },
+    inlineElements: {
+    }
 });
 
 export default Account;

@@ -72,7 +72,15 @@ const Settings = ({navigation}: SettingsProps) => {
                     name: 'Enable App Lock',
                     isSwitch: true,
                     action: () => navigation.navigate('AccountSetup'),
-                }
+                },
+                {
+                    name: 'Security Level',
+                    action: () => navigation.navigate('SecurityLevel'),
+                },
+                {
+                    name: 'Recovery Phrase',
+                    action: () => navigation.navigate('RecoveryPhrase'),
+                },
             ],
         },
         {

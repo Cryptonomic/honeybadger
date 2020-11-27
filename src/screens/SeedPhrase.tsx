@@ -10,6 +10,7 @@ import {colors} from '../theme';
 
 import {SeedPhraseProps} from './types';
 import {State} from '../reducers/types';
+import PhraseBackup from '../components/PhraseBackup';
 
 const SeedPhrase = ({navigation}: SeedPhraseProps) => {
     const seed = useSelector((state: State) => state.app.seed);
@@ -17,6 +18,7 @@ const SeedPhrase = ({navigation}: SeedPhraseProps) => {
     const arr = seed.split(' ');
     const half = arr.length / 2;
     const cols = [arr.slice(0, half), arr.slice(half)];
+    const [step, setStep] = useState(0);
 
     const onCopyToClipboard = () => {
         Clipboard.setString(seed);
@@ -25,54 +27,66 @@ const SeedPhrase = ({navigation}: SeedPhraseProps) => {
 
     return (
         <Container style={styles.container}>
-            <CustomHeader
-                title="Account Mnemonic"
-                onBack={() => navigation.goBack()}
-            />
-            <View style={styles.content}>
-                <View style={styles.title}>
-                    <Text style={styles.typo1}>
-                        Write down your recovery phrase and keep it safe.
-                    </Text>
-                    <Text style={[styles.subtitle, styles.typo2]}>
-                        You will need it to access your funds in case your phone is lost or stolen. If anyone else gets access to your recovery phrase they will be able to steal your funds.
-                    </Text>
-                </View>
-                <View style={styles.dividerHorizontal} />
+            
+            {step === 0 && 
+            <React.Fragment>
+                <CustomHeader
+                    title="Account Mnemonic"
+                    onBack={() => navigation.goBack()}
+                />
                 <ScrollView contentContainerStyle={{flexGrow: 1}}>
-                <View style={styles.seed}>
-                    <View style={styles.column}>
-                        {cols[0].map((value, index) => (
-                            <View style={styles.row} key={index}>
-                                <View style={styles.seedNumberWrapper}>
-                                    <Text style={styles.seedNumber}>{`${
-                                        index + 1
-                                    }`}</Text>
-                                </View>
-                                <View>
-                                    <Text style={styles.seedText}>{value}</Text>
-                                </View>
+                    <View style={styles.content}>
+                        <View style={styles.title}>
+                            <Text style={styles.typo1}>
+                                Write down your recovery phrase and keep it safe.
+                            </Text>
+                            <Text style={[styles.subtitle, styles.typo2]}>
+                                You will need it to access your funds in case your phone is lost or stolen. If anyone else gets access to your recovery phrase they will be able to steal your funds.
+                            </Text>
+                        </View>
+                        <View style={styles.dividerHorizontal} />
+                        <View style={styles.seed}>
+                            <View style={styles.column}>
+                                {cols[0].map((value, index) => (
+                                    <View style={styles.row} key={index}>
+                                        <View style={styles.seedNumberWrapper}>
+                                            <Text style={styles.seedNumber}>{`${
+                                                index + 1
+                                            }`}</Text>
+                                        </View>
+                                        <View>
+                                            <Text style={styles.seedText}>{value}</Text>
+                                        </View>
+                                    </View>
+                                ))}
                             </View>
-                        ))}
-                    </View>
-                    <View style={styles.dividerVertical} />
-                    <View style={styles.column}>
-                        {cols[1].map((value, index) => (
-                            <View style={styles.row} key={index}>
-                                <View style={styles.seedNumberWrapper}>
-                                    <Text style={styles.seedNumber}>{`${
-                                        half + 1 + index
-                                    }`}</Text>
-                                </View>
-                                <View>
-                                    <Text style={styles.seedText}>{value}</Text>
-                                </View>
+                            <View style={styles.dividerVertical} />
+                            <View style={styles.column}>
+                                {cols[1].map((value, index) => (
+                                    <View style={styles.row} key={index}>
+                                        <View style={styles.seedNumberWrapper}>
+                                            <Text style={styles.seedNumber}>{`${
+                                                half + 1 + index
+                                            }`}</Text>
+                                        </View>
+                                        <View>
+                                            <Text style={styles.seedText}>{value}</Text>
+                                        </View>
+                                    </View>
+                                ))}
                             </View>
-                        ))}
+                        </View>
+                        <Button style={styles.btn} onPress={()=> setStep(1)}>
+                            <Text>Next</Text>
+                        </Button>
                     </View>
-                </View>
                 </ScrollView>
-            </View>
+            </React.Fragment>
+            }
+            {
+                step === 1 &&
+                <PhraseBackup navigation={navigation}/>
+            }
         </Container>
     );
 };
@@ -141,12 +155,14 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     btn: {
-        width: 256,
+        width: 300,
         height: 50,
-        borderRadius: 25,
         justifyContent: 'center',
-        alignItems: 'center',
+        borderRadius: 25,
         backgroundColor: '#4b4b4b',
+        alignSelf: 'center',
+        marginTop: 10,
+        marginBottom: 20
     },
     btnText: {
         color: '#ffffff',
