@@ -302,6 +302,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#4b4b4b',
         justifyContent: 'center',
         alignSelf: 'center',
+        marginBottom: 50
     },
     edit: {
         width: 40,

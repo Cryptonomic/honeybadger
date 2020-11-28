@@ -74,7 +74,7 @@ const RecoveryPhrase = ({navigation}: SeedPhraseProps) => {
                             <Button style={styles.btn} onPress={() => setStep(1)}>
                                 <Text>I am ready</Text>
                             </Button>
-                            <Text style={styles.typo6}>
+                            <Text style={styles.typo6} onPress={() => navigation.navigate('Account')}>
                                 No, I’ll do it later
                             </Text>
                         </View>
