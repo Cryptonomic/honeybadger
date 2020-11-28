@@ -81,7 +81,6 @@ const RecoveryPhrase = ({navigation}: SeedPhraseProps) => {
                     </ScrollView>
                 }
                 {step === 1 &&
-                <ScrollView contentContainerStyle={{flexGrow: 1}}>
                     <SafeAreaView style={{ flex: 1 }}>
                         <ScrollView
                         style={{ flex: 1 }}
@@ -94,7 +93,7 @@ const RecoveryPhrase = ({navigation}: SeedPhraseProps) => {
                             setSliderPage(event);
                         }}
                         >
-                            <View style={{ width, height: height+200 }}>
+                            <View style={{ width, height: height }}>
                             <Image style={styles.backgroundImage} source={require('../../assets/banner.png')} />
                             <View style={styles.content}>
                                 <Text style={styles.typo7}>
@@ -104,6 +103,9 @@ const RecoveryPhrase = ({navigation}: SeedPhraseProps) => {
                                 <MobileIllustration style={{marginTop:25,marginBottom:25,marginLeft:'auto',marginRight:'auto'}}></MobileIllustration>
                                 <Text style={styles.typo1}>
                                     Screenshots are not secure
+                                </Text>
+                                <Text style={styles.typo1}>
+                                    
                                 </Text>
                                 <Text style={styles.typo5}>
                                     Many apps have access to your media and can view your screenshots.
@@ -124,7 +126,7 @@ const RecoveryPhrase = ({navigation}: SeedPhraseProps) => {
                                 </View>
                             </View>
                             </View>
-                            <View style={{ width, height }}>
+                            <View style={{ width, height:height }}>
                                 <Image style={styles.backgroundImage} source={require('../../assets/banner.png')} />
                                 <View style={styles.content}>
                                     <Text style={styles.typo7}>
@@ -155,7 +157,6 @@ const RecoveryPhrase = ({navigation}: SeedPhraseProps) => {
                             </View>
                         </ScrollView>
                     </SafeAreaView>
-                </ScrollView>
                 }
                 {/* {
                     step == 1 &&
@@ -229,7 +230,11 @@ const RecoveryPhrase = ({navigation}: SeedPhraseProps) => {
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: '#fff',
+        backgroundColor: '#fff'
+    },
+    containerYellow: {
+        backgroundColor: colors.bg,
+        marginBottom:-40
     },
     content: {
         backgroundColor: '#ffffff',

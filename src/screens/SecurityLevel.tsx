@@ -214,7 +214,7 @@ const SecurityLevel = ({navigation}: SeedPhraseProps) => {
                                             
                                             <View >
                                                 <Text style={styles.orangeDot3}></Text>
-                                                <Whiteflag style={{width:15,height:16,marginTop:-28,marginLeft:7}} />
+                                                <Whiteflag style={{width:15,height:16,marginTop:-26,marginLeft:12}} />
                                             </View>
                                         </React.Fragment>
                                     }
