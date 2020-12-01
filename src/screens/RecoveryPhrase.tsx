@@ -83,7 +83,7 @@ const RecoveryPhrase = ({navigation}: SeedPhraseProps) => {
                 }
                 {step === 1 &&
                     <Container style={styles.containerYellow}>
-                        <ScrollView contentContainerStyle={{flexGrow: 1}}>
+                        {/* <ScrollView contentContainerStyle={{flexGrow: 1}}> */}
                             <SafeAreaView style={{ flex: 1 }}>
                                 <ScrollView
                                 style={{ flex: 1 }}
@@ -109,6 +109,8 @@ const RecoveryPhrase = ({navigation}: SeedPhraseProps) => {
                                         </Text>
                                         <Text style={styles.typo5}>
                                             Many apps have access to your media and can view your screenshots.
+                                        </Text>
+                                        <Text style={styles.typo5}>
                                         </Text>
                                         <View style={styles.levelMain}>
                                             <View style={styles.levels}>
@@ -157,7 +159,7 @@ const RecoveryPhrase = ({navigation}: SeedPhraseProps) => {
                                     </View>
                                 </ScrollView>
                             </SafeAreaView>
-                        </ScrollView>
+                        {/* </ScrollView> */}
                     </Container>
                 }
                 {/* {
