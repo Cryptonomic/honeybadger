@@ -5,7 +5,6 @@ import {colors} from '../theme';
 import MobileIllustration from '../../assets/camera.svg';
 import QuiteIllustration from '../../assets/quiet.svg';
 import RightArrow from '../../assets/right-arr.svg';
-import CustomHeader from '../components/CustomHeader';
 import * as Keychain from 'react-native-keychain';
 
 import {SeedPhraseProps} from './types';
@@ -80,6 +79,8 @@ const RecoveryPhrase = ({navigation}: SeedPhraseProps) => {
                                         </Text>
                                         <Text style={styles.typo5}>
                                             Many apps have access to your media and can view your screenshots.
+                                        </Text>
+                                        <Text style={styles.typo5}>
                                         </Text>
                                         <View style={styles.levelMain}>
                                             <View style={styles.levels}>
