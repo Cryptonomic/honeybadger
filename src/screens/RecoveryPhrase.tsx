@@ -1,11 +1,10 @@
 import React, {useState, useEffect} from 'react';
-import {StyleSheet,  ScrollView, Image, Dimensions, SafeAreaView} from 'react-native';
+import {StyleSheet,  ScrollView, Image, Dimensions} from 'react-native';
 import {View, Text, Container, Button} from 'native-base';
 import {colors} from '../theme';
 import MobileIllustration from '../../assets/camera.svg';
 import QuiteIllustration from '../../assets/quiet.svg';
 import RightArrow from '../../assets/right-arr.svg';
-import CustomHeader from '../components/CustomHeader';
 import * as Keychain from 'react-native-keychain';
 
 import {SeedPhraseProps} from './types';
@@ -14,25 +13,8 @@ const RecoveryPhrase = ({navigation}: SeedPhraseProps) => {
     const [securityLevel, setSecurityLevel] = useState("0");
     const [step, setStep] = useState(0);
 
-    const [sliderState, setSliderState] = useState({ currentPage: 0 });
     const { width, height } = Dimensions.get('window');
-    let scroll = React.createRef();
 
-    const setSliderPage = (event: any) => {
-        const { currentPage } = sliderState;
-        const { x } = event.nativeEvent.contentOffset;
-        const indexOfNextScreen = Math.floor(x / width);
-        if (indexOfNextScreen !== currentPage) {
-        setSliderState({
-            ...sliderState,
-            currentPage: indexOfNextScreen,
-        });
-        }
-    };
-
-
-
-    const { currentPage: pageIndex } = sliderState;
     
     useEffect(() => {
         async function load() {
@@ -48,188 +30,123 @@ const RecoveryPhrase = ({navigation}: SeedPhraseProps) => {
         load();
     }, []);
 
-    const next = (width: any) => {
-        console.log(scroll)
-        scroll.scrollTo({ x: width })
-    }
 
     return (
-            <Container style={styles.container}>
+            <React.Fragment>
                 {
                 step ==0 &&
-                    <ScrollView contentContainerStyle={{flexGrow: 1}}>
-                        <Image style={{width:'100%',height:249,marginTop:34,marginBottom:60}} source={require('../../assets/banner.png')} />
-                        <View style={{alignItems:"center", paddingBottom:34, paddingTop:10, paddingLeft:60, paddingRight:60}}>
-                            
-                            <Text style={styles.typo1}>
-                                Are you away from snooping eyes?
-                            </Text>
-                            <Text style={styles.typo5}>
-                                Take a look arround. Make sure you have complete privacy and no one is looking over your shoulder.
-                            </Text>
-                            <Text style={styles.borderBottom}></Text>
-                            <Text style={styles.typo3}>
-                                Anyone with your recovery phrase can steal your funds.
-                            </Text>
-                            <Button style={styles.btn} onPress={() => setStep(1)}>
-                                <Text>I am ready</Text>
-                            </Button>
-                            <Text style={styles.typo6}>
-                                No, I’ll do it later
-                            </Text>
-                        </View>
-                    </ScrollView>
-                }
-                {step === 1 &&
-                <ScrollView contentContainerStyle={{flexGrow: 1}}>
-                    <SafeAreaView style={{ flex: 1 }}>
-                        <ScrollView
-                        style={{ flex: 1 }}
-                        horizontal={true}
-                        scrollEventThrottle={16}
-                        pagingEnabled={true}
-                        showsHorizontalScrollIndicator={false}
-                        ref={(node) => scroll = node}
-                        onScroll={(event: any) => {
-                            setSliderPage(event);
-                        }}
-                        >
-                            <View style={{ width, height: height+200 }}>
-                            <Image style={styles.backgroundImage} source={require('../../assets/banner.png')} />
-                            <View style={styles.content}>
-                                <Text style={styles.typo7}>
-                                    Security Tips
-                                </Text>
-                                <Text style={styles.borderBottom}></Text>
-                                <MobileIllustration style={{marginTop:25,marginBottom:25,marginLeft:'auto',marginRight:'auto'}}></MobileIllustration>
+                    <Container style={styles.container}>
+                        <ScrollView contentContainerStyle={{flexGrow: 1}}>
+                            <Image style={{width:'100%',height:249,marginTop:34,marginBottom:60}} source={require('../../assets/banner.png')} />
+                            <View style={{alignItems:"center", paddingBottom:34, paddingTop:10, paddingLeft:60, paddingRight:60}}>
+                                
                                 <Text style={styles.typo1}>
-                                    Screenshots are not secure
+                                    Are you away from snooping eyes?
                                 </Text>
                                 <Text style={styles.typo5}>
-                                    Many apps have access to your media and can view your screenshots.
+                                    Take a look arround. Make sure you have complete privacy and no one is looking over your shoulder.
                                 </Text>
-                                <View style={styles.levelMain}>
-                                    <View style={styles.levels}>
-                                        <Text style={styles.orangeDot1}>
-                                        </Text>
-                                        <Text style={styles.greyDots1} onPress={() => next(width)}>
-                                        </Text>
-                                    </View>
-                                    <Button
-                                        onPress={() => next(width)}
-                                        style={styles.btnWhite}>
-                                        <Text style={{color:'#333'}}>Next</Text> 
-                                        <RightArrow></RightArrow>
-                                    </Button>
-                                </View>
-                            </View>
-                            </View>
-                            <View style={{ width, height }}>
-                                <Image style={styles.backgroundImage} source={require('../../assets/banner.png')} />
-                                <View style={styles.content}>
-                                    <Text style={styles.typo7}>
-                                        Security Tips
-                                    </Text>
-                                    <Text style={styles.borderBottom}></Text>
-                                    <QuiteIllustration style={{marginTop:25,marginBottom:25,marginLeft:'auto',marginRight:'auto'}}></QuiteIllustration>
-                                    <Text style={styles.typo1}>
-                                        Don’t read your recovery phrase aloud
-                                    </Text>
-                                    <Text style={styles.typo5}>
-                                    Keep in mind that someone might be listening (maybe Alexa?).
-                                    </Text>
-                                    <View style={styles.levelMain}>
-                                        <View style={styles.levels}>
-                                            <Text style={styles.greyDots2} onPress={() => next(0)}>
-                                            </Text>
-                                            <Text style={styles.orangeDot2}>
-                                            </Text>
-                                        </View>
-                                        <Button
-                                            onPress={() => navigation.navigate("SeedPhrase")}
-                                            style={styles.btnBlack}>
-                                            <Text>Got It</Text> 
-                                        </Button>
-                                    </View>
-                                </View>
+                                <Text style={styles.borderBottom}></Text>
+                                <Text style={styles.typo3}>
+                                    Anyone with your recovery phrase can steal your funds.
+                                </Text>
+                                <Button style={styles.btn} onPress={() => setStep(1)}>
+                                    <Text>I am ready</Text>
+                                </Button>
+                                <Text style={styles.typo6} onPress={() => navigation.navigate('Account')}>
+                                    No, I’ll do it later
+                                </Text>
                             </View>
                         </ScrollView>
-                    </SafeAreaView>
-                </ScrollView>
+                    </Container>
                 }
-                {/* {
-                    step == 1 &&
-                    <ScrollView contentContainerStyle={{flexGrow: 1}}>
-                        <Image style={styles.backgroundImage} source={require('../../assets/banner.png')} />
-                        <View style={styles.content}>
-                            <Text style={styles.typo7}>
-                                Security Tips
-                            </Text>
-                            <Text style={styles.borderBottom}></Text>
-                            <MobileIllustration style={{marginTop:25,marginBottom:25,marginLeft:'auto',marginRight:'auto'}}></MobileIllustration>
-                            <Text style={styles.typo1}>
-                                Screenshots are not secure
-                            </Text>
-                            <Text style={styles.typo5}>
-                                Many apps have access to your media and can view your screenshots.
-                            </Text>
-                            <View style={styles.levelMain}>
-                                <View style={styles.levels}>
-                                    <Text style={styles.orangeDot1}>
-                                    </Text>
-                                    <Text style={styles.greyDots1}>
-                                    </Text>
+                {step > 0 &&
+                <Container style={styles.containerYellow}>
+                   
+                    {
+                        step ==1 &&
+                        <ScrollView contentContainerStyle={{flexGrow: 1}}>
+                                <View style={{ width, height: height+140, marginBottom: 20 }}>
+                                    <Image style={styles.backgroundImage} source={require('../../assets/banner.png')} />
+                                    <View style={styles.content}>
+                                        <Text style={styles.typo7}>
+                                            Security Tips
+                                        </Text>
+                                        <Text style={styles.borderBottom}></Text>
+                                        <MobileIllustration style={{marginTop:25,marginBottom:25,marginLeft:'auto',marginRight:'auto'}}></MobileIllustration>
+                                        <Text style={styles.typo1}>
+                                            Screenshots are not secure
+                                        </Text>
+                                        <Text style={styles.typo5}>
+                                            Many apps have access to your media and can view your screenshots.
+                                        </Text>
+                                        <Text style={styles.typo5}>
+                                        </Text>
+                                        <View style={styles.levelMain}>
+                                            <View style={styles.levels}>
+                                                <Text style={styles.orangeDot1}>
+                                                </Text>
+                                                <Text style={styles.greyDots1}>
+                                                </Text>
+                                            </View>
+                                            <Button
+                                                onPress={() => setStep(2)}
+                                                style={styles.btnWhite}>
+                                                <Text style={{color:'#333'}}>Next</Text> 
+                                                <RightArrow></RightArrow>
+                                            </Button>
+                                        </View>
+                                    </View>
                                 </View>
-                                <Button
-                                    onPress={() => setStep(2)}
-                                    style={styles.btnWhite}>
-                                    <Text style={{color:'#333'}}>Next</Text> 
-                                    <RightArrow></RightArrow>
-                                </Button>
-                            </View>
-                        </View>
-                    </ScrollView>
+                        </ScrollView>
+                    }
+                    {
+                        step ==2 &&
+                        <ScrollView contentContainerStyle={{flexGrow: 1}}>
+                                <View style={{ width, height: height+140 }}>
+                                    <Image style={styles.backgroundImage} source={require('../../assets/banner.png')} />
+                                    <View style={styles.content}>
+                                        <Text style={styles.typo7}>
+                                            Security Tips
+                                        </Text>
+                                        <Text style={styles.borderBottom}></Text>
+                                        <QuiteIllustration style={{marginTop:25,marginBottom:25,marginLeft:'auto',marginRight:'auto'}}></QuiteIllustration>
+                                        <Text style={styles.typo1}>
+                                            Don’t read your recovery phrase aloud
+                                        </Text>
+                                        <Text style={styles.typo5}>
+                                        Keep in mind that someone might be listening (maybe Alexa?).
+                                        </Text>
+                                        <View style={styles.levelMain}>
+                                            <View style={styles.levels}>
+                                                <Text style={styles.greyDots2}>
+                                                </Text>
+                                                <Text style={styles.orangeDot2}>
+                                                </Text>
+                                            </View>
+                                            <Button
+                                                onPress={() => navigation.navigate("SeedPhrase")}
+                                                style={styles.btnBlack}>
+                                                <Text>Got It</Text> 
+                                            </Button>
+                                        </View>
+                                    </View>
+                                </View>
+                        </ScrollView>
+                    }
+                </Container>
                 }
-                {
-                    step == 2 &&
-                    <ScrollView contentContainerStyle={{flexGrow: 1}}>
-                        <Image style={{width:'100%',height:249,marginTop:34,marginBottom:60}} source={require('../../assets/banner.png')} />
-                        <View style={styles.content}>
-                            <Text style={styles.typo7}>
-                                Security Tips
-                            </Text>
-                            <Text style={styles.borderBottom}></Text>
-                            <QuiteIllustration style={{marginTop:25,marginBottom:25,marginLeft:'auto',marginRight:'auto'}}></QuiteIllustration>
-                            <Text style={styles.typo1}>
-                                Don’t read your recovery phrase aloud
-                            </Text>
-                            <Text style={styles.typo5}>
-                            Keep in mind that someone might be listening (maybe Alexa?).
-                            </Text>
-                            <View style={styles.levelMain}>
-                                <View style={styles.levels}>
-                                    <Text style={styles.greyDots2}>
-                                    </Text>
-                                    <Text style={styles.orangeDot2}>
-                                    </Text>
-                                </View>
-                                <Button
-                                    onPress={() => navigation.navigate("SeedPhrase")}
-                                    style={styles.btnBlack}>
-                                    <Text>Got It</Text> 
-                                </Button>
-                            </View>
-                        </View>
-                    </ScrollView>
-                }    */}
-                
-            </Container>
+            </React.Fragment>
     );
 };
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: '#fff',
+        backgroundColor: '#fff'
+    },
+    containerYellow: {
+        backgroundColor: colors.bg,
+        marginBottom:-40
     },
     content: {
         backgroundColor: '#ffffff',
@@ -244,9 +161,9 @@ const styles = StyleSheet.create({
         paddingRight:40
     },
     backgroundImage: {
-        height:190,
-        marginTop:34,
-        resizeMode: 'cover', // or 'stretch'
+        height: 140,
+        marginTop:40,
+        resizeMode: 'contain', // or 'stretch'
       },
     btn: {
         width: 256,

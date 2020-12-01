@@ -51,8 +51,12 @@ const PhraseBackup = (props: any) => {
         }, true);
 
         if (match) {
+            let data: any= await Keychain.getInternetCredentials('securitySetup');
+            data = JSON.parse(data.password);
             let securityLevel: any = await Keychain.getInternetCredentials('securityLevel');
-            if(!securityLevel) {
+            if(data.isBiometric) {
+                await Keychain.setInternetCredentials('securityLevel', 'userName', JSON.stringify(2));
+            } else if(!securityLevel) {
                 await Keychain.setInternetCredentials('securityLevel', 'userName', JSON.stringify(1));
             }
             setStep('SUCCESS');
@@ -68,13 +72,16 @@ const PhraseBackup = (props: any) => {
 
     return (
         <React.Fragment>
-            <CustomHeader
-                title="Back up Recovery Phrase"
-                onBack={() => props.navigation.goBack()}
-            />
+            {
+                step !== "SUCCESS" &&
+                <CustomHeader
+                    title="Back up Recovery Phrase"
+                    onBack={() => props.navigation.goBack()}
+                />
+            }
             {
                 step === "VERIFY" &&
-                <ScrollView contentContainerStyle={{flexGrow: 1}}>
+                <ScrollView contentContainerStyle={{flexGrow: 1}} keyboardShouldPersistTaps={'handled'}>
                     <View style={styles.content}>
                         <Text style={styles.typo1}>
                         To verify that you have backed up your recovery phrase, Please type in the following four words.

@@ -141,13 +141,13 @@ const SecurityLevel = ({navigation}: SeedPhraseProps) => {
                             <Text style={styles.typo6}>{getLevelText()}</Text>
                                 <Text style={styles.typo3}>{ getSecurityLevel() }</Text>
                             </View>
-                            <View>
+                            <View style={{marginLeft:20}}>
                                 <Circle />
                             </View>
                             <View>
                                 {
                                     securityLevel !== "2" &&
-                                    <RightArrow style={{width:9,height:14}} />
+                                    <RightArrow style={{width:9,height:14,marginLeft:10}} />
                                 }
                                 
                             </View>
@@ -175,7 +175,7 @@ const SecurityLevel = ({navigation}: SeedPhraseProps) => {
                                             </View>
                                             <View >
                                                 <Text style={styles.greyDots3}></Text>
-                                                <Flag style={{width:15,height:16,marginTop:-28,marginLeft:7}} />
+                                                <Flag style={{width:15,height:16,marginTop:-26,marginLeft:12}} />
                                             </View>
                                         </React.Fragment>
                                     }
@@ -194,7 +194,7 @@ const SecurityLevel = ({navigation}: SeedPhraseProps) => {
                                             </View>
                                             <View >
                                                 <Text style={styles.greyDots3}></Text>
-                                                <Flag style={{width:15,height:16,marginTop:-28,marginLeft:7}} />
+                                                <Flag style={{width:15,height:16,marginTop:-26,marginLeft:12}} />
                                             </View>
                                         </React.Fragment>
                                     }
@@ -214,7 +214,7 @@ const SecurityLevel = ({navigation}: SeedPhraseProps) => {
                                             
                                             <View >
                                                 <Text style={styles.orangeDot3}></Text>
-                                                <Whiteflag style={{width:15,height:16,marginTop:-28,marginLeft:7}} />
+                                                <Whiteflag style={{width:15,height:16,marginTop:-26,marginLeft:12}} />
                                             </View>
                                         </React.Fragment>
                                     }
@@ -274,7 +274,7 @@ const SecurityLevel = ({navigation}: SeedPhraseProps) => {
                                     </View>
                                     <View style={styles.levels}>
                                         <View>
-                                            <Dolphin style={{width:47,height:42,marginRight:16}} />
+                                            <Dolphin style={{width:47,height:42,marginRight:29}} />
                                         </View>
                                         <View>
                                             <Text style={styles.typo3}>Level 3: Discreet Dolphin</Text>
@@ -396,6 +396,7 @@ const styles = StyleSheet.create({
     },
     dotsContainer: {
         height:60,
+        marginLeft:6
     },
     greyDots1: {
         height:12,
@@ -414,22 +415,22 @@ const styles = StyleSheet.create({
         marginRight:24,
     },
     greyDots3: {
-        height:20,
-        width:20,
-        borderWidth:20,
-        borderRadius: 20,
+        height:19,
+        width:19,
+        borderWidth:19,
+        borderRadius: 19,
         borderColor:'#E8E8E8',
         marginRight:24,
-        marginLeft:-6,
+        marginLeft:0,
     },
     orangeDot3: {
-        height:20,
-        width:20,
-        borderWidth:20,
-        borderRadius: 20,
+        height:19,
+        width:19,
+        borderWidth:19,
+        borderRadius: 19,
         borderColor:'#F5942A',
         marginRight:24,
-        marginLeft:-6,
+        marginLeft:0,
     },
     orangeDot1: {
         height:6,

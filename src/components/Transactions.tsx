@@ -168,6 +168,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         flexWrap: 'wrap',
         justifyContent: 'center',
+        marginBottom: 50
     },
     list: {
         width: '90%',

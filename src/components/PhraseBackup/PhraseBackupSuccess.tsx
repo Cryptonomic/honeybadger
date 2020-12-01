@@ -21,7 +21,7 @@ const PhraseBackupSuccess = (props: any) => {
                     <Button style={styles.btn} onPress={() => props.navigation.navigate('Account')}>
                         <Text style={styles.typo3}>Back to wallet</Text>
                     </Button>
-                    <Text style={{marginBottom: 40}} onPress={() => props.navigation.navigate('SeedPhrase')}>Back up Recovery Phrase Again</Text>
+                    {/* <Text style={{marginBottom: 40}} onPress={() => props.navigation.navigate('SeedPhrase')}>Back up Recovery Phrase Again</Text> */}
             </View>
         </Container>
     );

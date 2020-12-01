@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, Linking} from 'react-native';
+import {StyleSheet, Linking, ScrollView} from 'react-native';
 import {Text, View, Button, Container, Switch, Toast} from 'native-base';
 import DeviceInfo from 'react-native-device-info';
 import * as Keychain from 'react-native-keychain';
@@ -130,61 +130,63 @@ const Settings = ({navigation}: SettingsProps) => {
     return (
         <Container style={styles.container}>
             <CustomHeader title="Settings" onBack={() => navigation.goBack()} />
-            <View style={styles.content}>
-                {list.map(({title, items}) => (
-                    <View style={styles.section} key={title}>
-                        <View style={styles.item}>
-                            <View style={styles.title}>
-                                <Text style={styles.titleText}>{title}</Text>
-                            </View>
-                        </View>
-                        {items.map(({name, action, isSwitch}) => {
-                            const children = (
-                                <>
-                                    <View>
-                                        <Text style={styles.btnText}>
-                                            {name}
-                                        </Text>
-                                    </View>
-                                    {action && (
-                                        isSwitch ?
-                                        <Switch
-                                            trackColor={{ false: "#333333", true: "#0dbd8b" }}
-                                            thumbColor={true ? "#FFFFFF" : "#f4f3f4"}
-                                            ios_backgroundColor="#3e3e3e"
-                                            onValueChange={toggleAppLock}
-                                            value={securitySetup}
-                                        />
-                                        :
-                                        <CustomIcon
-                                            name="Caret-Left"
-                                            size={15}
-                                            color="#909090"
-                                        />
-                                        
-                                    )}
-                                </>
-                            );
-                            return (
-                                <View style={styles.item} key={name}>
-                                    {action ? (
-                                        <Button
-                                            transparent
-                                            style={styles.btn}
-                                            onPress={action}>
-                                            {children}
-                                        </Button>
-                                    ) : (
-                                        <View style={styles.btn}>
-                                            {children}
-                                        </View>
-                                    )}
+            <ScrollView contentContainerStyle={{flexGrow: 1}}>
+                <View style={styles.content}>
+                    {list.map(({title, items}) => (
+                        <View style={styles.section} key={title}>
+                            <View style={styles.item}>
+                                <View style={styles.title}>
+                                    <Text style={styles.titleText}>{title}</Text>
                                 </View>
-                            );
-                        })}
-                    </View>
-                ))}
-            </View>
+                            </View>
+                            {items.map(({name, action, isSwitch}) => {
+                                const children = (
+                                    <>
+                                        <View>
+                                            <Text style={styles.btnText}>
+                                                {name}
+                                            </Text>
+                                        </View>
+                                        {action && (
+                                            isSwitch ?
+                                            <Switch
+                                                trackColor={{ false: "#333333", true: "#0dbd8b" }}
+                                                thumbColor={true ? "#FFFFFF" : "#f4f3f4"}
+                                                ios_backgroundColor="#3e3e3e"
+                                                onValueChange={toggleAppLock}
+                                                value={securitySetup}
+                                            />
+                                            :
+                                            <CustomIcon
+                                                name="Caret-Left"
+                                                size={15}
+                                                color="#909090"
+                                            />
+                                            
+                                        )}
+                                    </>
+                                );
+                                return (
+                                    <View style={styles.item} key={name}>
+                                        {action ? (
+                                            <Button
+                                                transparent
+                                                style={styles.btn}
+                                                onPress={action}>
+                                                {children}
+                                            </Button>
+                                        ) : (
+                                            <View style={styles.btn}>
+                                                {children}
+                                            </View>
+                                        )}
+                                    </View>
+                                );
+                            })}
+                        </View>
+                    ))}
+                </View>
+            </ScrollView>
         </Container>
     );
 };
