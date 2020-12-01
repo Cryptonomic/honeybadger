@@ -66,7 +66,7 @@ const RecoveryPhrase = ({navigation}: SeedPhraseProps) => {
                     {
                         step ==1 &&
                         <ScrollView contentContainerStyle={{flexGrow: 1}}>
-                                <View style={{ width, height: height+100 }}>
+                                <View style={{ width, height: height+140, marginBottom: 20 }}>
                                     <Image style={styles.backgroundImage} source={require('../../assets/banner.png')} />
                                     <View style={styles.content}>
                                         <Text style={styles.typo7}>
