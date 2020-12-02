@@ -108,6 +108,11 @@ const Account = ({navigation}: AccountProps) => {
         navigation.navigate(item.title);
     };
 
+    const onBeaconSelect = (item: any) => {
+        setOpenSettings(false);
+        navigation.navigate(item.title);
+    };
+
     const toggleModal = () => {
         setModalVisible(!isModalVisible);
         setModalWasShown(true);
@@ -129,6 +134,7 @@ const Account = ({navigation}: AccountProps) => {
 
     const menuItems = [
         { title: 'Settings', action: onSettingsSelect },
+        { title: 'Beacon', action: onBeaconSelect },
         //{ title: 'Clear Data', action: onClearData }
     ];
 

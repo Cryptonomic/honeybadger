@@ -17,6 +17,7 @@ import AccountSetup from '../screens/AccountSetup';
 import ResetPin from '../screens/ResetPin';
 import SecurityLevel from '../screens/SecurityLevel';
 import RecoveryPhrase from '../screens/RecoveryPhrase';
+import Beacon from '../screens/Beacon';
 
 const MainNavigator = createStackNavigator(
     {
@@ -37,6 +38,7 @@ const MainNavigator = createStackNavigator(
         ResetPin: ResetPin,
         SecurityLevel: SecurityLevel,
         RecoveryPhrase:RecoveryPhrase,
+        Beacon: Beacon
     },
     {
         headerMode: 'none',
