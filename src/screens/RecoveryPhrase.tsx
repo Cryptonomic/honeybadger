@@ -66,72 +66,68 @@ const RecoveryPhrase = ({navigation}: SeedPhraseProps) => {
                     {
                         step ==1 &&
                         <ScrollView contentContainerStyle={{flexGrow: 1}}>
-                                <View style={{ width, height: height+140, marginBottom: 20 }}>
-                                    <Image style={styles.backgroundImage} source={require('../../assets/banner.png')} />
-                                    <View style={styles.content}>
-                                        <Text style={styles.typo7}>
-                                            Security Tips
+                            <Image style={styles.backgroundImage} source={require('../../assets/banner.png')} />
+                            <View style={styles.content}>
+                                <Text style={styles.typo7}>
+                                    Security Tips
+                                </Text>
+                                <Text style={styles.borderBottom}></Text>
+                                <MobileIllustration style={{marginTop:25,marginBottom:25,marginLeft:'auto',marginRight:'auto'}}></MobileIllustration>
+                                <Text style={styles.typo1}>
+                                    Screenshots are not secure
+                                </Text>
+                                <Text style={styles.typo5}>
+                                    Many apps have access to your media and can view your screenshots.
+                                </Text>
+                                <Text style={styles.typo5}>
+                                </Text>
+                                <View style={styles.levelMain}>
+                                    <View style={styles.levels}>
+                                        <Text style={styles.orangeDot1}>
                                         </Text>
-                                        <Text style={styles.borderBottom}></Text>
-                                        <MobileIllustration style={{marginTop:25,marginBottom:25,marginLeft:'auto',marginRight:'auto'}}></MobileIllustration>
-                                        <Text style={styles.typo1}>
-                                            Screenshots are not secure
+                                        <Text style={styles.greyDots1} onPress={()=> setStep(2)}>
                                         </Text>
-                                        <Text style={styles.typo5}>
-                                            Many apps have access to your media and can view your screenshots.
-                                        </Text>
-                                        <Text style={styles.typo5}>
-                                        </Text>
-                                        <View style={styles.levelMain}>
-                                            <View style={styles.levels}>
-                                                <Text style={styles.orangeDot1}>
-                                                </Text>
-                                                <Text style={styles.greyDots1}>
-                                                </Text>
-                                            </View>
-                                            <Button
-                                                onPress={() => setStep(2)}
-                                                style={styles.btnWhite}>
-                                                <Text style={{color:'#333'}}>Next</Text> 
-                                                <RightArrow></RightArrow>
-                                            </Button>
-                                        </View>
                                     </View>
+                                    <Button
+                                        onPress={() => setStep(2)}
+                                        style={styles.btnWhite}>
+                                        <Text style={{color:'#333'}}>Next</Text> 
+                                        <RightArrow></RightArrow>
+                                    </Button>
                                 </View>
+                            </View>
                         </ScrollView>
                     }
                     {
                         step ==2 &&
                         <ScrollView contentContainerStyle={{flexGrow: 1}}>
-                                <View style={{ width, height: height+140 }}>
-                                    <Image style={styles.backgroundImage} source={require('../../assets/banner.png')} />
-                                    <View style={styles.content}>
-                                        <Text style={styles.typo7}>
-                                            Security Tips
+                            <Image style={styles.backgroundImage} source={require('../../assets/banner.png')} />
+                            <View style={styles.content}>
+                                <Text style={styles.typo7}>
+                                    Security Tips
+                                </Text>
+                                <Text style={styles.borderBottom}></Text>
+                                <QuiteIllustration style={{marginTop:25,marginBottom:25,marginLeft:'auto',marginRight:'auto'}}></QuiteIllustration>
+                                <Text style={styles.typo1}>
+                                    Don’t read your recovery phrase aloud
+                                </Text>
+                                <Text style={styles.typo5}>
+                                Keep in mind that someone might be listening (maybe Alexa?).
+                                </Text>
+                                <View style={styles.levelMain}>
+                                    <View style={styles.levels}>
+                                        <Text style={styles.greyDots2} onPress={()=> setStep(1)}>
                                         </Text>
-                                        <Text style={styles.borderBottom}></Text>
-                                        <QuiteIllustration style={{marginTop:25,marginBottom:25,marginLeft:'auto',marginRight:'auto'}}></QuiteIllustration>
-                                        <Text style={styles.typo1}>
-                                            Don’t read your recovery phrase aloud
+                                        <Text style={styles.orangeDot2}>
                                         </Text>
-                                        <Text style={styles.typo5}>
-                                        Keep in mind that someone might be listening (maybe Alexa?).
-                                        </Text>
-                                        <View style={styles.levelMain}>
-                                            <View style={styles.levels}>
-                                                <Text style={styles.greyDots2}>
-                                                </Text>
-                                                <Text style={styles.orangeDot2}>
-                                                </Text>
-                                            </View>
-                                            <Button
-                                                onPress={() => navigation.navigate("SeedPhrase")}
-                                                style={styles.btnBlack}>
-                                                <Text>Got It</Text> 
-                                            </Button>
-                                        </View>
                                     </View>
+                                    <Button
+                                        onPress={() => navigation.navigate("SeedPhrase")}
+                                        style={styles.btnBlack}>
+                                        <Text>Got It</Text> 
+                                    </Button>
                                 </View>
+                            </View>
                         </ScrollView>
                     }
                 </Container>
@@ -290,7 +286,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems:'center',
         flexWrap:'wrap',
-        marginTop:50
+        marginTop:50,
+        marginBottom: 50
     },
     levels: {
         width: '100%',

@@ -44,7 +44,7 @@ const Account = ({navigation}: AccountProps) => {
     const hasPendingOperations = useSelector((state: State) => (state.app.pendingDelegations.length > 0 || state.app.pendingTransactions.length > 0));
     const [isPendingModalVisible, setPendingModalVisible] = useState(false);
     const [refreshTimer, setRefreshTimer] = useState(undefined as any);
-    const [securityLevel, setSecurityLevel] = useState("0");
+    const [securityLevel, setSecurityLevel] = useState("3");
     const changeTab = (newTab: number) => {
         if (newTab === tab) {
             return;
@@ -57,6 +57,12 @@ const Account = ({navigation}: AccountProps) => {
         async function load() {
             try {
                 const wallet = await Keychain.getGenericPassword();
+                let securityLevel: any = await Keychain.getInternetCredentials('securityLevel');
+                if(securityLevel.password) {
+                    setSecurityLevel(securityLevel.password);
+                } else {
+                    setSecurityLevel("0");
+                }
                 if (wallet) {
                     dispatch(syncAccount());
                     if (!refreshTimer) {
@@ -77,6 +83,8 @@ const Account = ({navigation}: AccountProps) => {
                     let securityLevel: any = await Keychain.getInternetCredentials('securityLevel');
                     if(securityLevel.password) {
                         setSecurityLevel(securityLevel.password);
+                    } else {
+                        setSecurityLevel("0");
                     }
                 } catch (error) {
                     // error

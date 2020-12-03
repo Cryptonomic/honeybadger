@@ -38,7 +38,7 @@ const SeedPhrase = ({navigation}: SeedPhraseProps) => {
                     <View style={styles.content}>
                         <View style={styles.title}>
                             <Text style={styles.typo1}>
-                                Write down your recovery phrase and keep it safe.
+                                Carefully write down your recovery phrase and keep it in a safe place.
                             </Text>
                             <Text style={[styles.subtitle, styles.typo2]}>
                                 You will need it to access your funds in case your phone is lost or stolen. If anyone else gets access to your recovery phrase they will be able to steal your funds.
@@ -76,9 +76,13 @@ const SeedPhrase = ({navigation}: SeedPhraseProps) => {
                                 ))}
                             </View>
                         </View>
-                        <Button style={styles.btn} onPress={()=> setStep(1)}>
-                            <Text>Next</Text>
-                        </Button>
+                        {
+                            !navigation.getParam('fromSetting') &&
+                            <Button style={styles.btn} onPress={()=> setStep(1)}>
+                                <Text>Next</Text>
+                            </Button>
+                        }
+                       
                     </View>
                 </ScrollView>
             </React.Fragment>

@@ -52,9 +52,12 @@ const PhraseBackup = (props: any) => {
 
         if (match) {
             let data: any= await Keychain.getInternetCredentials('securitySetup');
-            data = JSON.parse(data.password);
+            if(data) {
+                data = JSON.parse(data.password);
+            }
+            
             let securityLevel: any = await Keychain.getInternetCredentials('securityLevel');
-            if(data.isBiometric) {
+            if(data.securitySetup) {
                 await Keychain.setInternetCredentials('securityLevel', 'userName', JSON.stringify(2));
             } else if(!securityLevel) {
                 await Keychain.setInternetCredentials('securityLevel', 'userName', JSON.stringify(1));
