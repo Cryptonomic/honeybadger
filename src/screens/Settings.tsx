@@ -66,7 +66,7 @@ const Settings = ({navigation}: SettingsProps) => {
             items: [
                 {
                     name: 'Show Recovery Phrase',
-                    action: () => navigation.navigate('SeedPhrase'),
+                    action: () => navigation.navigate('SeedPhrase', { fromSetting: true }),
                 },
                 {
                     name: 'Enable App Lock',
