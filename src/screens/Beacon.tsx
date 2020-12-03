@@ -3,18 +3,20 @@ import {StyleSheet} from 'react-native';
 import {Container, Button, Text, View, Header} from 'native-base';
 import CustomHeader from '../components/CustomHeader';
 import EnterAddressCamera from '../components/EnterAddress/EnterAddressCamera';
-
+import BeaconSuccess from '../components/BeaconSuccess';
 
 import {AccountProps} from './types';
 
 const Beacon = ({navigation}: AccountProps) => {
     const [showCamera, setShowCamera] = useState(true);
     const [step, setStep] = useState(1);
+    const [data, setExtracteddata] = useState('');
 
     const onBarcodeRecognized = ({data}: {data: string}) => {
         if (data && data.length) {
-            // onAddressTextChange(data);
+            setExtracteddata(data);
             setShowCamera(false);
+            setStep(3);
         }
     };
     const scanQrCode = () => {
@@ -43,6 +45,12 @@ const Beacon = ({navigation}: AccountProps) => {
                         open={showCamera}
                         onBarcodeRecognized={onBarcodeRecognized}
                         onBack={() => closeCamera()}
+                    />
+                }
+                {
+                    step == 3 &&
+                    <BeaconSuccess
+                        text={data}
                     />
                 }
             </View>
