@@ -8,6 +8,7 @@ import CustomHeader from '../components/CustomHeader';
 import CustomIcon from '../components/CustomIcon';
 import {colors} from '../theme';
 import config from '../config';
+import Success from '../../assets/success.svg';
 
 import {SettingsProps} from './types';
 
@@ -145,10 +146,17 @@ const Settings = ({navigation}: SettingsProps) => {
                             {items.map(({name, action, isSwitch}) => {
                                 const children = (
                                     <>
-                                        <View>
+                                        <View style={styles.posRel}>
                                             <Text style={styles.btnText}>
                                                 {name}
                                             </Text>
+                                            {name == 'Show Recovery Phrase'? <Text  style={styles.subTitle}>Level 1: Goldfish</Text>: null }
+                                            {name == 'Recovery Phrase'? <Text  style={styles.alertText}>
+                                                Not backed up
+                                            </Text>: null }
+                                            {/* {name == 'Recovery Phrase'? <Text  style={styles.successText}>
+                                                Backed up <Success style={styles.successIcon}></Success>
+                                            </Text>: null } */}
                                         </View>
                                         {action && (
                                             isSwitch ?
@@ -233,6 +241,36 @@ const styles = StyleSheet.create({
         fontSize: 18,
         color: '#0d0d0d',
         letterSpacing: 0.75,
+    },
+    posRel: {
+        position:'relative'
+    },
+    subTitle: {
+        position: "absolute",
+        right:-150,
+        fontSize:14,
+        top:2,
+        color: '#909090',
+        fontFamily: 'Roboto-Medium',
+        fontWeight: '500',
+    },
+    alertText: {
+        position: "absolute",
+        right:-195,
+        fontSize:14,
+        top:2,
+        color: '#FF0000',
+    },
+    successText: {
+        position: "absolute",
+        right:-200,
+        fontSize:14,
+        top:1,
+        color: '#259C90',
+    },
+    successIcon: {
+        marginLeft:2,
+        marginTop:-3
     },
     btnText: {
         fontFamily: 'Roboto-Light',
