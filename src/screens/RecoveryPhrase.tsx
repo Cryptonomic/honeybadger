@@ -19,9 +19,18 @@ const RecoveryPhrase = ({navigation}: SeedPhraseProps) => {
     useEffect(() => {
         async function load() {
             try {
-                let securityLevel: any = await Keychain.getInternetCredentials('securityLevel');
-                if(securityLevel.password) {
-                    setSecurityLevel(securityLevel.password);
+                let data: any= await Keychain.getInternetCredentials('securitySetup');
+                if(data) {
+                    data = JSON.parse(data.password);
+                    if (data.securitySetup && data.phraseBackedUp) {
+                        setSecurityLevel("2");    
+                    } else if(data.phraseBackedUp) {
+                        setSecurityLevel("1")
+                    } else {
+                        setSecurityLevel("0");
+                    }
+                } else {
+                    setSecurityLevel("0");
                 }
             } catch (error) {
                 console.log("Keychain couldn't be accessed!", error);

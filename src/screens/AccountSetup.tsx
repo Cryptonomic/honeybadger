@@ -25,10 +25,16 @@ const AccountSetup = ({ navigation }: AccountSettingsProps) => {
         if (pin !== pinCode) {
             Alert.alert("Pin and confirm pin did not match");
         } else {
+            let data: any= await Keychain.getInternetCredentials('securitySetup');
+            if(data) {
+                data = JSON.parse(data.password);
+            }
+            
             const setup = {
                 securitySetup: true,
                 isBiometric: false,
-                pin: pin
+                pin: pin,
+                phraseBackedUp: data.phraseBackedUp ? data.phraseBackedUp : false
             }
             await Keychain.setInternetCredentials(
                 'securitySetup',
@@ -38,12 +44,6 @@ const AccountSetup = ({ navigation }: AccountSettingsProps) => {
             setConfirmPin(pin);
             // Disable back btn
             setBack(false);
-            let securityLevel: any = await Keychain.getInternetCredentials('securityLevel');
-            let currentLevel = 0;
-            if(securityLevel.password === '1') {
-                currentLevel = 2;
-                await Keychain.setInternetCredentials('securityLevel', 'userName', JSON.stringify(currentLevel));
-            }
             setStep('ENABLE_BIOMETRIC');
         }
     }

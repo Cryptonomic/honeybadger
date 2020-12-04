@@ -54,14 +54,25 @@ const PhraseBackup = (props: any) => {
             let data: any= await Keychain.getInternetCredentials('securitySetup');
             if(data) {
                 data = JSON.parse(data.password);
+                const setup = {
+                    securitySetup: data.securitySetup,
+                    isBiometric: data.isBiometric,
+                    pin: data.pin,
+                    phraseBackedUp: true
+                }
+                await Keychain.setInternetCredentials('securitySetup', 'userName', JSON.stringify(setup));
+            } else {
+
+                const setupData = {
+                    securitySetup: false,
+                    isBiometric: false,
+                    pin: '',
+                    phraseBackedUp: true
+                }
+
+                await Keychain.setInternetCredentials('securitySetup', 'userName', JSON.stringify(setupData));
             }
-            
-            let securityLevel: any = await Keychain.getInternetCredentials('securityLevel');
-            if(data.securitySetup) {
-                await Keychain.setInternetCredentials('securityLevel', 'userName', JSON.stringify(2));
-            } else if(!securityLevel) {
-                await Keychain.setInternetCredentials('securityLevel', 'userName', JSON.stringify(1));
-            }
+                
             setStep('SUCCESS');
         } else {
             setModalVisible(true);

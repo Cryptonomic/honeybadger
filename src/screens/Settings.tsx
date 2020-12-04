@@ -8,11 +8,14 @@ import CustomHeader from '../components/CustomHeader';
 import CustomIcon from '../components/CustomIcon';
 import {colors} from '../theme';
 import config from '../config';
+import Success from '../../assets/success.svg';
 
 import {SettingsProps} from './types';
 
 const Settings = ({navigation}: SettingsProps) => {
     const [securitySetup, setSecuritySetup] = useState(false);
+    const [phraseBackedup, setPhraseBackedup] = useState(false);
+    const [SecurityLevel, setSecurityLevel] = useState("0");
 
     useEffect(() => {
         navigation.addListener(
@@ -25,6 +28,20 @@ const Settings = ({navigation}: SettingsProps) => {
                     } else {
                         setSecuritySetup(false);
                     }
+                    if(data.phraseBackedUp) {
+                        setPhraseBackedup(true);
+                    }
+                    if(data) {
+                        if (data.securitySetup && data.phraseBackedUp) {
+                            setSecurityLevel("2");    
+                        } else if(data.phraseBackedUp) {
+                            setSecurityLevel("1")
+                        } else {
+                            setSecurityLevel("0");
+                        }
+                    } else {
+                        setSecurityLevel("0");
+                    }
                 } catch (error) {
                     // error
                 }
@@ -35,10 +52,13 @@ const Settings = ({navigation}: SettingsProps) => {
 
     const toggleAppLock = async () => {
         if (securitySetup) {
+            let data: any= await Keychain.getInternetCredentials('securitySetup');
+            data = JSON.parse(data.password);
             const setup = {
                 securitySetup: false,
                 isBiometric: false,
-                pin: ''
+                pin: '',
+                phraseBackedUp: data.phraseBackedUp
             }
             await Keychain.setInternetCredentials(
                 'securitySetup',
@@ -142,10 +162,36 @@ const Settings = ({navigation}: SettingsProps) => {
                             {items.map(({name, action, isSwitch}) => {
                                 const children = (
                                     <>
-                                        <View>
+                                        <View style={styles.posRel}>
                                             <Text style={styles.btnText}>
                                                 {name}
                                             </Text>
+                                            {
+                                                name == 'Show Recovery Phrase' &&
+                                                <React.Fragment>
+                                                    {
+                                                        SecurityLevel === "0" &&
+                                                        <Text  style={styles.subTitle}>Level 1: Goldfish</Text> 
+                                                    }
+                                                    {
+                                                        SecurityLevel === "1" &&
+                                                        <Text  style={styles.subTitle}>Level 2: Salmon</Text> 
+                                                    }
+                                                    {
+                                                        SecurityLevel === "2" &&
+                                                        <Text  style={styles.subTitle}>Level 3: Dolphine</Text> 
+                                                    }
+                                                </React.Fragment>
+                                            }
+                                            {name == 'Recovery Phrase' && !phraseBackedup ? 
+                                            <Text  style={styles.alertText}>
+                                                Not backed up
+                                            </Text>: null }
+                                            {
+                                            name == 'Recovery Phrase' && phraseBackedup
+                                            ? <Text  style={styles.successText}>
+                                                Backed up <Success style={styles.successIcon}></Success>
+                                            </Text>: null }
                                         </View>
                                         {action && (
                                             isSwitch ?
@@ -230,6 +276,36 @@ const styles = StyleSheet.create({
         fontSize: 18,
         color: '#0d0d0d',
         letterSpacing: 0.75,
+    },
+    posRel: {
+        position:'relative'
+    },
+    subTitle: {
+        position: "absolute",
+        right:-150,
+        fontSize:14,
+        top:2,
+        color: '#909090',
+        fontFamily: 'Roboto-Medium',
+        fontWeight: '500',
+    },
+    alertText: {
+        position: "absolute",
+        right:-195,
+        fontSize:14,
+        top:2,
+        color: '#FF0000',
+    },
+    successText: {
+        position: "absolute",
+        right:-200,
+        fontSize:14,
+        top:1,
+        color: '#259C90',
+    },
+    successIcon: {
+        marginLeft:2,
+        marginTop:-3
     },
     btnText: {
         fontFamily: 'Roboto-Light',

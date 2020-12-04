@@ -57,12 +57,20 @@ const Account = ({navigation}: AccountProps) => {
         async function load() {
             try {
                 const wallet = await Keychain.getGenericPassword();
-                let securityLevel: any = await Keychain.getInternetCredentials('securityLevel');
-                if(securityLevel.password) {
-                    setSecurityLevel(securityLevel.password);
+                let data: any= await Keychain.getInternetCredentials('securitySetup');
+                if(data) {
+                    data = JSON.parse(data.password);
+                    if (data.securitySetup && data.phraseBackedUp) {
+                        setSecurityLevel("2");    
+                    } else if(data.phraseBackedUp) {
+                        setSecurityLevel("1")
+                    } else {
+                        setSecurityLevel("0");
+                    }
                 } else {
                     setSecurityLevel("0");
                 }
+               
                 if (wallet) {
                     dispatch(syncAccount());
                     if (!refreshTimer) {
@@ -80,9 +88,16 @@ const Account = ({navigation}: AccountProps) => {
         navigation.addListener(
             'didFocus', async (payload: any) => {
                 try {
-                    let securityLevel: any = await Keychain.getInternetCredentials('securityLevel');
-                    if(securityLevel.password) {
-                        setSecurityLevel(securityLevel.password);
+                    let data: any= await Keychain.getInternetCredentials('securitySetup');
+                    if(data) {
+                        data = JSON.parse(data.password);
+                        if (data.securitySetup && data.phraseBackedUp) {
+                            setSecurityLevel("2");    
+                        } else if(data.phraseBackedUp) {
+                            setSecurityLevel("1")
+                        } else {
+                            setSecurityLevel("0");
+                        }
                     } else {
                         setSecurityLevel("0");
                     }
