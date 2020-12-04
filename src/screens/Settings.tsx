@@ -35,10 +35,13 @@ const Settings = ({navigation}: SettingsProps) => {
 
     const toggleAppLock = async () => {
         if (securitySetup) {
+            let data: any= await Keychain.getInternetCredentials('securitySetup');
+            data = JSON.parse(data.password);
             const setup = {
                 securitySetup: false,
                 isBiometric: false,
-                pin: ''
+                pin: '',
+                phraseBackedUp: data.phraseBackedUp
             }
             await Keychain.setInternetCredentials(
                 'securitySetup',
