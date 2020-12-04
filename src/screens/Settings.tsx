@@ -14,6 +14,8 @@ import {SettingsProps} from './types';
 
 const Settings = ({navigation}: SettingsProps) => {
     const [securitySetup, setSecuritySetup] = useState(false);
+    const [phraseBackedup, setPhraseBackedup] = useState(false);
+    const [SecurityLevel, setSecurityLevel] = useState("0");
 
     useEffect(() => {
         navigation.addListener(
@@ -25,6 +27,20 @@ const Settings = ({navigation}: SettingsProps) => {
                         setSecuritySetup(data.securitySetup)
                     } else {
                         setSecuritySetup(false);
+                    }
+                    if(data.phraseBackedUp) {
+                        setPhraseBackedup(true);
+                    }
+                    if(data) {
+                        if (data.securitySetup && data.phraseBackedUp) {
+                            setSecurityLevel("2");    
+                        } else if(data.phraseBackedUp) {
+                            setSecurityLevel("1")
+                        } else {
+                            setSecurityLevel("0");
+                        }
+                    } else {
+                        setSecurityLevel("0");
                     }
                 } catch (error) {
                     // error
@@ -150,13 +166,32 @@ const Settings = ({navigation}: SettingsProps) => {
                                             <Text style={styles.btnText}>
                                                 {name}
                                             </Text>
-                                            {name == 'Show Recovery Phrase'? <Text  style={styles.subTitle}>Level 1: Goldfish</Text>: null }
-                                            {name == 'Recovery Phrase'? <Text  style={styles.alertText}>
+                                            {
+                                                name == 'Show Recovery Phrase' &&
+                                                <React.Fragment>
+                                                    {
+                                                        SecurityLevel === "0" &&
+                                                        <Text  style={styles.subTitle}>Level 1: Goldfish</Text> 
+                                                    }
+                                                    {
+                                                        SecurityLevel === "1" &&
+                                                        <Text  style={styles.subTitle}>Level 2: Salmon</Text> 
+                                                    }
+                                                    {
+                                                        SecurityLevel === "2" &&
+                                                        <Text  style={styles.subTitle}>Level 3: Dolphine</Text> 
+                                                    }
+                                                </React.Fragment>
+                                            }
+                                            {name == 'Recovery Phrase' && !phraseBackedup ? 
+                                            <Text  style={styles.alertText}>
                                                 Not backed up
                                             </Text>: null }
-                                            {/* {name == 'Recovery Phrase'? <Text  style={styles.successText}>
+                                            {
+                                            name == 'Recovery Phrase' && phraseBackedup
+                                            ? <Text  style={styles.successText}>
                                                 Backed up <Success style={styles.successIcon}></Success>
-                                            </Text>: null } */}
+                                            </Text>: null }
                                         </View>
                                         {action && (
                                             isSwitch ?

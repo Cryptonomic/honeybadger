@@ -95,7 +95,8 @@ const Transactions = () => {
                 displayTransactions.map((t: any) => (
                     <TouchableOpacity
                         style={styles.list}
-                        onPress={() => onTransactionPress(t.opGroupHash)}>
+                        onPress={() => onTransactionPress(t.opGroupHash)}
+                        key={t.address}>
                         <View style={styles.listItem}>
                             <View style={styles.left}>
                                 <CustomIcon
