@@ -321,7 +321,6 @@ const styles = StyleSheet.create({
         borderWidth:8,
         borderRadius: 8,
         borderColor:'#F5942A',
-        marginLeft:5.5,
     },
     greyDots2: {
         height:8,
@@ -337,7 +336,6 @@ const styles = StyleSheet.create({
         borderWidth:8,
         borderRadius: 8,
         borderColor:'#F5942A',
-        marginLeft:5.5,
     },
     borderBottom: {
         width:'100%',

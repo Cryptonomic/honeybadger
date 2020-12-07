@@ -135,13 +135,32 @@ const SecurityLevel = ({navigation}: SeedPhraseProps) => {
                                     <Dolphin style={{width:47,height:35,marginRight:16}} />
                                 }
                             </View>
-                            <View style={{width:'57%'}}>
-                            <Text style={styles.typo6}>{getLevelText()}</Text>
-                                <Text style={styles.typo3}>{ getSecurityLevel() }</Text>
-                            </View>
-                            <View style={{marginLeft:20}}>
-                                <Circle />
-                            </View>
+                                {
+                                    securityLevel !== "2" &&
+                                    <View style={{width:'57%'}}>
+                                        <Text style={styles.typo6}>{getLevelText()}</Text>
+                                        <Text style={styles.typo3}>{ getSecurityLevel() }</Text>
+                                    </View>
+                                }
+                                {
+                                    securityLevel === "2" &&
+                                    <View style={{width:'63%',marginTop:-15}}>
+                                        <Text style={styles.typo6}>{getLevelText()}</Text>
+                                        <Text style={styles.typo3}>{ getSecurityLevel() }</Text>
+                                    </View>
+                                }
+                                {
+                                    securityLevel !== "2" &&
+                                    <View style={{marginLeft:20}}>
+                                        <Circle />
+                                    </View>
+                                }
+                                {
+                                    securityLevel === "2" &&
+                                    <View style={{marginLeft:35}}>
+                                        <Circle />
+                                    </View>
+                                }
                             <View>
                                 {
                                     securityLevel !== "2" &&

@@ -167,7 +167,7 @@ const Settings = ({navigation}: SettingsProps) => {
                                                 {name}
                                             </Text>
                                             {
-                                                name == 'Show Recovery Phrase' &&
+                                                name == 'Security Level' &&
                                                 <React.Fragment>
                                                     {
                                                         SecurityLevel === "0" &&
@@ -179,7 +179,7 @@ const Settings = ({navigation}: SettingsProps) => {
                                                     }
                                                     {
                                                         SecurityLevel === "2" &&
-                                                        <Text  style={styles.subTitle}>Level 3: Dolphine</Text> 
+                                                        <Text  style={styles.subTitle}>Level 3: Dolphin</Text> 
                                                     }
                                                 </React.Fragment>
                                             }
@@ -282,7 +282,7 @@ const styles = StyleSheet.create({
     },
     subTitle: {
         position: "absolute",
-        right:-150,
+        right:-215,
         fontSize:14,
         top:2,
         color: '#909090',
