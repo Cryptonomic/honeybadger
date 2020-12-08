@@ -1,12 +1,12 @@
-import React, {useEffect, useState} from 'react';
-import {StyleSheet, Linking, ScrollView} from 'react-native';
-import {Text, View, Button, Container, Switch, Toast} from 'native-base';
+import React, { useLayoutEffect, useState } from 'react';
+import { StyleSheet, Linking, ScrollView } from 'react-native';
+import { Text, View, Button, Container, Switch } from 'native-base';
 import DeviceInfo from 'react-native-device-info';
 import * as Keychain from 'react-native-keychain';
 
 import CustomHeader from '../components/CustomHeader';
 import CustomIcon from '../components/CustomIcon';
-import {colors} from '../theme';
+import { colors } from '../theme';
 import config from '../config';
 import Success from '../../assets/success.svg';
 
@@ -17,38 +17,51 @@ const Settings = ({navigation}: SettingsProps) => {
     const [phraseBackedup, setPhraseBackedup] = useState(false);
     const [SecurityLevel, setSecurityLevel] = useState("0");
 
-    useEffect(() => {
-        navigation.addListener(
-            'didFocus', async (payload: any) => {
-                try {
-                    let data: any= await Keychain.getInternetCredentials('securitySetup');
-                    data = JSON.parse(data.password);
-                    if (data.hasOwnProperty('securitySetup') && data.securitySetup) {
-                        setSecuritySetup(data.securitySetup)
-                    } else {
-                        setSecuritySetup(false);
-                    }
-                    if(data.phraseBackedUp) {
-                        setPhraseBackedup(true);
-                    }
-                    if(data) {
-                        if (data.securitySetup && data.phraseBackedUp) {
-                            setSecurityLevel("2");    
-                        } else if(data.phraseBackedUp) {
-                            setSecurityLevel("1")
-                        } else {
-                            setSecurityLevel("0");
-                        }
+    useLayoutEffect(() => {
+        const loadInitialState = async () => {
+            try {
+                let data: any = await Keychain.getInternetCredentials('securitySetup');
+                data = JSON.parse(data.password);
+
+                if (data.hasOwnProperty('securitySetup') && data.securitySetup) {
+                    setSecuritySetup(data.securitySetup)
+                } else {
+                    setSecuritySetup(false);
+                }
+
+                if (data.phraseBackedUp) {
+                    setPhraseBackedup(true);
+                }
+
+                if (data) {
+                    if (data.securitySetup && data.phraseBackedUp) {
+                        setSecurityLevel("2");    
+                    } else if(data.phraseBackedUp) {
+                        setSecurityLevel("1")
                     } else {
                         setSecurityLevel("0");
                     }
-                } catch (error) {
-                    // error
+                } else {
+                    setSecurityLevel("0");
                 }
+            } catch (error) {
+                // error
             }
-        )
+        };
+        loadInitialState();
+    });
 
-    }, [navigation]);
+    const getSecurityLevelText = (securityLevel: string) => {
+        if (securityLevel === "0") {
+            return "Level 1: Goldfish";
+        }
+
+        if (securityLevel === "1") {
+            return "Level 2: Savvy Salmon";
+        }
+
+        return "Level 3: Discreet Dolphin";
+    }
 
     const toggleAppLock = async () => {
         if (securitySetup) {
@@ -85,10 +98,6 @@ const Settings = ({navigation}: SettingsProps) => {
             title: 'Security',
             items: [
                 {
-                    name: 'Show Recovery Phrase',
-                    action: () => navigation.navigate('SeedPhrase', { fromSetting: true }),
-                },
-                {
                     name: 'Enable App Lock',
                     isSwitch: true,
                     action: () => navigation.navigate('AccountSetup'),
@@ -98,7 +107,7 @@ const Settings = ({navigation}: SettingsProps) => {
                     action: () => navigation.navigate('SecurityLevel'),
                 },
                 {
-                    name: 'Recovery Phrase',
+                    name: phraseBackedup ? 'Show Recovery Phrase' : 'Backup Recovery Phrase',
                     action: () => navigation.navigate('RecoveryPhrase'),
                 },
             ],
@@ -113,7 +122,7 @@ const Settings = ({navigation}: SettingsProps) => {
                             'https://cryptonomic.zendesk.com/hc/en-us/sections/360007678431-FAQ',
                         );
                     },
-                }, // TODO
+                }, // TODO: read from config
                 {
                     name: 'Support',
                     action: () => {
@@ -121,7 +130,7 @@ const Settings = ({navigation}: SettingsProps) => {
                             'https://cryptonomic.tech/support.html',
                         );
                     },
-                }, // TODO
+                }, // TODO: read from config
             ],
         },
         {
@@ -134,7 +143,7 @@ const Settings = ({navigation}: SettingsProps) => {
                             'https://github.com/Cryptonomic/Deployments/raw/master/Terms_of_Service.pdf',
                         );
                     },
-                }, // TODO
+                }, // TODO: read from config
                 {
                     name: 'Privacy Policy',
                     action: () => {
@@ -142,7 +151,7 @@ const Settings = ({navigation}: SettingsProps) => {
                             'https://github.com/Cryptonomic/Deployments/raw/master/Privacy_Policy.pdf',
                         );
                     },
-                }, // TODO
+                }, // TODO: read from config
             ],
         },
     ];
@@ -166,34 +175,23 @@ const Settings = ({navigation}: SettingsProps) => {
                                             <Text style={styles.btnText}>
                                                 {name}
                                             </Text>
-                                            {
-                                                name == 'Show Recovery Phrase' &&
+
+                                            { name == 'Security Level' &&
                                                 <React.Fragment>
-                                                    {
-                                                        SecurityLevel === "0" &&
-                                                        <Text  style={styles.subTitle}>Level 1: Goldfish</Text> 
-                                                    }
-                                                    {
-                                                        SecurityLevel === "1" &&
-                                                        <Text  style={styles.subTitle}>Level 2: Salmon</Text> 
-                                                    }
-                                                    {
-                                                        SecurityLevel === "2" &&
-                                                        <Text  style={styles.subTitle}>Level 3: Dolphine</Text> 
-                                                    }
+                                                    <Text style={styles.subTitle}>{getSecurityLevelText(SecurityLevel)}</Text> 
                                                 </React.Fragment>
                                             }
-                                            {name == 'Recovery Phrase' && !phraseBackedup ? 
-                                            <Text  style={styles.alertText}>
-                                                Not backed up
-                                            </Text>: null }
-                                            {
-                                            name == 'Recovery Phrase' && phraseBackedup
-                                            ? <Text  style={styles.successText}>
-                                                Backed up <Success style={styles.successIcon}></Success>
-                                            </Text>: null }
+
+                                            { name == 'Backup Recovery Phrase' &&
+                                                <Text style={styles.alertText}>Not backed up</Text>
+                                            }
+
+                                            { name == 'Show Recovery Phrase' &&
+                                                <Text style={styles.successText}>Backed up <Success style={styles.successIcon}></Success></Text>
+                                            }
                                         </View>
-                                        {action && (
+
+                                        { action && (
                                             isSwitch ?
                                             <Switch
                                                 trackColor={{ false: "#333333", true: "#0dbd8b" }}
@@ -212,6 +210,7 @@ const Settings = ({navigation}: SettingsProps) => {
                                         )}
                                     </>
                                 );
+
                                 return (
                                     <View style={styles.item} key={name}>
                                         {action ? (
@@ -278,27 +277,27 @@ const styles = StyleSheet.create({
         letterSpacing: 0.75,
     },
     posRel: {
-        position:'relative'
+        position:'relative',
+        display: 'flex',
+        flexDirection: 'row'
     },
     subTitle: {
-        position: "absolute",
-        right:-150,
-        fontSize:14,
-        top:2,
+        marginLeft: 50,
+        fontSize: 14,
+        top: 2,
         color: '#909090',
         fontFamily: 'Roboto-Medium',
         fontWeight: '500',
+
     },
     alertText: {
-        position: "absolute",
-        right:-195,
+        marginLeft: 30,
         fontSize:14,
         top:2,
         color: '#FF0000',
     },
     successText: {
-        position: "absolute",
-        right:-200,
+        marginLeft: 30,
         fontSize:14,
         top:1,
         color: '#259C90',

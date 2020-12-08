@@ -1,9 +1,8 @@
-import React, {useState, useEffect} from 'react';
-import {StyleSheet,  ScrollView, Image, TouchableOpacity} from 'react-native';
-import {View, Text, Container, Button} from 'native-base';
-import {colors} from '../theme';
-import CustomHeader from '../components/CustomHeader';
+import React, { useLayoutEffect, useState } from 'react';
+import { StyleSheet,  ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, Container } from 'native-base';
 import * as Keychain from 'react-native-keychain';
+
 import Fish from '../../assets/fish.svg';
 import Circle from '../../assets/circle.svg';
 import RightArrow from '../../assets/right-arrow.svg';
@@ -14,66 +13,71 @@ import Whiteflag from '../../assets/whiteflag.svg';
 import GoldFishBlack from '../../assets/goldFish_black.svg';
 import SalmonBlack from '../../assets/salmon_black.svg';
 import DolphinBlack from '../../assets/dolphin_black.svg';
-
-
+import { colors } from '../theme';
+import CustomHeader from '../components/CustomHeader';
 import {SeedPhraseProps} from './types';
 
 const SecurityLevel = ({navigation}: SeedPhraseProps) => {
     const [securityLevel, setSecurityLevel] = useState("0");
-    useEffect(() => {
-        navigation.addListener(
-            'didFocus', async (payload: any) => {
-                try {
-                    let data: any= await Keychain.getInternetCredentials('securitySetup');
-                    if(data) {
-                        data = JSON.parse(data.password);
-                        if (data.securitySetup && data.phraseBackedUp) {
-                            setSecurityLevel("2");    
-                        } else if(data.phraseBackedUp) {
-                            setSecurityLevel("1")
-                        } else {
-                            setSecurityLevel("0");
-                        }
+
+    useLayoutEffect(() => {
+        const loadInitialState = async () => {
+            try {
+                let data: any= await Keychain.getInternetCredentials('securitySetup');
+                if (data) {
+                    data = JSON.parse(data.password);
+                    if (data.securitySetup && data.phraseBackedUp) {
+                        setSecurityLevel("2");    
+                    } else if(data.phraseBackedUp) {
+                        setSecurityLevel("1")
                     } else {
                         setSecurityLevel("0");
                     }
-                } catch (error) {
-                    // error
-                    console.log("Keychain couldn't be accessed!", error);
+                } else {
+                    setSecurityLevel("0");
                 }
+            } catch (error) {
+                console.log("Keychain couldn't be accessed!", error);
             }
-        )
-    }, []);
+        };
 
-    const getSecurityLevel = () => {
-        if(securityLevel === "0") {
+        loadInitialState();
+    });
+
+    const getSecurityLevelText = () => {
+        if (securityLevel === "0") {
             return "Level 1: Goldfish";
-        } else if(securityLevel === "1") {
-            return "Level 2: Savvy Salmon";
-        } else {
-            return "Level 3: Discreet Dolphin";
         }
+
+        if (securityLevel === "1") {
+            return "Level 2: Savvy Salmon";
+        }
+
+        return "Level 3: Discreet Dolphin";
     }
 
     const getSubText = () => {
-        if(securityLevel === "0") {
-            return "Your funds are not secure";
-        } else if(securityLevel === "1") {
-            return "Backed Up Recovery Phrase";
-        } else {
-            return "Enabled App Lock";
+        if (securityLevel === "0") {
+            return "Your funds are not secure!";
         }
+
+        if (securityLevel === "1") {
+            return "Recovery Phrase Backed Up";
+        }
+
+        return "App Lock Enabled";
     }
 
     const getLevelText = () => {
-        if(securityLevel === "0") {
+        if (securityLevel === "0") {
             return "Your Security Level"
-        } else if(securityLevel === "1") {
-            return "Next Level";
-        } else {
-            return "";
         }
         
+        if (securityLevel === "1") {
+            return "Next Level";
+        }
+
+        return "";
     }
 
     const handleNavigation = () => {
@@ -88,23 +92,19 @@ const SecurityLevel = ({navigation}: SeedPhraseProps) => {
             <Container style={styles.container}>
                 <CustomHeader
                     title="Security Level"
-                    onBack={() => navigation.goBack()}
-                />
+                    onBack={() => navigation.goBack()} />
                 <View style={{alignItems:"center", paddingBottom:34}}>
-                    {
-                        securityLevel === "0" &&
+                    { securityLevel === "0" &&
                         <GoldFishBlack style={{width:91,height:68, marginTop:34, marginBottom:24}} />
                     }
-                    {
-                        securityLevel === "1" &&
+                    { securityLevel === "1" &&
                         <SalmonBlack style={{width:91,height:68, marginTop:34, marginBottom:24}} />
                     }
-                    {
-                        securityLevel === "2" &&
+                    { securityLevel === "2" &&
                         <DolphinBlack style={{width:91,height:68, marginTop:34, marginBottom:24}} />
                     }
                     <Text style={styles.typo1}>
-                        { getSecurityLevel() }
+                        { getSecurityLevelText() }
                     </Text>
                     <Text style={styles.typo5}>
                         {getSubText()}
@@ -112,45 +112,33 @@ const SecurityLevel = ({navigation}: SeedPhraseProps) => {
                 </View>
                 <ScrollView contentContainerStyle={{flexGrow: 1}}>
                     <View style={styles.content}>
-                        <Text style={styles.typo3}>
-                            { 
-                                securityLevel === "2" ?
-                                "You Have Reached The Final Level! "
-                                :
-                                "Level Up Your Security"
-                            }
-                        </Text>
-                        <TouchableOpacity style={styles.security} onPress={()=> handleNavigation()}>
+                        { Number(securityLevel) < 2 &&
+                            <TouchableOpacity style={styles.security} onPress={()=> handleNavigation()}>
                             <View>
-                                {
-                                    securityLevel === "0" &&
+                                { securityLevel === "0" &&
                                     <Fish style={{width:47,height:35,marginRight:16}}/>
                                 }
-                                {
-                                    securityLevel === "1" &&
+                                { securityLevel === "1" &&
                                     <Salmon style={{width:47,height:35,marginRight:16}} />
                                 }
-                                {
-                                    securityLevel === "2" &&
+                                { securityLevel === "2" &&
                                     <Dolphin style={{width:47,height:35,marginRight:16}} />
                                 }
                             </View>
-                            <View style={{width:'57%'}}>
-                            <Text style={styles.typo6}>{getLevelText()}</Text>
-                                <Text style={styles.typo3}>{ getSecurityLevel() }</Text>
+                            <View style={{ width: '70%' }}>
+                                <Text style={styles.typo6}>{ getLevelText() }</Text>
+                                <Text style={styles.typo3}>{ getSecurityLevelText() }</Text>
                             </View>
-                            <View style={{marginLeft:20}}>
+                            <View style={{marginLeft: 10}}>
                                 <Circle />
                             </View>
                             <View>
-                                {
-                                    securityLevel !== "2" &&
+                                { securityLevel !== "2" &&
                                     <RightArrow style={{width:9,height:14,marginLeft:10}} />
                                 }
-                                
                             </View>
-                        </TouchableOpacity>
-                        {/* Levels Grid */}
+                        </TouchableOpacity>}
+
                         <ScrollView contentContainerStyle={{flexGrow: 1}}>
                         <View>
                             <Text style={styles.typo3}>
@@ -158,9 +146,7 @@ const SecurityLevel = ({navigation}: SeedPhraseProps) => {
                             </Text>
                             <View style={styles.levelMain}>
                                 <View style={{paddingTop:18}}>
-                                    {/* Level 1 */}
-                                    {
-                                        securityLevel === "0" &&
+                                    { securityLevel === "0" &&
                                         <React.Fragment>
                                             <View style={styles.dotsContainer}>
                                                 <Text style={styles.greyDots1}></Text>
@@ -177,8 +163,7 @@ const SecurityLevel = ({navigation}: SeedPhraseProps) => {
                                             </View>
                                         </React.Fragment>
                                     }
-                                    {
-                                        securityLevel === "1" &&
+                                    { securityLevel === "1" &&
                                         <React.Fragment>
                                             <View style={styles.dotsContainer}>
                                                 <Text style={styles.greyDots2}></Text>
@@ -196,8 +181,7 @@ const SecurityLevel = ({navigation}: SeedPhraseProps) => {
                                             </View>
                                         </React.Fragment>
                                     }
-                                    {
-                                        securityLevel === "2" &&
+                                    { securityLevel === "2" &&
                                         <React.Fragment>
                                             <View style={styles.dotsContainer}>
                                                 <Text style={styles.greyDots2}></Text>
@@ -216,40 +200,6 @@ const SecurityLevel = ({navigation}: SeedPhraseProps) => {
                                             </View>
                                         </React.Fragment>
                                     }
-                                    
-                                    {/* Level 2
-                                    <View style={styles.dotsContainer}>
-                                        <Text style={styles.greyDots2}></Text>
-                                        <Text style={styles.orangeDot1}></Text>
-                                        <Text style={styles.orangeLine1}></Text>
-                                    </View>
-                                    <View style={styles.dotsContainer}>
-                                        <Text style={styles.greyDots1}></Text>
-                                        <Text style={styles.orangeDot1}></Text>
-                                        <Text style={styles.greyLine1}></Text>
-                                    </View>
-                                    <View >
-                                        <Text style={styles.greyDots3}></Text>
-                                        <Image style={{width:15,height:16,marginTop:-28,marginLeft:7}} source={require('../../assets/flag.png')} />
-                                    </View>
-                                    */}
-                                    {/* Level 3 
-                                    <View style={styles.dotsContainer}>
-                                        <Text style={styles.greyDots2}></Text>
-                                        <Text style={styles.orangeDot1}></Text>
-                                        <Text style={styles.orangeLine1}></Text>
-                                    </View>
-                                    <View style={styles.dotsContainer}>
-                                        <Text style={styles.greyDots2}></Text>
-                                        <Text style={styles.orangeDot1}></Text>
-                                        <Text style={styles.orangeLine1}></Text>
-                                    </View>
-                                    
-                                    <View >
-                                        <Text style={styles.orangeDot3}></Text>
-                                        <Image style={{width:15,height:16,marginTop:-28,marginLeft:7}} source={require('../../assets/whiteflag.png')} />
-                                    </View>
-                                    */}
                                 </View>
                                 <View>
                                     <View style={styles.levels}>
@@ -283,7 +233,6 @@ const SecurityLevel = ({navigation}: SeedPhraseProps) => {
                             </View>
                         </View>
                         </ScrollView>
-                        {/* Levels Grid */}
                     </View>
                 </ScrollView>
             </Container>
