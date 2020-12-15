@@ -84,7 +84,7 @@ const SecurityLevel = ({navigation}: SeedPhraseProps) => {
         if (securityLevel === '1') {
             navigation.navigate("AccountSetup")
         } else if(securityLevel === '0') {
-            navigation.navigate("RecoveryPhrase")
+            navigation.navigate("RecoveryPhrase", {fromSetting: false});
         }
     }
 

@@ -98,17 +98,17 @@ const Settings = ({navigation}: SettingsProps) => {
             title: 'Security',
             items: [
                 {
-                    name: 'Enable App Lock',
-                    isSwitch: true,
-                    action: () => navigation.navigate('AccountSetup'),
-                },
-                {
                     name: 'Security Level',
                     action: () => navigation.navigate('SecurityLevel'),
                 },
                 {
                     name: phraseBackedup ? 'Show Recovery Phrase' : 'Backup Recovery Phrase',
-                    action: () => navigation.navigate('RecoveryPhrase'),
+                    action: () => navigation.navigate('RecoveryPhrase', {fromSetting: true}),
+                },
+                {
+                    name: 'Enable App Lock',
+                    isSwitch: true,
+                    action: () => navigation.navigate('AccountSetup'),
                 },
             ],
         },

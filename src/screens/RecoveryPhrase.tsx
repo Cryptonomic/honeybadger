@@ -99,7 +99,7 @@ const RecoveryPhrase = ({navigation}: SeedPhraseProps) => {
                                 </Text>
                             </View>
                             <Button
-                                onPress={() => navigation.navigate("SeedPhrase")}
+                                onPress={() => navigation.navigate("SeedPhrase", {fromSetting: navigation.getParam('fromSetting')})}
                                 style={styles.btnBlack}>
                                 <Text>Got It</Text> 
                             </Button>

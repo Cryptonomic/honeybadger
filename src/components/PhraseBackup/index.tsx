@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef, Ref} from 'react';
 import {StyleSheet, TextInput, ScrollView, Alert, Modal} from 'react-native';
 import {View, Text, Container, Button} from 'native-base';
 import {useSelector} from 'react-redux';
@@ -19,6 +19,7 @@ const PhraseBackup = (props: any) => {
     const [back, setBack] = useState(false);
     const [phraseInputs, setPhraseInputs] = useState([{key: 0, value: ''}]);
     const [modalVisible, setModalVisible] = useState(false);
+    const inputRefs:any = useRef([]);
 
     useEffect(() => {
         generateNewPhrases();
@@ -84,6 +85,18 @@ const PhraseBackup = (props: any) => {
         generatePhrases();
     }
 
+    const changeFocus = (index: number) => {
+        console.log(inputRefs)
+        switch(index) {
+            case 1: 
+                inputRefs.current[0] && inputRefs.current[0].focus();
+            case 2: 
+                inputRefs.current[2] && inputRefs.current[2].focus();
+            case 3: 
+                inputRefs.current[3] && inputRefs.current[3].focus();
+        }
+    }
+
     return (
         <React.Fragment>
             {
@@ -105,10 +118,12 @@ const PhraseBackup = (props: any) => {
                                 return (
                                     <React.Fragment key={index}>
                                         <Text style={styles.typo2}>Word {item.key + 1}</Text>
-                                        <TextInput autoFocus={index === 0 ? true : false} style={styles.inputField} placeholder={`Recovery phrase word ${item.key + 1}`} value={item.value}
+                                        <TextInput ref={(el: any) => (inputRefs.current[index] = el)} returnKeyType={index !== 3 ? 'next' : 'done'} autoFocus={index === 0 ? true : false} style={styles.inputField} placeholder={`Recovery phrase word ${item.key + 1}`} value={item.value}
                                         onChangeText={text => {
                                             onInputChange(text, index, item);
-                                        }}/>
+                                        }}
+                                        onSubmitEditing={() => inputRefs.current[index+1] && inputRefs.current[index+1].focus()}
+                                        />
                                     </React.Fragment> 
                                 )
                             })
