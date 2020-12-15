@@ -129,9 +129,9 @@ const SecurityLevel = ({navigation}: SeedPhraseProps) => {
                                 <Text style={styles.typo6}>{ getLevelText() }</Text>
                                 <Text style={styles.typo3}>{ getSecurityLevelText() }</Text>
                             </View>
-                            <View style={{marginLeft: 10}}>
+                            {/* <View style={{marginLeft: 10}}>
                                 <Circle />
-                            </View>
+                            </View> */}
                             <View>
                                 { securityLevel !== "2" &&
                                     <RightArrow style={{width:9,height:14,marginLeft:10}} />
