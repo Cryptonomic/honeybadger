@@ -25,6 +25,14 @@ const SeedPhrase = ({navigation}: SeedPhraseProps) => {
         setCopied(true);
     };
 
+    const handleBack = () => {
+        if(navigation.getParam('fromSetting')) {
+            navigation.navigate("Settings")
+        } else {
+            navigation.navigate("SecurityLevel")
+        }
+    }
+
     return (
         <Container style={styles.container}>
             
@@ -32,7 +40,7 @@ const SeedPhrase = ({navigation}: SeedPhraseProps) => {
             <React.Fragment>
                 <CustomHeader
                     title="Account Mnemonic"
-                    onBack={() => navigation.goBack()}
+                    onBack={() => handleBack()}
                 />
                 <ScrollView contentContainerStyle={{flexGrow: 1}}>
                     <View style={styles.content}>

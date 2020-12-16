@@ -7,6 +7,7 @@ import QuiteIllustration from '../../assets/quiet.svg';
 import RightArrow from '../../assets/right-arr.svg';
 import {colors} from '../theme';
 import {SeedPhraseProps} from './types';
+import CustomHeader from '../components/CustomHeader';
 
 const RecoveryPhrase = ({navigation}: SeedPhraseProps) => {
     const [step, setStep] = useState(0);
@@ -14,65 +15,69 @@ const RecoveryPhrase = ({navigation}: SeedPhraseProps) => {
     return (
             <React.Fragment>
                 { step == 0 &&
-                    <Container style={styles.container}>
+                    <Container style={styles.yellowContainer}>
+                        <CustomHeader
+                            onBack={() => navigation.goBack()} />
                         <ScrollView contentContainerStyle={{flexGrow: 1}}>
-                            <Image style={{width:'100%',height:249,marginTop:34,marginBottom:60}} source={require('../../assets/banner.png')} />
-                            <View style={{alignItems:"center", paddingBottom:34, paddingTop:10, paddingLeft:60, paddingRight:60}}>
-                                
-                                <Text style={styles.typo1}>
-                                    Are you away from snooping eyes?
-                                </Text>
-                                <Text style={styles.typo5}>
-                                    Take a look arround. Make sure you have complete privacy and no one is looking over your shoulder.
-                                </Text>
-                                <Text style={styles.borderBottom}></Text>
-                                <Text style={styles.typo3}>
-                                    Anyone with your recovery phrase can steal your funds.
-                                </Text>
-                                <Button style={styles.btn} onPress={() => setStep(1)}>
-                                    <Text>I am ready</Text>
-                                </Button>
-                                <Text style={styles.typo6} onPress={() => navigation.navigate('Account')}>
-                                    No, I’ll do it later
-                                </Text>
+                            <View style={styles.container}>
+                                <Image style={{width:'100%',height:249,marginBottom:60}} source={require('../../assets/banner.png')} />
+                                <View style={{alignItems:"center", paddingBottom:34, paddingTop:10, paddingLeft:60, paddingRight:60}}>
+                                    
+                                    <Text style={styles.typo1}>
+                                        Are you away from snooping eyes?
+                                    </Text>
+                                    <Text style={styles.typo5}>
+                                        Take a look arround. Make sure you have complete privacy and no one is looking over your shoulder.
+                                    </Text>
+                                    <Text style={styles.borderBottom}></Text>
+                                    <Text style={styles.typo3}>
+                                        Anyone with your recovery phrase can steal your funds.
+                                    </Text>
+                                    <Button style={styles.btn} onPress={() => setStep(1)}>
+                                        <Text>I am ready</Text>
+                                    </Button>
+                                    <Text style={styles.typo6} onPress={() => navigation.navigate('Account')}>
+                                        No, I’ll do it later
+                                    </Text>
+                                </View>
                             </View>
                         </ScrollView>
                     </Container>
                 }
                 { step == 1 &&
                     <Container style={styles.containerYellow}>
-                    <ScrollView contentContainerStyle={{flexGrow: 1}}>
-                        <Image style={styles.backgroundImage} source={require('../../assets/banner.png')} />
-                        <View style={styles.content}>
-                            <Text style={styles.typo7}>
-                                Security Tips
-                            </Text>
-                            <Text style={styles.borderBottom}></Text>
-                            <MobileIllustration style={{marginTop:25,marginBottom:25,marginLeft:'auto',marginRight:'auto'}}></MobileIllustration>
-                            <Text style={styles.typo1}>
-                                Screenshots are not secure
-                            </Text>
-                            <Text style={styles.typo5}>
-                                Many apps have access to your media and can view your screenshots.
-                            </Text>
-                            <Text style={styles.typo5}>
-                            </Text>
-                            <View style={styles.levelMain}>
-                                <View style={styles.levels}>
-                                    <Text style={styles.orangeDot1}>
-                                    </Text>
-                                    <Text style={styles.greyDots1} onPress={()=> setStep(2)}>
-                                    </Text>
+                        <ScrollView contentContainerStyle={{flexGrow: 1}}>
+                            <Image style={styles.backgroundImage} source={require('../../assets/banner.png')} />
+                            <View style={styles.content}>
+                                <Text style={styles.typo7}>
+                                    Security Tips
+                                </Text>
+                                <Text style={styles.borderBottom}></Text>
+                                <MobileIllustration style={{marginTop:25,marginBottom:25,marginLeft:'auto',marginRight:'auto'}}></MobileIllustration>
+                                <Text style={styles.typo1}>
+                                    Screenshots are not secure
+                                </Text>
+                                <Text style={styles.typo5}>
+                                    Many apps have access to your media and can view your screenshots.
+                                </Text>
+                                <Text style={styles.typo5}>
+                                </Text>
+                                <View style={styles.levelMain}>
+                                    <View style={styles.levels}>
+                                        <Text style={styles.orangeDot1}>
+                                        </Text>
+                                        <Text style={styles.greyDots1} onPress={()=> setStep(2)}>
+                                        </Text>
+                                    </View>
+                                    <Button
+                                        onPress={() => setStep(2)}
+                                        style={styles.btnWhite}>
+                                        <Text style={{color:'#333'}}>Next</Text> 
+                                        <RightArrow></RightArrow>
+                                    </Button>
                                 </View>
-                                <Button
-                                    onPress={() => setStep(2)}
-                                    style={styles.btnWhite}>
-                                    <Text style={{color:'#333'}}>Next</Text> 
-                                    <RightArrow></RightArrow>
-                                </Button>
                             </View>
-                        </View>
-                    </ScrollView>
+                        </ScrollView>
                     </Container>
                 }
                 { step == 2 &&
@@ -99,7 +104,7 @@ const RecoveryPhrase = ({navigation}: SeedPhraseProps) => {
                                 </Text>
                             </View>
                             <Button
-                                onPress={() => navigation.navigate("SeedPhrase")}
+                                onPress={() => navigation.navigate("SeedPhrase", {fromSetting: navigation.getParam('fromSetting')})}
                                 style={styles.btnBlack}>
                                 <Text>Got It</Text> 
                             </Button>
@@ -114,7 +119,10 @@ const RecoveryPhrase = ({navigation}: SeedPhraseProps) => {
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: '#fff'
+        backgroundColor: '#fff',
+    },
+    yellowContainer: {
+        backgroundColor: colors.bg,
     },
     containerYellow: {
         backgroundColor: colors.bg,
@@ -125,6 +133,7 @@ const styles = StyleSheet.create({
         flexGrow: 1,
         borderTopLeftRadius: 26,
         borderTopRightRadius: 26,
+        overflow: "hidden",
         paddingHorizontal: 30,
         paddingTop:22,
         borderTopWidth:10,
