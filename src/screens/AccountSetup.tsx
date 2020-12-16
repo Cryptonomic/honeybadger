@@ -34,6 +34,7 @@ const AccountSetup = ({ navigation }: AccountSettingsProps) => {
                 securitySetup: true,
                 isBiometric: false,
                 pin: pin,
+                phraseBackedUpFirst: data.phraseBackedUpFirst ? data.phraseBackedUpFirst : false,
                 phraseBackedUp: data.phraseBackedUp ? data.phraseBackedUp : false
             }
             await Keychain.setInternetCredentials(
@@ -54,7 +55,9 @@ const AccountSetup = ({ navigation }: AccountSettingsProps) => {
         const setup = {
             securitySetup: true,
             isBiometric: true,
-            pin: data.pin
+            pin: data.pin,
+            phraseBackedUpFirst: data.phraseBackedUpFirst,
+            phraseBackedUp: data.phraseBackedUp
         }
         await Keychain.setInternetCredentials('securitySetup', 'userName', JSON.stringify(setup));
     }

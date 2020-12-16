@@ -62,7 +62,7 @@ const Account = ({navigation}: AccountProps) => {
                     data = JSON.parse(data.password);
                     if (data.securitySetup && data.phraseBackedUp) {
                         setSecurityLevel("2");    
-                    } else if(data.phraseBackedUp) {
+                    } else if(data.securitySetup || data.phraseBackedUp) {
                         setSecurityLevel("1")
                     } else {
                         setSecurityLevel("0");
@@ -93,7 +93,7 @@ const Account = ({navigation}: AccountProps) => {
                         data = JSON.parse(data.password);
                         if (data.securitySetup && data.phraseBackedUp) {
                             setSecurityLevel("2");    
-                        } else if(data.phraseBackedUp) {
+                        } else if (data.securitySetup || data.phraseBackedUp) {
                             setSecurityLevel("1")
                         } else {
                             setSecurityLevel("0");
