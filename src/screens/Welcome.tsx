@@ -163,9 +163,14 @@ const Welcome = ({navigation}: WelcomeProps) => {
                         }
                         {
                             (!isAccountPresent) &&
-                            <Button style={styles.btn} onPress={getStarted}>
-                                <Text style={styles.typo3}>Get Started</Text>
-                            </Button>
+                            <React.Fragment>
+                                <Button style={styles.btn} onPress={getStarted}>
+                                    <Text style={styles.typo3}>Restore Account</Text>
+                                </Button>
+                                <Button style={styles.btnWhite} onPress={getStarted}>
+                                    <Text style={styles.typo3White}>Create New Account</Text>
+                                </Button>
+                            </React.Fragment>
                         }
                     </View>
                 </View>
@@ -212,6 +217,17 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         marginTop: 10
     },
+    btnWhite: {
+        width: 256,
+        height: 50,
+        justifyContent: 'center',
+        borderRadius: 25,
+        backgroundColor: '#ffffff',
+        alignSelf: 'center',
+        marginTop: 10,
+        borderWidth: 1,
+        borderColor: '#4b4b4b'
+    },
     text: {
         flexDirection: 'row',
         alignItems: 'center',
@@ -240,6 +256,14 @@ const styles = StyleSheet.create({
         letterSpacing: 0.85,
         textTransform: 'capitalize',
     },
+    typo3White: {
+        fontFamily: 'Roboto-Medium',
+        fontSize: 17,
+        fontWeight: '500',
+        letterSpacing: 0.85,
+        textTransform: 'capitalize',
+        color: '#4b4b4b'
+    }
 });
 
 export default Welcome;
