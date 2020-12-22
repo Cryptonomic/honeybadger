@@ -11,30 +11,48 @@ import {
     MenuOption,
     MenuTrigger,
 } from 'react-native-popup-menu';
+import SeedInput from '../components/SeedInput';
+import CustomHeader from '../components/CustomHeader';
+import RecoveryOption from '../components/RecoveryOptions';
 
-import {syncAccount} from '../reducers/app/thunks';
-import {setMessage} from '../reducers/messages/actions';
-import Transactions from '../components/Transactions';
-import Delegation from '../components/Delegation';
-import SecurityLevelButton from '../components/SecurityLevelButton';
-import Receive from '../../assets/receive.svg';
-import Send from '../../assets/send.svg';
-
-import CustomIcon from '../components/CustomIcon';
-import {truncateHash} from '../utils/general';
-import {formatAmount} from '../utils/currency';
-
-import {State} from '../reducers/types';
 import {AccountProps} from './types';
-import Fish from '../../assets/fish.svg';
-import Circle from '../../assets/circle.svg';
-import RightArrow from '../../assets/right-arrow.svg';
-import Salmon from '../../assets/salmon.svg';
+import {colors} from '../theme';
 
 const RestoreAccount = ({navigation}: AccountProps) => {
+    const [step, setStep] = useState(1);
+
+    const handleSeeds = (seeds: String) => {
+        setStep(2);
+    }
+
+    const handleRecovery = (options: any) => {
+        // handle
+    }
+
     return (
-        <Text>Hello From Restore account</Text>
+        <Container style={styles.yellowContainer}>
+            <CustomHeader
+                title="Recovery Phrase"
+                onBack={() => navigation.replace('Welcome')}
+            />
+            {
+                step === 1 &&
+                <SeedInput onChange={handleSeeds}/>
+            }
+
+            {
+                step === 2 &&
+                <RecoveryOption onChange={handleRecovery}/>
+            }
+            
+        </Container>
     )
 }
 
+const styles = StyleSheet.create({
+    
+    yellowContainer: {
+        backgroundColor: colors.bg,
+    },
+});
 export default RestoreAccount;

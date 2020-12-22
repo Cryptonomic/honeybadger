@@ -164,7 +164,7 @@ const Welcome = ({navigation}: WelcomeProps) => {
                         {
                             (!isAccountPresent) &&
                             <React.Fragment>
-                                <Button style={styles.btn} onPress={getStarted}>
+                                <Button style={styles.btn} onPress={() => navigation.replace('RestoreAccount')}>
                                     <Text style={styles.typo3}>Restore Account</Text>
                                 </Button>
                                 <Button style={styles.btnWhite} onPress={getStarted}>
