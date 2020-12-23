@@ -34,7 +34,7 @@ const SeedInput = (props: any) => {
                         </Text>
                         <React.Fragment>
                             
-                        <TextInput style={styles.inputField} multiline={true} numberOfLines={5} autoFocus={true} onChangeText={(text): any => setSeeds(text) }/>
+                        <TextInput style={styles.inputField} multiline={true} numberOfLines={6} autoFocus={true} onChangeText={(text): any => setSeeds(text) }/>
                         </React.Fragment> 
                         <Button style={ isBtnDisabled() ? styles.btnDisabled : styles.btn} onPress={handleSeeds} disabled={isBtnDisabled()}>
                             <Text>Continue</Text>
@@ -106,7 +106,9 @@ const styles = StyleSheet.create({
         fontWeight: '300',
         marginBottom:30,
         lineHeight: 24,
-        color: '#4D4D4D'
+        color: '#4D4D4D',
+        textAlignVertical: 'top',
+        padding: 10
     },
     centeredView: {
         flex: 1,
