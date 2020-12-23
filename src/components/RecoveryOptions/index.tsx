@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, {useState, useEffect, useRef, Ref} from 'react';
-import {StyleSheet, TextInput, ScrollView, KeyboardAvoidingView, Platform, SafeAreaView} from 'react-native';
+import {StyleSheet, TextInput, ScrollView, KeyboardAvoidingView, Platform, SafeAreaView, Alert} from 'react-native';
 import {View, Text, Container, Button} from 'native-base';
 import {useSelector} from 'react-redux';
 import * as Keychain from 'react-native-keychain';
@@ -11,10 +11,14 @@ import CustomHeader from '../CustomHeader';
 
 const SeedInput = (props: any) => {
     const [password, setPassword] = useState('');
-    const [derivation, setDerivation] = useState('');
+    const [derivationPath, setDerivation] = useState('');
 
     const handleOptions = () => {
-        // 
+        if(!password.trim().length) {
+            Alert.alert("Password is required");
+        }
+
+        props.onChange({password, derivationPath});
     }
 
     return (
@@ -26,6 +30,7 @@ const SeedInput = (props: any) => {
                             If you’ve encrypted your recovery phrase with a password, please enter it below (optional)
                         </Text>
                         <TextInput style={styles.inputField} autoFocus={true} placeholder="Recovery Phrase Password" onChangeText={(text): any => setPassword(text) }/>
+                        <Text style={styles.label}>Enter a derivation path (optional)</Text>
                         <TextInput style={styles.inputField} placeholder="Default (44’/1792’/0/0/0’)" onChangeText={(text): any => setDerivation(text) }/>
                         <Button style={styles.btn} onPress={handleOptions}>
                             <Text>Continue</Text>
@@ -79,6 +84,13 @@ const styles = StyleSheet.create({
         lineHeight: 26,
         paddingTop:30,
         paddingBottom:30,
+    },
+    label: {
+        fontFamily: 'Roboto',
+        fontSize: 16,
+        fontWeight: '500',
+        lineHeight: 26,
+        paddingBottom:20,
     },
     typo2: {
         fontFamily: 'Roboto-Regular',
