@@ -14,10 +14,6 @@ const SeedInput = (props: any) => {
     const [derivationPath, setDerivation] = useState('');
 
     const handleOptions = () => {
-        if(!password.trim().length) {
-            Alert.alert("Password is required");
-        }
-
         props.onChange({password, derivationPath});
     }
 

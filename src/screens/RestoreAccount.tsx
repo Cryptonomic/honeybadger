@@ -7,6 +7,9 @@ import SeedInput from '../components/SeedInput';
 import CustomHeader from '../components/CustomHeader';
 import RecoveryOption from '../components/RecoveryOptions';
 import { getAccountInfo } from '../reducers/app/thunks';
+import * as Keychain from 'react-native-keychain';
+import {setKeysAction} from '../reducers/app/actions';
+import {useDispatch} from 'react-redux';
 
 import {AccountProps} from './types';
 import {colors} from '../theme';
@@ -18,7 +21,8 @@ const RestoreAccount = ({navigation}: AccountProps) => {
     const [derivationPath, setDerivationPath] = useState('');
     const [modalVisible, setModalVisible] = useState(false);
     const [errorText, setErrorText] = useState("");
-
+    const [isAccountNotFound, setAccountNotFound] = useState(false);
+    const dispatch = useDispatch();
 
     const handleSeeds = (seeds: string) => {
         setSeeds(seeds);
@@ -33,22 +37,47 @@ const RestoreAccount = ({navigation}: AccountProps) => {
             identity = await KeyStoreUtils.restoreIdentityFromMnemonic(seeds, password, '', derivationPath)
         } catch(error) {
             setErrorText(error.message);
-            setModalVisible(true)
+            setModalVisible(true);
+            return false;
         }
 
         const account = await getAccountInfo(identity.publicKeyHash).catch(
             () => false
         );
+        const termsDate = new Date().toLocaleString();
+
         if (!account) {
-            const title = 'Account does not exists';
+            const title = 'Account does not exists. We will create a new Account for you.';
             setErrorText(title);
-            setModalVisible(true)
+            setModalVisible(true);
+            setAccountNotFound(true);
+        } else {
+            await Keychain.resetGenericPassword();
+            await Keychain.setGenericPassword(
+                'newwallet',
+                JSON.stringify({...identity, termsDate}),
+            );
+            dispatch(setKeysAction(identity));   
+            navigation.replace('AccountSetup');
         }
     }
 
-    const closeModal = () => {
+    const closeModal = async() => {
         setModalVisible(false)
         setErrorText("");
+        if (isAccountNotFound) {
+            const termsDate = new Date().toLocaleString();
+            const keys = await KeyStoreUtils.generateIdentity();
+            await Keychain.resetGenericPassword();
+            await Keychain.setGenericPassword(
+                'newwallet',
+                JSON.stringify({...keys, termsDate}),
+            );
+            dispatch(setKeysAction(keys));
+            setTimeout(() => {
+                navigation.replace('AccountSetup');
+            }, 100);
+        }
     }
 
     return (
