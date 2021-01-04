@@ -32,7 +32,7 @@ const initialState = {
     delegateAddress: '',
     expectedPaymentDate: null,
     pendingTransactions: [],
-    pendingDelegations: [],
+    pendingDelegations: []
 };
 
 const app = (state = initialState, action: AppActions) => {
