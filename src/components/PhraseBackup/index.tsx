@@ -87,15 +87,11 @@ const PhraseBackup = (props: any) => {
         generatePhrases();
     }
 
-    const changeFocus = (index: number) => {
-        console.log(inputRefs)
-        switch(index) {
-            case 1: 
-                inputRefs.current[0] && inputRefs.current[0].focus();
-            case 2: 
-                inputRefs.current[2] && inputRefs.current[2].focus();
-            case 3: 
-                inputRefs.current[3] && inputRefs.current[3].focus();
+    const handleNext = (index: number) => {
+        if (inputRefs.current[index+1]) {
+            inputRefs.current[index+1].focus()
+        } else {
+            validatePhrase();
         }
     }
 
@@ -124,7 +120,7 @@ const PhraseBackup = (props: any) => {
                                         onChangeText={text => {
                                             onInputChange(text, index, item);
                                         }}
-                                        onSubmitEditing={() => inputRefs.current[index+1] && inputRefs.current[index+1].focus()}
+                                        onSubmitEditing={() => handleNext(index)}
                                         />
                                     </React.Fragment> 
                                 )
