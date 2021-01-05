@@ -36,11 +36,12 @@ const Settings = ({navigation}: SettingsProps) => {
                 if (data) {
                     if (data.securitySetup && data.phraseBackedUp) {
                         setSecurityLevel("2");    
-                    } else if(data.phraseBackedUp) {
+                    } else if(data.securitySetup || data.phraseBackedUp) {
                         setSecurityLevel("1")
                     } else {
                         setSecurityLevel("0");
                     }
+                    
                 } else {
                     setSecurityLevel("0");
                 }

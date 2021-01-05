@@ -59,7 +59,8 @@ const PhraseBackup = (props: any) => {
                     securitySetup: data.securitySetup,
                     isBiometric: data.isBiometric,
                     pin: data.pin,
-                    phraseBackedUp: true
+                    phraseBackedUp: true,
+                    phraseBackedUpFirst: data.phraseBackedUpFirst,
                 }
                 await Keychain.setInternetCredentials('securitySetup', 'userName', JSON.stringify(setup));
             } else {
@@ -68,6 +69,7 @@ const PhraseBackup = (props: any) => {
                     securitySetup: false,
                     isBiometric: false,
                     pin: '',
+                    phraseBackedUpFirst: true,
                     phraseBackedUp: true
                 }
 

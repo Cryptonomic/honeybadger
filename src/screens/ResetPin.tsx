@@ -81,7 +81,8 @@ const ResetPin = ({navigation}: SeedPhraseProps) => {
                 securitySetup: true,
                 isBiometric: securityConfig.isBiometric,
                 pin: pin,
-                phraseBackedUp: securityConfig.phraseBackedUp
+                phraseBackedUp: securityConfig.phraseBackedUp,
+                phraseBackedUpFirst: securityConfig.phraseBackedUpFirst,
             }
             await Keychain.setInternetCredentials(
                 'securitySetup',
