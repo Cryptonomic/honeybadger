@@ -161,7 +161,6 @@ const Account = ({navigation}: AccountProps) => {
 
     return (
         <Container style={styles.container}>
-            
             <ScrollView contentContainerStyle={{flexGrow: 1}}>
                 <View>
                     <View style={styles.account}>
@@ -465,7 +464,7 @@ const styles = StyleSheet.create({
         height: 24,
         justifyContent: 'flex-end',
         position: 'relative',
-        marginTop: 20
+        marginTop: 44
     },
     amount: {
         marginTop: 20,

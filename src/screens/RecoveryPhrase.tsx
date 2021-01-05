@@ -44,7 +44,7 @@ const RecoveryPhrase = ({navigation}: SeedPhraseProps) => {
                         </ScrollView>
                     </Container>
                 }
-                { step ==1 &&
+                { step == 1 &&
                     <Container style={styles.containerYellow}>
                         <ScrollView contentContainerStyle={{flexGrow: 1}}>
                             <Image style={styles.backgroundImage} source={require('../../assets/banner.png')} />
