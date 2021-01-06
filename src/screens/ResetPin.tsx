@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {StyleSheet, TextInput, ScrollView, Alert, Modal} from 'react-native';
 import {View, Text, Container, Button} from 'native-base';
 import {useSelector} from 'react-redux';
@@ -9,6 +9,7 @@ import CustomHeader from '../components/CustomHeader';
 import PinCode from '../components/PinCode';
 import EnableBiometric from '../components/EnableBiometric';
 import {State} from '../reducers/types';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 import {SeedPhraseProps} from './types';
 
@@ -21,6 +22,7 @@ const ResetPin = ({navigation}: SeedPhraseProps) => {
     const [back, setBack] = useState(false);
     const [phraseInputs, setPhraseInputs] = useState([{key: 0, value: ''}]);
     const [modalVisible, setModalVisible] = useState(false);
+    const inputRefs:any = useRef([]);
 
     useEffect(() => { 
         generateNewPhrases();
@@ -106,6 +108,14 @@ const ResetPin = ({navigation}: SeedPhraseProps) => {
         return false;
     }
 
+    const handleNext = (index: number) => {
+        if (inputRefs.current[index+1]) {
+            inputRefs.current[index+1].focus()
+        } else {
+            validatePhrase();
+        }
+    }
+
     return (
         <React.Fragment>
             <Container style={styles.container}>
@@ -123,7 +133,7 @@ const ResetPin = ({navigation}: SeedPhraseProps) => {
                 
                 { 
                     step === "VERIFY" &&
-                    <ScrollView contentContainerStyle={{flexGrow: 1}}>
+                    <KeyboardAwareScrollView>
                         <View style={styles.content}>
                             <Text style={styles.typo1}>
                             Enter the following four words from your recovery phrase to verify your ownership of this account.
@@ -133,10 +143,17 @@ const ResetPin = ({navigation}: SeedPhraseProps) => {
                                     return (
                                         <React.Fragment key={index}>
                                             <Text style={styles.typo2}>Word {item.key + 1}</Text>
-                                            <TextInput autoFocus={index === 0 ? true : false} style={styles.inputField} placeholder={`Recovery phrase word ${item.key + 1}`} value={item.value}
+                                            {/* <TextInput autoFocus={index === 0 ? true : false} style={styles.inputField} placeholder={`Recovery phrase word ${item.key + 1}`} value={item.value}
                                             onChangeText={text => {
                                                 onInputChange(text, index, item);
-                                            }}/>
+                                            }}/> */}
+
+                                            <TextInput ref={(el: any) => (inputRefs.current[index] = el)} returnKeyType={index !== 3 ? 'next' : 'done'} autoFocus={index === 0 ? true : false} style={styles.inputField} placeholder={`Recovery phrase word ${item.key + 1}`} value={item.value}
+                                                onChangeText={text => {
+                                                    onInputChange(text, index, item);
+                                                }}
+                                                onSubmitEditing={() => handleNext(index)}
+                                            />
                                         </React.Fragment> 
                                     )
                                 })
@@ -145,7 +162,7 @@ const ResetPin = ({navigation}: SeedPhraseProps) => {
                                 <Text>Reset PIN</Text>
                             </Button>
                         </View>
-                    </ScrollView>
+                    </KeyboardAwareScrollView>
                 }
                 {
                     step === "PIN" &&

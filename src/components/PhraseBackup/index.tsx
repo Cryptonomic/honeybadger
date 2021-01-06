@@ -9,7 +9,7 @@ import {colors} from '../../theme';
 import CustomHeader from '../CustomHeader';
 import {State} from '../../reducers/types';
 import PhraseBackupSuccess from './PhraseBackupSuccess';
-
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 const PhraseBackup = (props: any) => {
     
@@ -106,7 +106,7 @@ const PhraseBackup = (props: any) => {
             }
             {
                 step === "VERIFY" &&
-                <ScrollView contentContainerStyle={{flexGrow: 1}} keyboardShouldPersistTaps={'handled'}>
+                <KeyboardAwareScrollView>
                     <View style={styles.content}>
                         <Text style={styles.typo1}>
                         To verify that you have backed up your recovery phrase, Please type in the following four words.
@@ -130,7 +130,7 @@ const PhraseBackup = (props: any) => {
                             <Text>Submit</Text>
                         </Button>
                     </View>
-                </ScrollView>
+                </KeyboardAwareScrollView>
             }
             {
                 step === "SUCCESS" &&
