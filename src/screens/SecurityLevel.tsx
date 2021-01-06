@@ -19,6 +19,13 @@ import {SeedPhraseProps} from './types';
 
 const SecurityLevel = ({navigation}: SeedPhraseProps) => {
     const [securityLevel, setSecurityLevel] = useState("0");
+    const  [data, setData] = useState({
+        phraseBackedUpFirst: false,
+        phraseBackedUp: false,
+        securitySetup: false
+    });
+    const [isAvailable, setAvailable] = useState(true);
+
 
     useLayoutEffect(() => {
         const loadInitialState = async () => {
@@ -26,15 +33,17 @@ const SecurityLevel = ({navigation}: SeedPhraseProps) => {
                 let data: any= await Keychain.getInternetCredentials('securitySetup');
                 if (data) {
                     data = JSON.parse(data.password);
+                    setData(data);
                     if (data.securitySetup && data.phraseBackedUp) {
                         setSecurityLevel("2");    
-                    } else if(data.phraseBackedUp) {
-                        setSecurityLevel("1")
+                    } else if(data.securitySetup || data.phraseBackedUp) {
+                        setSecurityLevel("1");
                     } else {
                         setSecurityLevel("0");
                     }
                 } else {
                     setSecurityLevel("0");
+                    setAvailable(false);
                 }
             } catch (error) {
                 console.log("Keychain couldn't be accessed!", error);
@@ -61,8 +70,16 @@ const SecurityLevel = ({navigation}: SeedPhraseProps) => {
             return "Your funds are not secure!";
         }
 
-        if (securityLevel === "1") {
+        if (securityLevel === "1" && (!isAvailable || data.phraseBackedUpFirst) ) {
             return "Recovery Phrase Backed Up";
+        } else if(securityLevel === "1") {
+            return "App Lock Enabled"
+        }
+        
+        if (securityLevel === "2" && (!isAvailable || data.phraseBackedUpFirst)) {
+            return "App Lock Enabled";
+        } else if(securityLevel === "2") {
+            return "Recovery Phrase Backed Up"
         }
 
         return "App Lock Enabled";
@@ -81,11 +98,33 @@ const SecurityLevel = ({navigation}: SeedPhraseProps) => {
     }
 
     const handleNavigation = () => {
-        if (securityLevel === '1') {
+        if (securityLevel === '1' && (!isAvailable || data.phraseBackedUpFirst)) {
             navigation.navigate("AccountSetup")
+        } else if(securityLevel === '1' && (!isAvailable || !data.phraseBackedUpFirst)) {
+            navigation.navigate("RecoveryPhrase", {fromSetting: false});
         } else if(securityLevel === '0') {
             navigation.navigate("RecoveryPhrase", {fromSetting: false});
         }
+    }
+
+    const getSecurityLevelForStepper = (level: string) => {
+        if (level === "0") {
+            return "No Security";
+        }
+
+        if (level === "1" && (!isAvailable || data.phraseBackedUpFirst)) {
+            return "Back Up Recovery Phrase";
+        } else if(level === "1") {
+            return "Enable App Lock"
+        }
+        
+        if (level === "2" && (!isAvailable || data.phraseBackedUpFirst)) {
+            return "Enable App Lock";
+        } else if(level === "2") {
+            return "Back Up Recovery Phrase"
+        }
+
+        return "Enable App Lock";
     }
 
     return (
@@ -181,7 +220,7 @@ const SecurityLevel = ({navigation}: SeedPhraseProps) => {
                                             </View>
                                         </React.Fragment>
                                     }
-                                    { securityLevel === "2" &&
+                                    {  securityLevel === "2" &&
                                         <React.Fragment>
                                             <View style={styles.dotsContainer}>
                                                 <Text style={styles.greyDots2}></Text>
@@ -217,7 +256,7 @@ const SecurityLevel = ({navigation}: SeedPhraseProps) => {
                                         </View>
                                         <View>
                                             <Text style={styles.typo3}>Level 2: Savvy Salmon</Text>
-                                            <Text style={styles.typo6}>Back Up Recovery Phrase</Text>
+                                            <Text style={styles.typo6}>{getSecurityLevelForStepper("1")}</Text>
                                         </View>
                                     </View>
                                     <View style={styles.levels}>
@@ -226,7 +265,7 @@ const SecurityLevel = ({navigation}: SeedPhraseProps) => {
                                         </View>
                                         <View>
                                             <Text style={styles.typo3}>Level 3: Discreet Dolphin</Text>
-                                            <Text style={styles.typo6}>Enable App Lock</Text>
+                                            <Text style={styles.typo6}>{getSecurityLevelForStepper("2")}</Text>
                                         </View>
                                     </View>
                                 </View>
