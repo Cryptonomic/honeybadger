@@ -10,6 +10,7 @@ import { getAccountInfo } from '../reducers/app/thunks';
 import * as Keychain from 'react-native-keychain';
 import {setKeysAction} from '../reducers/app/actions';
 import {useDispatch} from 'react-redux';
+import bip39 from 'react-native-bip39';
 
 import {AccountProps} from './types';
 import {colors} from '../theme';
@@ -21,12 +22,21 @@ const RestoreAccount = ({navigation}: AccountProps) => {
     const [derivationPath, setDerivationPath] = useState('');
     const [modalVisible, setModalVisible] = useState(false);
     const [errorText, setErrorText] = useState("");
+    const [infoModalVisible, setInfoModalVisible] = useState(false);
+    const [infoText, setInfoText] = useState(false);
     const [isAccountNotFound, setAccountNotFound] = useState(false);
+    const [identityData, setIdentity]: any = useState({});
     const dispatch = useDispatch();
 
     const handleSeeds = (seeds: string) => {
+        seeds = seeds.trim().toLowerCase();
         setSeeds(seeds);
-        setStep(2);
+        if( bip39.validateMnemonic(seeds) ) {
+            setStep(2);
+        } else {
+            setErrorText("Invalid mnemonic");
+            setModalVisible(true);
+        }
     }
 
     const handleRecovery = async (options: any) => {
@@ -41,24 +51,39 @@ const RestoreAccount = ({navigation}: AccountProps) => {
             return false;
         }
 
-        const account = await getAccountInfo(identity.publicKeyHash).catch(
-            () => false
-        );
-        const termsDate = new Date().toLocaleString();
+        setIdentity(identity);
+        setInfoText(identity.publicKeyHash);
+        setInfoModalVisible(true);        
+    }
 
-        if (!account) {
-            const title = 'Account does not exists. We will create a new Account for you.';
+    const recoverAccount = async () => {
+       
+        if( identityData.publicKeyHash ) {
+            const account = await getAccountInfo(identityData.publicKeyHash).catch(
+                () => false
+            );
+            const termsDate = new Date().toLocaleString();
+            setInfoModalVisible(false); 
+            if (!account) {
+                const title = 'Account does not exists. We will create a new Account for you.';
+                setErrorText(title);
+                setModalVisible(true);
+                setAccountNotFound(true);
+            } else {
+                await Keychain.resetGenericPassword();
+                await Keychain.setGenericPassword(
+                    'newwallet',
+                    JSON.stringify({...identityData, termsDate}),
+                );
+                dispatch(setKeysAction(identityData));   
+                navigation.replace('AccountSetup');
+            }
+        } else {
+            setInfoModalVisible(false); 
+            const title = 'Unable to recover Account.';
             setErrorText(title);
             setModalVisible(true);
             setAccountNotFound(true);
-        } else {
-            await Keychain.resetGenericPassword();
-            await Keychain.setGenericPassword(
-                'newwallet',
-                JSON.stringify({...identity, termsDate}),
-            );
-            dispatch(setKeysAction(identity));   
-            navigation.replace('AccountSetup');
         }
     }
 
@@ -109,6 +134,21 @@ const RestoreAccount = ({navigation}: AccountProps) => {
                         <Text style={styles.typo2}>{errorText}</Text>
                         <Button style={styles.modalBtn} onPress={closeModal}>
                             <Text>Close</Text>
+                        </Button>
+                    </View>
+                </View>
+            </Modal>
+            <Modal
+                animationType="fade"
+                transparent={true}
+                visible={infoModalVisible}
+            >
+                <View style={styles.centeredView}>
+                    <View style={styles.modalView}>
+                        <Text style={styles.modalText}>Found Account</Text>
+                        <Text style={styles.typo2}>{infoText}</Text>
+                        <Button style={styles.modalBtn} onPress={recoverAccount}>
+                            <Text>Proceed</Text>
                         </Button>
                     </View>
                 </View>
