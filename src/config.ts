@@ -4,7 +4,7 @@ export default [
         nodeUrl: '',
         url: '',
         apiKey: '',
-        network: '',
-        displayNetwork: '',
+        network: 'mainnet',
+        displayNetwork: 'mainnet',
     },
 ];

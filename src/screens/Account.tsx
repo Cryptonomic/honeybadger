@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, {useState, useEffect} from 'react';
-import {StyleSheet} from 'react-native';
+import {StyleSheet, Image, TouchableOpacity, ScrollView} from 'react-native';
 import {Container, Button, Text, View, Header} from 'native-base';
 import * as Keychain from 'react-native-keychain';
 import Modal from 'react-native-modal';
@@ -26,6 +26,10 @@ import {formatAmount} from '../utils/currency';
 
 import {State} from '../reducers/types';
 import {AccountProps} from './types';
+import Fish from '../../assets/fish.svg';
+import Circle from '../../assets/circle.svg';
+import RightArrow from '../../assets/right-arrow.svg';
+import Salmon from '../../assets/salmon.svg';
 
 const Account = ({navigation}: AccountProps) => {
     const dispatch = useDispatch();
@@ -40,7 +44,7 @@ const Account = ({navigation}: AccountProps) => {
     const hasPendingOperations = useSelector((state: State) => (state.app.pendingDelegations.length > 0 || state.app.pendingTransactions.length > 0));
     const [isPendingModalVisible, setPendingModalVisible] = useState(false);
     const [refreshTimer, setRefreshTimer] = useState(undefined as any);
-
+    const [securityLevel, setSecurityLevel] = useState("3");
     const changeTab = (newTab: number) => {
         if (newTab === tab) {
             return;
@@ -53,6 +57,20 @@ const Account = ({navigation}: AccountProps) => {
         async function load() {
             try {
                 const wallet = await Keychain.getGenericPassword();
+                let data: any= await Keychain.getInternetCredentials('securitySetup');
+                if(data) {
+                    data = JSON.parse(data.password);
+                    if (data.securitySetup && data.phraseBackedUp) {
+                        setSecurityLevel("2");    
+                    } else if(data.securitySetup || data.phraseBackedUp) {
+                        setSecurityLevel("1")
+                    } else {
+                        setSecurityLevel("0");
+                    }
+                } else {
+                    setSecurityLevel("0");
+                }
+               
                 if (wallet) {
                     dispatch(syncAccount());
                     if (!refreshTimer) {
@@ -61,12 +79,35 @@ const Account = ({navigation}: AccountProps) => {
                 } else {
                     navigation.replace('Welcome');
                 }
+                
             } catch (error) {
                 console.log("Keychain couldn't be accessed!", error);
             }
         }
         load();
-    }, []);
+        navigation.addListener(
+            'didFocus', async (payload: any) => {
+                try {
+                    let data: any= await Keychain.getInternetCredentials('securitySetup');
+                    if(data) {
+                        data = JSON.parse(data.password);
+                        if (data.securitySetup && data.phraseBackedUp) {
+                            setSecurityLevel("2");    
+                        } else if (data.securitySetup || data.phraseBackedUp) {
+                            setSecurityLevel("1")
+                        } else {
+                            setSecurityLevel("0");
+                        }
+                    } else {
+                        setSecurityLevel("0");
+                    }
+                } catch (error) {
+                    // error
+                }
+            }
+        )
+
+    }, [navigation]);
 
     const onPress = (value: string) => {
         if (balance === 0 && value === 'SendAddress') {
@@ -114,178 +155,240 @@ const Account = ({navigation}: AccountProps) => {
         //{ title: 'Clear Data', action: onClearData }
     ];
 
+    const navigateToSecurity = () => {
+        navigation.navigate("SecurityLevel")
+    }
+
     return (
         <Container style={styles.container}>
-            <Header transparent />
-            <View>
-                <View style={styles.account}>
-                    {/*<Text style={styles.typo1}>{`My account (${truncateHash(
-                        publicKeyHash,
-                    )})`}</Text>*/}
-                    <Menu
-                        opened={openSettings}
-                        onBackdropPress={() => setOpenSettings(false)}
-                        style={styles.menu}>
-                        <MenuTrigger
-                            customStyles={{
-                                TriggerTouchableComponent: () => (
-                                    <Button
-                                        style={styles.menuBtn}
-                                        transparent
-                                        onPress={() => setOpenSettings(true)}>
-                                        <View style={styles.icon}>
-                                            <View style={styles.dot} />
-                                            <View style={styles.dot} />
-                                            <View style={styles.dot} />
-                                        </View>
-                                    </Button>
-                                ),
-                            }}
-                        />
-                        <MenuOptions optionsContainerStyle={styles.menuOptions}>
-                            {menuItems.map((item, index) => (
-                                <MenuOption
-                                    onSelect={() => item.action(item)}
-                                    value={item.title}
-                                    text={item.title}
-                                    key={item.title}
-                                    customStyles={{
-                                        optionWrapper:
-                                            index === menuItems.length - 1
-                                                ? styles.menuOption
-                                                : [
-                                                      styles.menuOption,
-                                                      styles.menuLastItem,
-                                                  ],
-                                        optionText: styles.typo5,
-                                    }}
-                                />
-                            ))}
-                        </MenuOptions>
-                    </Menu>
-                </View>
-                <View style={styles.amount}>
-                    <View style={[styles.center, styles.row]}>
-                        <Text style={styles.typo2}>
-                            {formatAmount(balance)}
-                        </Text>
-                        <CustomIcon name="XTZ" size={30} color="#1a1919" />
+            <ScrollView contentContainerStyle={{flexGrow: 1}}>
+                <View>
+                    <View style={styles.account}>
+                        {/*<Text style={styles.typo1}>{`My account (${truncateHash(
+                            publicKeyHash,
+                        )})`}</Text>*/}
+                        <Menu
+                            opened={openSettings}
+                            onBackdropPress={() => setOpenSettings(false)}
+                            style={styles.menu}>
+                            <MenuTrigger
+                                customStyles={{
+                                    TriggerTouchableComponent: () => (
+                                        <Button
+                                            style={styles.menuBtn}
+                                            transparent
+                                            onPress={() => setOpenSettings(true)}>
+                                            <View style={styles.icon}>
+                                                <View style={styles.dot} />
+                                                <View style={styles.dot} />
+                                                <View style={styles.dot} />
+                                            </View>
+                                        </Button>
+                                    ),
+                                }}
+                            />
+                            <MenuOptions optionsContainerStyle={styles.menuOptions}>
+                                {menuItems.map((item, index) => (
+                                    <MenuOption
+                                        onSelect={() => item.action(item)}
+                                        value={item.title}
+                                        text={item.title}
+                                        key={item.title}
+                                        customStyles={{
+                                            optionWrapper:
+                                                index === menuItems.length - 1
+                                                    ? styles.menuOption
+                                                    : [
+                                                        styles.menuOption,
+                                                        styles.menuLastItem,
+                                                    ],
+                                            optionText: styles.typo5,
+                                        }}
+                                    />
+                                ))}
+                            </MenuOptions>
+                        </Menu>
                     </View>
-                    {/*<View style={styles.center}>
-                        <Text style={styles.typo3}>$0.00</Text>
-                    </View>*/}
-                </View>
-                <View style={styles.actions}>
-                    <View style={styles.center}>
-                        <Button transparent onPress={() => onPress('Receive')}>
-                            <View style={styles.actionCircle}>
-                                <Receive />
-                            </View>
-                        </Button>
-                        <Text style={[styles.actionLabel, styles.typo4]}>
-                            Receive
-                        </Text>
-                    </View>
-                    <View style={styles.center}>
-                        <Button
-                            transparent
-                            onPress={() => onPress('SendAddress')}>
-                            <View style={styles.actionCircle}>
-                                <Send />
-                            </View>
-                        </Button>
-                        <Text style={[styles.actionLabel, styles.typo4]}>
-                            Send
-                        </Text>
-                    </View>
-                </View>
-            </View>
-            <View style={styles.bottom}>
-                {/*((transactions.length > 0 && tab === 0) ||
-                    (delegations.length > 0 && tab === 1)) && (
-                    <View style={styles.securityBtn}>
-                        <SecurityLevelButton />
-                    </View>
-                )*/}
-                <View style={styles.tabs}>
-                    <View
-                        style={[
-                            styles.tab,
-                            tab === 0
-                                ? styles.tabBorderActive
-                                : styles.tabBorderInactive,
-                        ]}>
-                        <Button
-                            style={styles.tabBtn}
-                            transparent
-                            onPress={() => changeTab(0)}>
-                            <Text
-                                style={[
-                                    styles.typo3,
-                                    tab === 0
-                                        ? styles.tabActive
-                                        : styles.tabInactive,
-                                ]}>
-                                Transactions
+                    <View style={styles.amount}>
+                        <View style={[styles.center, styles.row]}>
+                            <Text style={styles.typo2}>
+                                {formatAmount(balance)}
                             </Text>
-                        </Button>
+                            <CustomIcon name="XTZ" size={30} color="#1a1919" />
+                        </View>
+                        {/*<View style={styles.center}>
+                            <Text style={styles.typo3}>$0.00</Text>
+                        </View>*/}
                     </View>
-                    <View
-                        style={[
-                            styles.tab,
-                            tab === 1
-                                ? styles.tabBorderActive
-                                : styles.tabBorderInactive,
-                        ]}>
-                        <Button
-                            style={styles.tabBtn}
-                            transparent
-                            onPress={() => changeTab(1)}>
-                            <Text
-                                style={[
-                                    styles.typo3,
-                                    tab === 1
-                                        ? styles.tabActive
-                                        : styles.tabInactive,
-                                ]}>
-                                Delegation
+                    <View style={styles.actions}>
+                        <View style={styles.center}>
+                            <Button transparent onPress={() => onPress('Receive')}>
+                                <View style={styles.actionCircle}>
+                                    <Receive />
+                                </View>
+                            </Button>
+                            <Text style={[styles.actionLabel, styles.typo4]}>
+                                Receive
                             </Text>
-                        </Button>
+                        </View>
+                        <View style={styles.center}>
+                            <Button
+                                transparent
+                                onPress={() => onPress('SendAddress')}>
+                                <View style={styles.actionCircle}>
+                                    <Send />
+                                </View>
+                            </Button>
+                            <Text style={[styles.actionLabel, styles.typo4]}>
+                                Send
+                            </Text>
+                        </View>
                     </View>
                 </View>
-                <View style={styles.tabContainer}>
-                    {tab === 0 && <Transactions />}
-                    {tab === 1 && <Delegation onDelegate={onDelegate} />}
+                <View style={styles.bottom}>
+                    {/*((transactions.length > 0 && tab === 0) ||
+                        (delegations.length > 0 && tab === 1)) && (
+                        <View style={styles.securityBtn}>
+                            <SecurityLevelButton />
+                        </View>
+                    )*/}
+                    {
+                        securityLevel === "0" &&
+                        <TouchableOpacity style={styles.security} onPress={() => navigateToSecurity()}>
+                            <View>
+                                {/* <Image style={{width:47,height:35,marginRight:16}} source={require('../../assets/fish.png')} /> */}
+                                <Fish style={{width:47,height:35,marginRight:16}}/>
+                            </View>
+                            <View style={{width:'75%'}}>
+                                <Text style={styles.typo6}>Your Security Level</Text>
+                                <Text style={styles.typo3}>Level 1: Goldfish</Text>
+                            </View>
+                            {/* <View>
+                                <Circle style={{width:60,height:59,marginRight:16}}/>
+                            </View> */}
+                            <View>
+                                <RightArrow style={{width:9,height:14}}/> 
+                            </View>
+                        </TouchableOpacity>
+                    }
+                    {
+                        securityLevel === "1" &&
+                        <TouchableOpacity style={styles.security} onPress={() => navigateToSecurity()}>
+                            <View>
+                                <Salmon style={{width:47,height:35,marginRight:16}}/>
+                            </View>
+                            <View style={{width:'75%'}}>
+                                <Text style={styles.typo6}>Your Security Level</Text>
+                                <Text style={styles.typo3}>Level 2: Savvy Salmon</Text>
+                            </View>
+                            {/* <View>
+                            <Circle style={{width:60,height:59,marginRight:16}}/>
+                            </View> */}
+                            <View>
+                                <RightArrow style={{width:9,height:14}}/>
+                            </View>
+                        </TouchableOpacity>
+                    }
+                    {/* {
+                        securityLevel === "2" &&
+                        <TouchableOpacity style={styles.security} onPress={() => navigateToSecurity()}>
+                            <View>
+                                <Image style={{width:47,height:35,marginRight:16}} source={require('../../assets/dolphin.png')} />
+                            </View>
+                            <View style={{width:'57%'}}>
+                                <Text style={styles.typo6}>Your Security Level</Text>
+                                <Text style={styles.typo3}>Level 3: Discreet Dolphin</Text>
+                            </View>
+                            <View>
+                                <Image style={{width:60,height:59,marginRight:16}} source={require('../../assets/circle.png')} />
+                            </View>
+                            <View>
+                                <Image style={{width:9,height:14}} source={require('../../assets/right-arrow.png')} />
+                            </View>
+                        </TouchableOpacity>
+                    } */}
+                    
+                    
+                    <View style={styles.tabs}>
+                        <View
+                            style={[
+                                styles.tab,
+                                tab === 0
+                                    ? styles.tabBorderActive
+                                    : styles.tabBorderInactive,
+                            ]}>
+                            <Button
+                                style={styles.tabBtn}
+                                transparent
+                                onPress={() => changeTab(0)}>
+                                <Text
+                                    style={[
+                                        styles.typo3,
+                                        tab === 0
+                                            ? styles.tabActive
+                                            : styles.tabInactive,
+                                    ]}>
+                                    Transactions
+                                </Text>
+                            </Button>
+                        </View>
+                        <View
+                            style={[
+                                styles.tab,
+                                tab === 1
+                                    ? styles.tabBorderActive
+                                    : styles.tabBorderInactive,
+                            ]}>
+                            <Button
+                                style={styles.tabBtn}
+                                transparent
+                                onPress={() => changeTab(1)}>
+                                <Text
+                                    style={[
+                                        styles.typo3,
+                                        tab === 1
+                                            ? styles.tabActive
+                                            : styles.tabInactive,
+                                    ]}>
+                                    Delegation
+                                </Text>
+                            </Button>
+                        </View>
+                    </View>
+                    <View style={styles.tabContainer}>
+                        {tab === 0 && <Transactions />}
+                        {tab === 1 && <Delegation onDelegate={onDelegate} />}
+                    </View>
                 </View>
-            </View>
 
-            <Modal isVisible={isModalVisible}>
-                <View style={styles.warningModal}>
-                    <Text style={{marginBottom: 5}}>
-                        We only recommend storing and transferring small amounts
-                        of tez with this mobile wallet. You might want to wait
-                        for hardware wallet support for larger amounts.
-                    </Text>
-                    <Button
-                        onPress={toggleModal}
-                        style={styles.warningModalButton}>
-                        <Text>OK</Text>
-                    </Button>
-                </View>
-            </Modal>
+                <Modal isVisible={isModalVisible}>
+                    <View style={styles.warningModal}>
+                        <Text style={{marginBottom: 5}}>
+                            We only recommend storing and transferring small amounts
+                            of tez with this mobile wallet. You might want to wait
+                            for hardware wallet support for larger amounts.
+                        </Text>
+                        <Button
+                            onPress={toggleModal}
+                            style={styles.warningModalButton}>
+                            <Text>OK</Text>
+                        </Button>
+                    </View>
+                </Modal>
 
-            <Modal isVisible={isPendingModalVisible}>
-                <View style={styles.warningModal}>
-                    <Text style={{marginBottom: 5}}>
-                        There is a pending operation awaiting processing on the chain. It must be included in a block or time out. New operations cannot be submitted until then.
-                    </Text>
-                    <Button
-                        onPress={togglePendingModal}
-                        style={styles.warningModalButton}>
-                        <Text>OK</Text>
-                    </Button>
-                </View>
-            </Modal>
+                <Modal isVisible={isPendingModalVisible}>
+                    <View style={styles.warningModal}>
+                        <Text style={{marginBottom: 5}}>
+                            There is a pending operation awaiting processing on the chain. It must be included in a block or time out. New operations cannot be submitted until then.
+                        </Text>
+                        <Button
+                            onPress={togglePendingModal}
+                            style={styles.warningModalButton}>
+                            <Text>OK</Text>
+                        </Button>
+                    </View>
+                </Modal>
+            </ScrollView>
         </Container>
     );
 };
@@ -361,6 +464,7 @@ const styles = StyleSheet.create({
         height: 24,
         justifyContent: 'flex-end',
         position: 'relative',
+        marginTop: 44
     },
     amount: {
         marginTop: 20,
@@ -456,6 +560,30 @@ const styles = StyleSheet.create({
         fontSize: 16,
         letterSpacing: 0.67,
     },
+    typo6: {
+        fontFamily: 'Roboto-Light',
+        fontWeight: '300',
+        fontSize: 14,
+    },
+    security: {
+        borderRadius: 9,
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.10,
+        shadowRadius: 3.84,
+        elevation: 5,
+        padding: 16,
+        margin:20,
+        backgroundColor: '#fff',
+        width: '90%',
+        flexDirection: 'row',
+        alignItems:'center'
+    },
+    inlineElements: {
+    }
 });
 
 export default Account;

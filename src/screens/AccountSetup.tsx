@@ -25,10 +25,17 @@ const AccountSetup = ({ navigation }: AccountSettingsProps) => {
         if (pin !== pinCode) {
             Alert.alert("Pin and confirm pin did not match");
         } else {
+            let data: any= await Keychain.getInternetCredentials('securitySetup');
+            if(data) {
+                data = JSON.parse(data.password);
+            }
+            
             const setup = {
                 securitySetup: true,
                 isBiometric: false,
-                pin: pin
+                pin: pin,
+                phraseBackedUpFirst: data.phraseBackedUpFirst ? data.phraseBackedUpFirst : false,
+                phraseBackedUp: data.phraseBackedUp ? data.phraseBackedUp : false
             }
             await Keychain.setInternetCredentials(
                 'securitySetup',
@@ -48,7 +55,9 @@ const AccountSetup = ({ navigation }: AccountSettingsProps) => {
         const setup = {
             securitySetup: true,
             isBiometric: true,
-            pin: data.pin
+            pin: data.pin,
+            phraseBackedUpFirst: data.phraseBackedUpFirst,
+            phraseBackedUp: data.phraseBackedUp
         }
         await Keychain.setInternetCredentials('securitySetup', 'userName', JSON.stringify(setup));
     }

@@ -95,7 +95,8 @@ const Transactions = () => {
                 displayTransactions.map((t: any) => (
                     <TouchableOpacity
                         style={styles.list}
-                        onPress={() => onTransactionPress(t.opGroupHash)}>
+                        onPress={() => onTransactionPress(t.opGroupHash)}
+                        key={t.address}>
                         <View style={styles.listItem}>
                             <View style={styles.left}>
                                 <CustomIcon
@@ -168,6 +169,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         flexWrap: 'wrap',
         justifyContent: 'center',
+        marginBottom: 50
     },
     list: {
         width: '90%',
