@@ -12,30 +12,30 @@ import {setKeysAction} from '../reducers/app/actions';
 import {useDispatch} from 'react-redux';
 import bip39 from 'react-native-bip39';
 
+import {splitHash} from '../utils/general';
 import {AccountProps} from './types';
 import {colors} from '../theme';
 
 const RestoreAccount = ({navigation}: AccountProps) => {
     const [step, setStep] = useState(1);
-    const [seeds, setSeeds] = useState("");
+    const [mnemonic, setMnemonic] = useState('');
     const [password, setPassword] = useState('');
     const [derivationPath, setDerivationPath] = useState('');
-    const [modalVisible, setModalVisible] = useState(false);
-    const [errorText, setErrorText] = useState("");
+    const [errorModalVisible, setErrorModalVisible] = useState(false);
+    const [errorText, setErrorText] = useState('');
     const [infoModalVisible, setInfoModalVisible] = useState(false);
-    const [infoText, setInfoText] = useState(false);
+    const [recoveredAddress, setRecoveredAddress] = useState('');
     const [isAccountNotFound, setAccountNotFound] = useState(false);
     const [identityData, setIdentity]: any = useState({});
     const dispatch = useDispatch();
 
-    const handleSeeds = (seeds: string) => {
-        seeds = seeds.trim().toLowerCase();
-        setSeeds(seeds);
-        if( bip39.validateMnemonic(seeds) ) {
+    const handleSeeds = async (seeds: string) => {
+        if (bip39.validateMnemonic(seeds.trim().toLowerCase())) {
+            setMnemonic(seeds.trim().toLowerCase());
             setStep(2);
         } else {
             setErrorText("Invalid mnemonic");
-            setModalVisible(true);
+            setErrorModalVisible(true);
         }
     }
 
@@ -44,60 +44,62 @@ const RestoreAccount = ({navigation}: AccountProps) => {
         setDerivationPath(options.derivationPath);
         let identity: any = {};
         try {
-            identity = await KeyStoreUtils.restoreIdentityFromMnemonic(seeds, password, '', derivationPath)
-        } catch(error) {
+            identity = await KeyStoreUtils.restoreIdentityFromMnemonic(mnemonic, password, '', derivationPath);
+        } catch (error) {
             setErrorText(error.message);
-            setModalVisible(true);
+            setErrorModalVisible(true);
             return false;
         }
 
         setIdentity(identity);
-        setInfoText(identity.publicKeyHash);
+        setRecoveredAddress(identity.publicKeyHash);
         setInfoModalVisible(true);        
     }
 
     const recoverAccount = async () => {
-       
-        if( identityData.publicKeyHash ) {
+        if (identityData.publicKeyHash) {
             const account = await getAccountInfo(identityData.publicKeyHash).catch(
                 () => false
             );
             const termsDate = new Date().toLocaleString();
             setInfoModalVisible(false); 
             if (!account) {
-                const title = 'Account does not exists. We will create a new Account for you.';
+                const title = 'Account does not exists. We will create a new account for you.';
                 setErrorText(title);
-                setModalVisible(true);
+                setErrorModalVisible(true);
                 setAccountNotFound(true);
             } else {
                 await Keychain.resetGenericPassword();
-                await Keychain.setGenericPassword(
-                    'newwallet',
-                    JSON.stringify({...identityData, termsDate}),
-                );
+                await Keychain.setGenericPassword('newwallet', JSON.stringify({...identityData, termsDate}));
+
+                const setup = {
+                    securitySetup: false,
+                    isBiometric: false,
+                    pin: '',
+                    phraseBackedUp: true,
+                    phraseBackedUpFirst: true,
+                }
+                await Keychain.setInternetCredentials('securitySetup', 'userName', JSON.stringify(setup));
+
                 dispatch(setKeysAction(identityData));   
                 navigation.replace('AccountSetup');
             }
         } else {
             setInfoModalVisible(false); 
-            const title = 'Unable to recover Account.';
-            setErrorText(title);
-            setModalVisible(true);
+            setErrorText('Unable to recover address.');
+            setErrorModalVisible(true);
             setAccountNotFound(true);
         }
     }
 
-    const closeModal = async() => {
-        setModalVisible(false)
-        setErrorText("");
+    const closeErrorModal = async() => {
+        setErrorModalVisible(false)
+        setErrorText('');
         if (isAccountNotFound) {
             const termsDate = new Date().toLocaleString();
             const keys = await KeyStoreUtils.generateIdentity();
             await Keychain.resetGenericPassword();
-            await Keychain.setGenericPassword(
-                'newwallet',
-                JSON.stringify({...keys, termsDate}),
-            );
+            await Keychain.setGenericPassword('newwallet', JSON.stringify({...keys, termsDate}));
             dispatch(setKeysAction(keys));
             setTimeout(() => {
                 navigation.replace('AccountSetup');
@@ -105,39 +107,39 @@ const RestoreAccount = ({navigation}: AccountProps) => {
         }
     }
 
+    let addressParts = splitHash(recoveredAddress);
+
     return (
         <React.Fragment>
             <Container style={styles.yellowContainer}>
                 <CustomHeader
                     title="Recovery Phrase"
-                    onBack={() => navigation.replace('Welcome')}
+                    onBack={() => step === 1 ? navigation.replace('Welcome') : setStep(1)}
                 />
-                {
-                    step === 1 &&
+                {step === 1 &&
                     <SeedInput onChange={handleSeeds}/>
                 }
 
-                {
-                    step === 2 &&
+                {step === 2 &&
                     <RecoveryOption onChange={handleRecovery}/>
                 }
-                
             </Container>
             <Modal
                 animationType="fade"
                 transparent={true}
-                visible={modalVisible}
+                visible={errorModalVisible}
             >
                 <View style={styles.centeredView}>
                     <View style={styles.modalView}>
                         <Text style={styles.modalText}>Error</Text>
                         <Text style={styles.typo2}>{errorText}</Text>
-                        <Button style={styles.modalBtn} onPress={closeModal}>
+                        <Button style={styles.modalBtn} onPress={closeErrorModal}>
                             <Text>Close</Text>
                         </Button>
                     </View>
                 </View>
             </Modal>
+
             <Modal
                 animationType="fade"
                 transparent={true}
@@ -145,11 +147,30 @@ const RestoreAccount = ({navigation}: AccountProps) => {
             >
                 <View style={styles.centeredView}>
                     <View style={styles.modalView}>
-                        <Text style={styles.modalText}>Found Account</Text>
-                        <Text style={styles.typo2}>{infoText}</Text>
-                        <Button style={styles.modalBtn} onPress={recoverAccount}>
-                            <Text>Proceed</Text>
-                        </Button>
+                        <Text style={styles.modalText}>Continue to recover address?</Text>
+                        <View style={styles.address}>
+                            {(addressParts).map((item, i) => (
+                                <Text
+                                    style={
+                                        !(i === 0 || i === addressParts.length - 1)
+                                            ? [
+                                                styles.addressItem,
+                                                styles.addressItemMiddle,
+                                            ]
+                                            : styles.addressItem
+                                    }>
+                                    {item}
+                                </Text>
+                            ))}
+                        </View>
+                        <View style={{flexDirection: 'row'}}>
+                            <Button style={styles.btn} transparent onPress={() => setInfoModalVisible(false)}>
+                                <Text style={styles.cancelText}>Cancel</Text>
+                            </Button>
+                            <Button style={styles.modalBtn} onPress={recoverAccount}>
+                                <Text>Proceed</Text>
+                            </Button>
+                        </View>
                     </View>
                 </View>
             </Modal>
@@ -158,7 +179,6 @@ const RestoreAccount = ({navigation}: AccountProps) => {
 }
 
 const styles = StyleSheet.create({
-    
     yellowContainer: {
         backgroundColor: colors.bg,
     },
@@ -167,9 +187,9 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: '400',
         lineHeight: 18,
-        color:'#343434',
-        marginBottom:10,
-        textAlign:'center'
+        color: '#343434',
+        marginBottom: 10,
+        textAlign: 'center'
     },
     centeredView: {
         flex: 1,
@@ -185,7 +205,7 @@ const styles = StyleSheet.create({
         padding: 28,
         alignItems: "center",
         width: '80%',
-        elevation: 5,
+        elevation: 5
     },
     openButton: {
         backgroundColor: "#F194FF",
@@ -202,14 +222,58 @@ const styles = StyleSheet.create({
         color: '#E3787D',
     },
     modalBtn: {
-        width: 150,
+        width: 130,
         height: 50,
         justifyContent: 'center',
         borderRadius: 25,
         backgroundColor: '#4b4b4b',
         alignSelf: 'center',
         marginTop: 30,
-        marginBottom: 0
-    }
+        marginBottom: 0,
+        marginLeft: 10
+    },
+    address: {
+        marginTop: 20,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        width: 200
+    },
+    addressItem: {
+        paddingHorizontal: 2,
+        fontFamily: 'Roboto-Medium',
+        fontSize: 14,
+        fontWeight: '500'
+    },
+    addressItemMiddle: {
+        color: '#979797'
+    },
+    btn: {
+        width: 130,
+        height: 50,
+        borderColor: '#4b4b4b',
+        borderWidth: 1,
+        borderRadius: 25,
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginTop: 30,
+        marginBottom: 0,
+        marginLeft: 10
+    },
+    accept: {
+        backgroundColor: '#4b4b4b',
+    },
+    acceptText: {
+        fontFamily: 'Roboto-Medium',
+        fontSize: 17,
+        fontWeight: '500',
+        letterSpacing: 0.85,
+        color: '#ffffff'
+    },
+    cancelText: {
+        fontFamily: 'Roboto-Regular',
+        fontSize: 17,
+        letterSpacing: 0.85,
+        color: '#4b4b4b'
+    },
 });
 export default RestoreAccount;
