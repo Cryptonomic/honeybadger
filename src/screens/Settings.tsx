@@ -50,7 +50,7 @@ const Settings = ({navigation}: SettingsProps) => {
             }
         };
         loadInitialState();
-    });
+    }, []);
 
     const getSecurityLevelText = (securityLevel: string) => {
         if (securityLevel === "0") {

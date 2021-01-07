@@ -49,7 +49,7 @@ const SecurityLevel = ({navigation}: SeedPhraseProps) => {
         };
 
         loadInitialState();
-    });
+    }, []);
 
     const getSecurityLevelText = () => {
         if (securityLevel === "0") {
