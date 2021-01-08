@@ -9,7 +9,7 @@ import {colors} from '../../theme';
 import CustomHeader from '../CustomHeader';
 import {State} from '../../reducers/types';
 import PhraseBackupSuccess from './PhraseBackupSuccess';
-
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 const PhraseBackup = (props: any) => {
     
@@ -53,7 +53,7 @@ const PhraseBackup = (props: any) => {
 
         if (match) {
             let data: any= await Keychain.getInternetCredentials('securitySetup');
-            if(data) {
+            if (data) {
                 data = JSON.parse(data.password);
                 const setup = {
                     securitySetup: data.securitySetup,
@@ -64,7 +64,6 @@ const PhraseBackup = (props: any) => {
                 }
                 await Keychain.setInternetCredentials('securitySetup', 'userName', JSON.stringify(setup));
             } else {
-
                 const setupData = {
                     securitySetup: false,
                     isBiometric: false,
@@ -75,7 +74,7 @@ const PhraseBackup = (props: any) => {
 
                 await Keychain.setInternetCredentials('securitySetup', 'userName', JSON.stringify(setupData));
             }
-                
+
             setStep('SUCCESS');
         } else {
             setModalVisible(true);
@@ -87,15 +86,11 @@ const PhraseBackup = (props: any) => {
         generatePhrases();
     }
 
-    const changeFocus = (index: number) => {
-        console.log(inputRefs)
-        switch(index) {
-            case 1: 
-                inputRefs.current[0] && inputRefs.current[0].focus();
-            case 2: 
-                inputRefs.current[2] && inputRefs.current[2].focus();
-            case 3: 
-                inputRefs.current[3] && inputRefs.current[3].focus();
+    const handleNext = (index: number) => {
+        if (inputRefs.current[index+1]) {
+            inputRefs.current[index+1].focus()
+        } else {
+            validatePhrase();
         }
     }
 
@@ -110,7 +105,7 @@ const PhraseBackup = (props: any) => {
             }
             {
                 step === "VERIFY" &&
-                <ScrollView contentContainerStyle={{flexGrow: 1}} keyboardShouldPersistTaps={'handled'}>
+                <KeyboardAwareScrollView>
                     <View style={styles.content}>
                         <Text style={styles.typo1}>
                         To verify that you have backed up your recovery phrase, Please type in the following four words.
@@ -124,7 +119,7 @@ const PhraseBackup = (props: any) => {
                                         onChangeText={text => {
                                             onInputChange(text, index, item);
                                         }}
-                                        onSubmitEditing={() => inputRefs.current[index+1] && inputRefs.current[index+1].focus()}
+                                        onSubmitEditing={() => handleNext(index)}
                                         />
                                     </React.Fragment> 
                                 )
@@ -134,7 +129,7 @@ const PhraseBackup = (props: any) => {
                             <Text>Submit</Text>
                         </Button>
                     </View>
-                </ScrollView>
+                </KeyboardAwareScrollView>
             }
             {
                 step === "SUCCESS" &&

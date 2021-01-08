@@ -4,7 +4,6 @@ import { View, Text, Container } from 'native-base';
 import * as Keychain from 'react-native-keychain';
 
 import Fish from '../../assets/fish.svg';
-import Circle from '../../assets/circle.svg';
 import RightArrow from '../../assets/right-arrow.svg';
 import Salmon from '../../assets/salmon.svg';
 import Dolphin from '../../assets/dolphin.svg';
@@ -19,13 +18,12 @@ import {SeedPhraseProps} from './types';
 
 const SecurityLevel = ({navigation}: SeedPhraseProps) => {
     const [securityLevel, setSecurityLevel] = useState("0");
-    const  [data, setData] = useState({
+    const [data, setData] = useState({
         phraseBackedUpFirst: false,
         phraseBackedUp: false,
         securitySetup: false
     });
     const [isAvailable, setAvailable] = useState(true);
-
 
     useLayoutEffect(() => {
         const loadInitialState = async () => {
@@ -51,7 +49,7 @@ const SecurityLevel = ({navigation}: SeedPhraseProps) => {
         };
 
         loadInitialState();
-    });
+    }, []);
 
     const getSecurityLevelText = () => {
         if (securityLevel === "0") {
@@ -63,6 +61,18 @@ const SecurityLevel = ({navigation}: SeedPhraseProps) => {
         }
 
         return "Level 3: Discreet Dolphin";
+    }
+
+    const getNextSecurityLevelText = () => {
+        if (securityLevel === "0") {
+            return "Level 2: Savvy Salmon";
+        }
+
+        if (securityLevel === "1") {
+            return "Level 3: Discreet Dolphin";
+        }
+
+        return "";
     }
 
     const getSubText = () => {
@@ -85,7 +95,7 @@ const SecurityLevel = ({navigation}: SeedPhraseProps) => {
         return "App Lock Enabled";
     }
 
-    const getLevelText = () => {
+    const getNextLevelText = () => {
         if (securityLevel === "0") {
             return "Your Security Level"
         }
@@ -146,7 +156,7 @@ const SecurityLevel = ({navigation}: SeedPhraseProps) => {
                         { getSecurityLevelText() }
                     </Text>
                     <Text style={styles.typo5}>
-                        {getSubText()}
+                        { getSubText() }
                     </Text>
                 </View>
                 <ScrollView contentContainerStyle={{flexGrow: 1}}>
@@ -165,8 +175,8 @@ const SecurityLevel = ({navigation}: SeedPhraseProps) => {
                                 }
                             </View>
                             <View style={{ width: '70%' }}>
-                                <Text style={styles.typo6}>{ getLevelText() }</Text>
-                                <Text style={styles.typo3}>{ getSecurityLevelText() }</Text>
+                                <Text style={styles.typo6}>{ getNextLevelText() }</Text>
+                                <Text style={styles.typo3}>{ getNextSecurityLevelText() }</Text>
                             </View>
                             {/* <View style={{marginLeft: 10}}>
                                 <Circle />

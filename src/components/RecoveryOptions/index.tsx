@@ -26,8 +26,11 @@ const SeedInput = (props: any) => {
                             If you’ve encrypted your recovery phrase with a password, please enter it below (optional)
                         </Text>
                         <TextInput style={styles.inputField} autoFocus={true} placeholder="Recovery Phrase Password" onChangeText={(text): any => setPassword(text) }/>
-                        <Text style={styles.label}>Enter a derivation path (optional)</Text>
-                        <TextInput style={styles.inputField} placeholder="Default (44’/1792’/0/0/0’)" onChangeText={(text): any => setDerivation(text) }/>
+                        
+                        {/*
+                            <Text style={styles.label}>Enter a derivation path (optional)</Text>
+                            <TextInput style={styles.inputField} placeholder="Default (44’/1792’/0/0/0’)" onChangeText={(text): any => setDerivation(text) }/>
+                        */}
                         <Button style={styles.btn} onPress={handleOptions}>
                             <Text>Continue</Text>
                         </Button>

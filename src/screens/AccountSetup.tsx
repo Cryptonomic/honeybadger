@@ -37,11 +37,7 @@ const AccountSetup = ({ navigation }: AccountSettingsProps) => {
                 phraseBackedUpFirst: data.phraseBackedUpFirst ? data.phraseBackedUpFirst : false,
                 phraseBackedUp: data.phraseBackedUp ? data.phraseBackedUp : false
             }
-            await Keychain.setInternetCredentials(
-                'securitySetup',
-                'userName',
-                JSON.stringify(setup)
-            );
+            await Keychain.setInternetCredentials('securitySetup', 'userName', JSON.stringify(setup));
             setConfirmPin(pin);
             // Disable back btn
             setBack(false);
