@@ -58,7 +58,8 @@ const styles = StyleSheet.create({
         paddingHorizontal: 30,
     },
     areaContainer: {
-        flex: 1
+        flex: 1,
+        backgroundColor: '#ffffff',
     },
     btn: {
         width: 256,
