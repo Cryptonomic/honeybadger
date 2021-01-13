@@ -31,6 +31,12 @@ const Welcome = ({navigation}: WelcomeProps) => {
             let securityConfig: any;
 
             try {
+                NativeModules.BeaconBridge.startBeacon();
+            } catch (error) {
+                console.log("Failed to init BeaconBridge", error);
+            }
+
+            try {
                 keys = await Keychain.getGenericPassword();
                 if (keys) {
                     setIsAccountPresent(true);
@@ -75,9 +81,7 @@ const Welcome = ({navigation}: WelcomeProps) => {
         load();
     }, [dispatch, navigation]);
 
-    // Test Beacon
-    // const getStarted = () => navigation.replace('Terms');
-    const getStarted = () => NativeModules.BeaconBridge.startBeacon();
+    const getStarted = () => { navigation.replace('Terms') };
 
     const showAppLock = () => {
         TouchID.isSupported()

@@ -2,7 +2,7 @@ import Foundation
 import BeaconSDK
 
 @objc(BeaconBridge)
-class BeaconBridge: NSObject {
+class BeaconBridge: NSObject, RCTBridgeModule {
   private static let examplePeerID = "a59fb446-7913-2fdc-3267-02149f0b1c4e"
   private static let examplePeerName = "Beacon Example Dapp"
   private static let examplePeerPublicKey = "100247a23a014e5b005d4e6406bfce1cfa7d7ed4f0e4ee63f0ce566fca996551"
@@ -10,6 +10,14 @@ class BeaconBridge: NSObject {
   private static let examplePeerVersion = "2"
   
   private static let exampleTezosPublicKey = "edpktpzo8UZieYaJZgCHP6M6hKHPdWBSNqxvmEt6dwWRgxDh1EAFw9"
+  
+  static func moduleName() -> String! {
+        return "BeaconBridge";
+  }
+  
+  static func requiresMainQueueSetup() -> Bool {
+      return true
+  }
   
   @Published private(set) var beaconRequest: String? = nil
   
