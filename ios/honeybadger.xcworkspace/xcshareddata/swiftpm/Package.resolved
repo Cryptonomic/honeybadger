@@ -1,0 +1,34 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "Base58Swift",
+        "repositoryURL": "https://github.com/keefertaylor/Base58Swift.git",
+        "state": {
+          "branch": null,
+          "revision": "1c13ea6b07f1584660526f8bde3d4cc150e91acd",
+          "version": "2.1.14"
+        }
+      },
+      {
+        "package": "BeaconSDK",
+        "repositoryURL": "https://github.com/airgap-it/beacon-ios-sdk",
+        "state": {
+          "branch": null,
+          "revision": "3b2f2e82385f548c185c0b1174a74956018c25e6",
+          "version": "1.0.0"
+        }
+      },
+      {
+        "package": "BigInt",
+        "repositoryURL": "https://github.com/attaswift/BigInt.git",
+        "state": {
+          "branch": null,
+          "revision": "889a1ecacd73ccc189c5cb29288048f186c44ed9",
+          "version": "5.2.1"
+        }
+      }
+    ]
+  },
+  "version": 1
+}

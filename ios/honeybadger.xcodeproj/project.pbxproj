@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 46;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -41,6 +41,10 @@
 		AAA4444B17AB49FEDCC8AEB2 /* libPods-honeybadger-honeybadgerTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 008FA60B9E0B9F7D7CECA50D /* libPods-honeybadger-honeybadgerTests.a */; };
 		AB9FC776422C4E3AADC4851D /* Roboto-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DF30A310BD504D47A0A9E77F /* Roboto-Regular.ttf */; };
 		C75F75E73E7A48408E8E251E /* Galleon-Mobile.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7CA79D30852F4FFE8EAE1F6F /* Galleon-Mobile.ttf */; };
+		C80D5DE225AF5542006E670F /* BeaconSDK in Frameworks */ = {isa = PBXBuildFile; productRef = C80D5DE125AF5542006E670F /* BeaconSDK */; };
+		C80D5DE425AF5542006E670F /* libsodium in Frameworks */ = {isa = PBXBuildFile; productRef = C80D5DE325AF5542006E670F /* libsodium */; };
+		C80D5DEB25AF5573006E670F /* BeaconBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = C80D5DEA25AF5573006E670F /* BeaconBridge.swift */; };
+		C80D5DF125AF55AF006E670F /* BeaconBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = C80D5DF025AF55AF006E670F /* BeaconBridge.m */; };
 		CEE5789618C34536887695B7 /* Feather.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6A696CA2AFD24376B9A241CC /* Feather.ttf */; };
 		D81B9E4313BA407E87899325 /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B2FA291240AB4628881FFFF3 /* Zocial.ttf */; };
 		F1853ABC7C542CC8534F4CDD /* libPods-honeybadger.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BCD2D0F88B6F157F87E29CC /* libPods-honeybadger.a */; };
@@ -109,6 +113,9 @@
 		B2FA291240AB4628881FFFF3 /* Zocial.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Zocial.ttf; path = "../node_modules/native-base/Fonts/Zocial.ttf"; sourceTree = "<group>"; };
 		BD3FB6515ED245FF8B6B9AFE /* MaterialIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialIcons.ttf; path = "../node_modules/native-base/Fonts/MaterialIcons.ttf"; sourceTree = "<group>"; };
 		C38ABCD4738D4FCA8AA861EB /* Roboto.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Roboto.ttf; path = "../node_modules/native-base/Fonts/Roboto.ttf"; sourceTree = "<group>"; };
+		C80D5DE925AF5573006E670F /* honeybadger-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "honeybadger-Bridging-Header.h"; sourceTree = "<group>"; };
+		C80D5DEA25AF5573006E670F /* BeaconBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BeaconBridge.swift; sourceTree = "<group>"; };
+		C80D5DF025AF55AF006E670F /* BeaconBridge.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BeaconBridge.m; sourceTree = "<group>"; };
 		CC9038420FAA6A4C001A1761 /* Pods-honeybadger.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-honeybadger.debug.xcconfig"; path = "Target Support Files/Pods-honeybadger/Pods-honeybadger.debug.xcconfig"; sourceTree = "<group>"; };
 		DF30A310BD504D47A0A9E77F /* Roboto-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-Regular.ttf"; path = "../assets/fonts/Roboto-Regular.ttf"; sourceTree = "<group>"; };
 		E1E7776609FF41A894D725E7 /* FontAwesome5_Solid.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Solid.ttf; path = "../node_modules/native-base/Fonts/FontAwesome5_Solid.ttf"; sourceTree = "<group>"; };
@@ -135,6 +142,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				F1853ABC7C542CC8534F4CDD /* libPods-honeybadger.a in Frameworks */,
+				C80D5DE225AF5542006E670F /* BeaconSDK in Frameworks */,
+				C80D5DE425AF5542006E670F /* libsodium in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -184,6 +193,9 @@
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
 				13B07FB71A68108700A75B9A /* main.m */,
+				C80D5DEA25AF5573006E670F /* BeaconBridge.swift */,
+				C80D5DE925AF5573006E670F /* honeybadger-Bridging-Header.h */,
+				C80D5DF025AF55AF006E670F /* BeaconBridge.m */,
 			);
 			name = honeybadger;
 			sourceTree = "<group>";
@@ -323,6 +335,10 @@
 			dependencies = (
 			);
 			name = honeybadger;
+			packageProductDependencies = (
+				C80D5DE125AF5542006E670F /* BeaconSDK */,
+				C80D5DE325AF5542006E670F /* libsodium */,
+			);
 			productName = honeybadger;
 			productReference = 13B07F961A680F5B00A75B9A /* Galleon Mobile.app */;
 			productType = "com.apple.product-type.application";
@@ -381,7 +397,7 @@
 					};
 					13B07F861A680F5B00A75B9A = {
 						DevelopmentTeam = G7QQMG8Q65;
-						LastSwiftMigration = 1120;
+						LastSwiftMigration = 1230;
 					};
 					2D02E47A1E0B4A5D006451C7 = {
 						CreatedOnToolsVersion = 8.2.1;
@@ -404,6 +420,9 @@
 				Base,
 			);
 			mainGroup = 83CBB9F61A601CBA00E9B192;
+			packageReferences = (
+				C80D5DE025AF5542006E670F /* XCRemoteSwiftPackageReference "beacon-ios-sdk" */,
+			);
 			productRefGroup = 83CBBA001A601CBA00E9B192 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -684,6 +703,8 @@
 			files = (
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
+				C80D5DF125AF55AF006E670F /* BeaconBridge.m in Sources */,
+				C80D5DEB25AF5573006E670F /* BeaconBridge.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -724,6 +745,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 44E051E4D9E91763F0619D3F /* Pods-honeybadger-honeybadgerTests.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -731,7 +753,11 @@
 				);
 				INFOPLIST_FILE = honeybadgerTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-lc++",
@@ -747,11 +773,16 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = EB309C5BD6C8B7625C5F251E /* Pods-honeybadger-honeybadgerTests.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
 				INFOPLIST_FILE = honeybadgerTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-lc++",
@@ -772,9 +803,13 @@
 				CURRENT_PROJECT_VERSION = 46;
 				DEVELOPMENT_TEAM = G7QQMG8Q65;
 				ENABLE_BITCODE = NO;
+				EXCLUDED_ARCHS = arm64;
 				INFOPLIST_FILE = honeybadger/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				MARKETING_VERSION = 1.9;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -783,6 +818,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "tech.cryptonomic.galleon-mobile";
 				PRODUCT_NAME = "Galleon Mobile";
+				SWIFT_OBJC_BRIDGING_HEADER = "honeybadger-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -798,9 +834,13 @@
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 46;
 				DEVELOPMENT_TEAM = G7QQMG8Q65;
+				EXCLUDED_ARCHS = arm64;
 				INFOPLIST_FILE = honeybadger/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				MARKETING_VERSION = 1.9;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -809,6 +849,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "tech.cryptonomic.galleon-mobile";
 				PRODUCT_NAME = "Galleon Mobile";
+				SWIFT_OBJC_BRIDGING_HEADER = "honeybadger-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -829,7 +870,10 @@
 				ENABLE_TESTABILITY = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
 				INFOPLIST_FILE = "honeybadger-tvOS/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -857,7 +901,10 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_NO_COMMON_BLOCKS = YES;
 				INFOPLIST_FILE = "honeybadger-tvOS/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -885,7 +932,11 @@
 				ENABLE_TESTABILITY = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
 				INFOPLIST_FILE = "honeybadger-tvOSTests/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -913,7 +964,11 @@
 				DEVELOPMENT_TEAM = G7QQMG8Q65;
 				GCC_NO_COMMON_BLOCKS = YES;
 				INFOPLIST_FILE = "honeybadger-tvOSTests/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -975,7 +1030,10 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
-				LD_RUNPATH_SEARCH_PATHS = "/usr/lib/swift $(inherited)";
+				LD_RUNPATH_SEARCH_PATHS = (
+					/usr/lib/swift,
+					"$(inherited)",
+				);
 				LIBRARY_SEARCH_PATHS = (
 					"\"$(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME)\"",
 					"\"$(TOOLCHAIN_DIR)/usr/lib/swift-5.0/$(PLATFORM_NAME)\"",
@@ -1028,7 +1086,10 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
-				LD_RUNPATH_SEARCH_PATHS = "/usr/lib/swift $(inherited)";
+				LD_RUNPATH_SEARCH_PATHS = (
+					/usr/lib/swift,
+					"$(inherited)",
+				);
 				LIBRARY_SEARCH_PATHS = (
 					"\"$(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME)\"",
 					"\"$(TOOLCHAIN_DIR)/usr/lib/swift-5.0/$(PLATFORM_NAME)\"",
@@ -1089,6 +1150,30 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		C80D5DE025AF5542006E670F /* XCRemoteSwiftPackageReference "beacon-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/airgap-it/beacon-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		C80D5DE125AF5542006E670F /* BeaconSDK */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C80D5DE025AF5542006E670F /* XCRemoteSwiftPackageReference "beacon-ios-sdk" */;
+			productName = BeaconSDK;
+		};
+		C80D5DE325AF5542006E670F /* libsodium */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C80D5DE025AF5542006E670F /* XCRemoteSwiftPackageReference "beacon-ios-sdk" */;
+			productName = libsodium;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 83CBB9F71A601CBA00E9B192 /* Project object */;
 }

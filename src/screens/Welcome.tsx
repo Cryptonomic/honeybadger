@@ -3,6 +3,7 @@ import {Alert, StyleSheet} from 'react-native';
 import {Container, Text, Button, View} from 'native-base';
 import * as Keychain from 'react-native-keychain';
 import {useDispatch} from 'react-redux';
+import {NativeModules} from 'react-native';
 
 import {setKeysAction} from '../reducers/app/actions';
 import TouchID from "react-native-touch-id";
@@ -74,7 +75,9 @@ const Welcome = ({navigation}: WelcomeProps) => {
         load();
     }, [dispatch, navigation]);
 
-    const getStarted = () => navigation.replace('Terms');
+    // Test Beacon
+    // const getStarted = () => navigation.replace('Terms');
+    const getStarted = () => NativeModules.BeaconBridge.startBeacon();
 
     const showAppLock = () => {
         TouchID.isSupported()
@@ -127,7 +130,7 @@ const Welcome = ({navigation}: WelcomeProps) => {
     }
 
     return (
-        !isPin ? 
+        !isPin ?
         <Container>
             <View style={styles.waveBg} />
             <SafeContainer>
@@ -147,7 +150,7 @@ const Welcome = ({navigation}: WelcomeProps) => {
                     </View>
                     <View style={styles.item}>
                         {
-                            (isAccountPresent && isPinEnabled) && 
+                            (isAccountPresent && isPinEnabled) &&
                             <React.Fragment>
                                 <Button style={styles.btn} onPress={showPin}>
                                     <Text style={styles.typo3}>Enter Pin</Text>
