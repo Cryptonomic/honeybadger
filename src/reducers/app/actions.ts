@@ -27,6 +27,12 @@ export const SET_DELEGATE_ADDRESS = 'SET_DELEGATE_ADDRESS';
 export const SET_DELEGATION = 'SET_DELEGATION';
 export const SET_EXPECTEDDELEGATEDATE = 'SET_EXPECTEDDELEGATEDATE';
 export const SET_PENDING_OPERATIONS = 'SET_PENDING_OPERATIONS';
+export const SET_BEACON_MESSAGE = 'SET_BEACON_MESSAGE';
+
+export const setBeaconMessage = (beaconMessage: any) => ({
+    type: SET_BEACON_MESSAGE,
+    beaconMessage
+});
 
 export const setKeysAction = (keys: KeyStore): SetKeysAction => ({
     type: SET_KEYS,

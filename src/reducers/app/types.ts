@@ -11,7 +11,8 @@ import {
     SET_REVEALED,
     SET_DELEGATION,
     SET_EXPECTEDDELEGATEDATE,
-    SET_PENDING_OPERATIONS
+    SET_PENDING_OPERATIONS,
+    SET_BEACON_MESSAGE,
 } from './actions';
 import {Operation} from '../types';
 
@@ -38,6 +39,12 @@ export interface State {
     expectedPaymentDate: Date;
     pendingTransactions: [];
     pendingDelegations: [];
+    beaconMessage: any;
+}
+
+export interface BeaconMessageAction {
+    type: typeof SET_BEACON_MESSAGE;
+    beaconMessage: any;
 }
 
 export interface SetKeysAction {
@@ -114,4 +121,4 @@ export type AppActions =
     | SetDelegationAction
     | SetDelegationExpectedDate
     | SetPendingOperationsAction
-    ;
+    | BeaconMessageAction;

@@ -12,7 +12,8 @@ import {
     SET_REVEALED,
     SET_DELEGATION,
     SET_EXPECTEDDELEGATEDATE,
-    SET_PENDING_OPERATIONS
+    SET_PENDING_OPERATIONS,
+    SET_BEACON_MESSAGE,
 } from './actions';
 
 const initialState = {
@@ -32,7 +33,8 @@ const initialState = {
     delegateAddress: '',
     expectedPaymentDate: null,
     pendingTransactions: [],
-    pendingDelegations: []
+    pendingDelegations: [],
+    beaconMessage: {},
 };
 
 const app = (state = initialState, action: AppActions) => {
@@ -75,6 +77,8 @@ const app = (state = initialState, action: AppActions) => {
             return {...state, expectedPaymentDate: action.date};
         case SET_PENDING_OPERATIONS:
             return {...state, pendingTransactions: action.transactions, pendingDelegations: action.delegations};
+        case SET_BEACON_MESSAGE:
+            return {...state, beaconMessage: action.beaconMessage };
         default:
             return state;
     }

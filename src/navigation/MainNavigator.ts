@@ -18,6 +18,8 @@ import ResetPin from '../screens/ResetPin';
 import SecurityLevel from '../screens/SecurityLevel';
 import RecoveryPhrase from '../screens/RecoveryPhrase';
 import RestoreAccount from '../screens/RestoreAccount';
+import BeaconConnectionRequest from '../screens/BeaconConnectionRequest';
+import BeaconPermissionsRequest from '../screens/BeaconPermissionsRequest';
 
 const MainNavigator = createStackNavigator(
     {
@@ -37,8 +39,10 @@ const MainNavigator = createStackNavigator(
         DelegateReview: DelegateReviewScreen,
         ResetPin: ResetPin,
         SecurityLevel: SecurityLevel,
-        RecoveryPhrase:RecoveryPhrase,
-        RestoreAccount: RestoreAccount
+        RecoveryPhrase: RecoveryPhrase,
+        RestoreAccount: RestoreAccount,
+        BeaconConnectionRequest: BeaconConnectionRequest,
+        BeaconPermissionsRequest: BeaconPermissionsRequest,
     },
     {
         headerMode: 'none',

@@ -61,7 +61,7 @@ const Account = ({navigation}: AccountProps) => {
                 if(data) {
                     data = JSON.parse(data.password);
                     if (data.securitySetup && data.phraseBackedUp) {
-                        setSecurityLevel("2");    
+                        setSecurityLevel("2");
                     } else if(data.securitySetup || data.phraseBackedUp) {
                         setSecurityLevel("1")
                     } else {
@@ -70,7 +70,7 @@ const Account = ({navigation}: AccountProps) => {
                 } else {
                     setSecurityLevel("0");
                 }
-               
+
                 if (wallet) {
                     dispatch(syncAccount());
                     if (!refreshTimer) {
@@ -79,7 +79,7 @@ const Account = ({navigation}: AccountProps) => {
                 } else {
                     navigation.replace('Welcome');
                 }
-                
+
             } catch (error) {
                 console.log("Keychain couldn't be accessed!", error);
             }
@@ -92,7 +92,7 @@ const Account = ({navigation}: AccountProps) => {
                     if(data) {
                         data = JSON.parse(data.password);
                         if (data.securitySetup && data.phraseBackedUp) {
-                            setSecurityLevel("2");    
+                            setSecurityLevel("2");
                         } else if (data.securitySetup || data.phraseBackedUp) {
                             setSecurityLevel("1")
                         } else {
@@ -128,7 +128,7 @@ const Account = ({navigation}: AccountProps) => {
 
     const onSettingsSelect = (item: any) => {
         setOpenSettings(false);
-        navigation.navigate(item.title);
+        navigation.navigate(item.screen);
     };
 
     const toggleModal = () => {
@@ -151,8 +151,9 @@ const Account = ({navigation}: AccountProps) => {
     };
 
     const menuItems = [
-        { title: 'Settings', action: onSettingsSelect },
-        //{ title: 'Clear Data', action: onClearData }
+        { title: 'Beacon', screen: 'BeaconConnectionRequest', action: onSettingsSelect },
+        { title: 'Settings', screen: 'Settings', action: onSettingsSelect },
+        // { title: 'Clear Data', action: onClearData }
     ];
 
     const navigateToSecurity = () => {
@@ -267,7 +268,7 @@ const Account = ({navigation}: AccountProps) => {
                                 <Circle style={{width:60,height:59,marginRight:16}}/>
                             </View> */}
                             <View>
-                                <RightArrow style={{width:9,height:14}}/> 
+                                <RightArrow style={{width:9,height:14}}/>
                             </View>
                         </TouchableOpacity>
                     }
@@ -307,8 +308,8 @@ const Account = ({navigation}: AccountProps) => {
                             </View>
                         </TouchableOpacity>
                     } */}
-                    
-                    
+
+
                     <View style={styles.tabs}>
                         <View
                             style={[
