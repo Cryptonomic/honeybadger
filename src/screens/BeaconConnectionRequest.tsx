@@ -1,70 +1,98 @@
 import {View} from 'native-base';
 import * as React from 'react';
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
 import {Text, StyleSheet, TouchableOpacity} from 'react-native';
 import {RNCamera} from 'react-native-camera';
+import bs58check from 'bs58check';
 
 import SafeContainer from '../components/SafeContainer';
 
 import {BeaconConnectionRequestProps} from '../screens/types';
 
-const initialQrData = {
-    network: 'Mainnet',
-    address: '',
-    name: 'AppName',
-};
+interface displayDataProps {
+    id: string;
+    type: string;
+    name: string;
+    version: string;
+    publicKey: string;
+    relayServer: string;
+}
 
 const BeaconConnectionRequest = ({
     navigation,
 }: BeaconConnectionRequestProps) => {
-    const [camera, setCamera] = useState(false);
-    const [qrData, setQrData] = useState(initialQrData);
+    const [camera, setCamera] = useState(true);
+    const [qrData, setQrData] = useState('');
+    const [data, setData] = useState<displayDataProps | null>(null);
 
-    const onBarCodeRead = ({data}: {data: string}) => {
-        setQrData(JSON.parse(data));
-        setCamera(false);
+    const onBarcodeRecognized = ({data}: {data: string}) => {
+        if (data && data.length) {
+            setQrData(data);
+            setCamera(false);
+        }
     };
 
     const onCancel = () => {
         navigation.navigate('Account');
         setCamera(false);
-        setQrData(initialQrData);
+        setQrData('');
     };
 
     const onConnect = async () => {
         try {
             //TODO: add peer and send to beacon
-
         } catch (e) {}
     };
+
+    useEffect(() => {
+        if (!qrData) {
+            return;
+        }
+        /*
+            {
+                id: '5104a023-d058-b199-12e1-6d62635d2e4e',
+                type: 'p2p-pairing-request',
+                name: 'Beacon Example Dapp',
+                version: '2',
+                publicKey: 'd526c1ee2db53f0b1995784aaf2e897ca9fcc337fd6cd74191a8a49958efb929',
+                relayServer: 'matrix.papers.tech'
+            }
+        */
+        const data = JSON.parse(
+            bs58check.decode(
+                qrData.slice(qrData.indexOf('data=') + 'data='.length),
+            ),
+        );
+        setData(data);
+    }, [qrData]);
 
     return (
         <>
             {camera && (
                 <RNCamera
                     captureAudio={false}
-                    onBarCodeRead={onBarCodeRead}
+                    onBarCodeRead={onBarcodeRecognized}
                     style={s.camera}>
                     <SafeContainer>
-                        <Text>Start Camera</Text>
+                        <Text onPress={onCancel}>Back</Text>
                     </SafeContainer>
                 </RNCamera>
             )}
-            {!camera && (
+            {!camera && data && (
                 <View style={s.container}>
                     <SafeContainer>
                         <Text style={s.title}>Connection Request</Text>
-                        <Text
-                            style={[
-                                s.network,
-                                s.p1,
-                            ]}>{`Network: ${qrData.network}`}</Text>
-                        <Text style={[s.address, s.p1]}>{qrData.address}</Text>
+                        <Text style={[s.network, s.p1]}>
+                            {data?.name}
+                        </Text>
+                        <Text style={[s.address, s.p1]}>
+                            {data.publicKey}
+                        </Text>
                         <Text
                             style={[
                                 s.message,
                                 s.p2,
-                            ]}>{`${qrData.name} would like to connect to your account`}</Text>
+                            ]}>{`${data.name} would like to connect to your account`}</Text>
                         <Text style={[s.info]}>
                             This site is requesting access to view your account
                             address. Always make sure you trust the sites you
@@ -120,10 +148,12 @@ const s = StyleSheet.create({
     network: {
         marginTop: 100,
         textAlign: 'center',
+        paddingHorizontal: 24,
     },
     address: {
         marginTop: 4,
         textAlign: 'center',
+        paddingHorizontal: 24,
     },
     message: {
         marginTop: 32,
