@@ -11,9 +11,7 @@ import {State} from '../reducers/types';
 const BeaconPermissionsRequest = ({
     navigation,
 }: BeaconConnectionRequestProps) => {
-    const beaconMessage = useSelector(
-        (state: State) => state.app.beaconMessage,
-    );
+    const beaconMessage = useSelector((state: State) => state.app.beaconMessage);
 
     const onCancel = () => {
         navigation.navigate('Account');
@@ -33,16 +31,16 @@ const BeaconPermissionsRequest = ({
                     style={[
                         s.network,
                         s.p1,
-                    ]}>{`Network: ${beaconMessage.network}`}</Text>
+                    ]}>{`Network: ${beaconMessage.network.type}`}</Text>
                 <Text style={[s.address, s.p1]}>{beaconMessage.address}</Text>
                 <Text
                     style={[
                         s.message,
                         s.p2,
-                    ]}>{`${beaconMessage.name} is requesting the following permissions:`}</Text>
+                    ]}>{`${beaconMessage.appMetadata.name} is requesting the following permissions:`}</Text>
                 <View style={s.permissions}>
-                    {beaconMessage?.permissions?.length &&
-                        beaconMessage.permissions.map((item: string) => (
+                    {beaconMessage?.scopes?.length &&
+                        beaconMessage.scopes.map((item: string) => (
                             <View style={s.item}>
                                 <View style={s.dot} />
                                 <Text style={s.itemText}>{item}</Text>
