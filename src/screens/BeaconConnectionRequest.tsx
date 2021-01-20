@@ -1,15 +1,15 @@
 import {View} from 'native-base';
 import * as React from 'react';
 import {useState, useEffect} from 'react';
-import {Text, StyleSheet, TouchableOpacity} from 'react-native';
+import {Text, StyleSheet, TouchableOpacity, NativeModules} from 'react-native';
 import {RNCamera} from 'react-native-camera';
 import bs58check from 'bs58check';
 
 import SafeContainer from '../components/SafeContainer';
-
+import CustomHeader from '../components/CustomHeader';
 import {BeaconConnectionRequestProps} from '../screens/types';
 
-interface displayDataProps {
+interface displayDataProps { //PeerInfo
     id: string;
     type: string;
     name: string;
@@ -21,64 +21,51 @@ interface displayDataProps {
 const BeaconConnectionRequest = ({
     navigation,
 }: BeaconConnectionRequestProps) => {
-    const [camera, setCamera] = useState(true);
-    const [qrData, setQrData] = useState('');
+    const [showCamera, setShowCamera] = useState(true);
     const [data, setData] = useState<displayDataProps | null>(null);
 
     const onBarcodeRecognized = ({data}: {data: string}) => {
         if (data && data.length) {
-            setQrData(data);
-            setCamera(false);
+            const parsedData = JSON.parse(bs58check.decode(data.slice(data.indexOf('data=') + 'data='.length)));
+
+            setData(parsedData);
+            setShowCamera(false);
         }
     };
 
     const onCancel = () => {
         navigation.navigate('Account');
-        setCamera(false);
-        setQrData('');
+        setShowCamera(false);
     };
 
     const onConnect = async () => {
         try {
-            //TODO: add peer and send to beacon
+            if (data === null) { return; }
+            NativeModules.BeaconBridge.addPeer(data.id, data.name, data.publicKey, data.relayServer, data.version);
+            onCancel();
         } catch (e) {}
     };
 
-    useEffect(() => {
-        if (!qrData) {
-            return;
-        }
-        /*
-            {
-                id: '5104a023-d058-b199-12e1-6d62635d2e4e',
-                type: 'p2p-pairing-request',
-                name: 'Beacon Example Dapp',
-                version: '2',
-                publicKey: 'd526c1ee2db53f0b1995784aaf2e897ca9fcc337fd6cd74191a8a49958efb929',
-                relayServer: 'matrix.papers.tech'
-            }
-        */
-        const data = JSON.parse(
-            bs58check.decode(
-                qrData.slice(qrData.indexOf('data=') + 'data='.length),
-            ),
-        );
-        setData(data);
-    }, [qrData]);
+    const btn = {
+        size: 30,
+        color: '#ffffff',
+    };
 
     return (
         <>
-            {camera && (
+            {showCamera && (
                 <RNCamera
                     captureAudio={false}
                     onBarCodeRead={onBarcodeRecognized}
                     style={s.camera}>
-                    <SafeContainer>
-                        <Text onPress={onCancel}>Back</Text>
-                    </SafeContainer>
+                    <CustomHeader
+                        onBack={onCancel}
+                        leftIconName="Cancel"
+                        backIconCustomStyles={btn}
+                    />
                 </RNCamera>
             )}
-            {!camera && data && (
+            {!showCamera && data && (
                 <View style={s.container}>
                     <SafeContainer>
                         <Text style={s.title}>Connection Request</Text>

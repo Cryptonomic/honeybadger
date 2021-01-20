@@ -8,7 +8,7 @@ import SafeContainer from '../components/SafeContainer';
 import {BeaconConnectionRequestProps} from '../screens/types';
 import {State} from '../reducers/types';
 
-const BeaconConnectionRequest = ({
+const BeaconPermissionsRequest = ({
     navigation,
 }: BeaconConnectionRequestProps) => {
     const beaconMessage = useSelector(
@@ -19,9 +19,9 @@ const BeaconConnectionRequest = ({
         navigation.navigate('Account');
     };
 
-    const onConnect = async () => {
+    const onAuthorize = async () => {
         try {
-            //TODO: add beacon permission
+            //TODO: permission reply
         } catch (e) {}
     };
 
@@ -57,9 +57,9 @@ const BeaconConnectionRequest = ({
                         <Text style={s.btnTxt}>Cancel</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
-                        onPress={onConnect}
+                        onPress={onAuthorize}
                         style={[s.btn, s.btnBg]}>
-                        <Text style={[s.btnTxt, s.whiteTxt]}>Connect</Text>
+                        <Text style={[s.btnTxt, s.whiteTxt]}>Authorize</Text>
                     </TouchableOpacity>
                 </View>
             </SafeContainer>
@@ -169,4 +169,4 @@ const s = StyleSheet.create({
     },
 });
 
-export default BeaconConnectionRequest;
+export default BeaconPermissionsRequest;

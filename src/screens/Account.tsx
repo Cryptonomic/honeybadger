@@ -46,10 +46,7 @@ const Account = ({navigation}: AccountProps) => {
     const [refreshTimer, setRefreshTimer] = useState(undefined as any);
     const [securityLevel, setSecurityLevel] = useState("3");
     const changeTab = (newTab: number) => {
-        if (newTab === tab) {
-            return;
-        }
-
+        if (newTab === tab) { return; }
         setTab(newTab);
     };
 
@@ -58,7 +55,7 @@ const Account = ({navigation}: AccountProps) => {
             try {
                 const wallet = await Keychain.getGenericPassword();
                 let data: any= await Keychain.getInternetCredentials('securitySetup');
-                if(data) {
+                if (data) {
                     data = JSON.parse(data.password);
                     if (data.securitySetup && data.phraseBackedUp) {
                         setSecurityLevel("2");
@@ -153,7 +150,7 @@ const Account = ({navigation}: AccountProps) => {
     const menuItems = [
         { title: 'Beacon', screen: 'BeaconConnectionRequest', action: onSettingsSelect },
         { title: 'Settings', screen: 'Settings', action: onSettingsSelect },
-        // { title: 'Clear Data', action: onClearData }
+        { title: 'Clear Data', action: onClearData }
     ];
 
     const navigateToSecurity = () => {
