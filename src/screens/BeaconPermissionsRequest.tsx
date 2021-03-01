@@ -13,13 +13,33 @@ const BeaconPermissionsRequest = ({
 }: BeaconConnectionRequestProps) => {
     const beaconMessage = useSelector((state: State) => state.app.beaconMessage);
 
+    /*
+        { scopes: [ 'operation_request', 'sign' ],
+        origin: { kind: 'p2p', id: '4af4bdfc5f14bc3812afdd27b408ea041949804282e972afb04da24616c69c2f' },
+        id: '3043584f-16fc-8967-9555-2d07c990cfd4',
+        senderID: 'hZpXb7SAfUmx',
+        version: '2',
+        appMetadata: { name: 'TzButton', senderID: 'hZpXb7SAfUmx' },
+        network: { type: 'mainnet' } }
+    */
+
     const onCancel = () => {
         navigation.navigate('Account');
     };
 
     const onAuthorize = async () => {
         try {
-            //TODO: permission reply
+            const authorizationScope = modalValues[activeModal].scopes.join(', ');
+            const authorizationRequestId = modalValues[activeModal].id;
+            const response: PermissionResponseInput = {
+                type: BeaconMessageType.PermissionResponse,
+                network: { type: connectedBlockchainNode.network } as Network,
+                scopes: authorizationScope.split(', ') as PermissionScope[],
+                id: authorizationRequestId,
+                publicKey: keyStore.publicKey,
+            };
+            await beaconClient.respond(response);
+            const permissions = await beaconClient.getPermissions();
         } catch (e) {}
     };
 

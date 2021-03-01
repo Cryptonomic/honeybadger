@@ -13,9 +13,6 @@ class BeaconBridge: NSObject, RCTBridgeModule {
     return true
   }
 
-  @Published private(set) var beaconRequest: String? = nil
-  private var awaitingRequest: Beacon.Request? = nil
-
   private var beaconClient: Beacon.Client?
   private var onMessage: RCTResponseSenderBlock?
 
@@ -51,17 +48,28 @@ class BeaconBridge: NSObject, RCTBridgeModule {
   }
 
   @objc
-  func sendResponse() {
-    guard let request = awaitingRequest else {
-        return
-    }
-    
-    beaconRequest = nil
-    awaitingRequest = nil
-    
-    switch request {
-    case let .permission(permission):
-        let response = Beacon.Response.Permission(from: permission, publicKey: BeaconBridge.exampleTezosPublicKey)
+  func sendResponse(_ messageType: String, messageContent: String) {
+    switch messageType {
+    case "permission":
+      let decoder = JSONDecoder()
+      let data = try? decoder.decode("")
+      
+      let request = Beacon.Request.Permission(data)
+      //let response = new Beacon.Response.Permission(
+          
+          
+          id: String,
+          publicKey: String,
+          network: Beacon.Network,
+          scopes: [Beacon.Permission.Scope],
+          threshold: Beacon.Threshold? = nil,
+          version: String,
+          requestOrigin: Beacon.Origin
+      
+      
+          Beacon.Response.Permission(from: permission, publicKey: BeaconBridge.exampleTezosPublicKey)
+      
+      
         beaconClient?.respond(with: .permission(response)) { result in
             switch result {
             case .success(_):
@@ -70,6 +78,8 @@ class BeaconBridge: NSObject, RCTBridgeModule {
                 print("Failed to send the response, got error: \(error)")
             }
         }
+    //case "operation":
+    //case "signPayload":
     default:
         // TODO
         return
