@@ -1,6 +1,6 @@
 import {View} from 'native-base';
 import * as React from 'react';
-import {useState, useEffect} from 'react';
+import {useState} from 'react';
 import {Text, StyleSheet, TouchableOpacity, NativeModules} from 'react-native';
 import {RNCamera} from 'react-native-camera';
 import bs58check from 'bs58check';
@@ -27,7 +27,6 @@ const BeaconConnectionRequest = ({
     const onBarcodeRecognized = ({data}: {data: string}) => {
         if (data && data.length) {
             const parsedData = JSON.parse(bs58check.decode(data.slice(data.indexOf('data=') + 'data='.length)));
-
             setData(parsedData);
             setShowCamera(false);
         }

@@ -1,6 +1,6 @@
 import {View} from 'native-base';
 import * as React from 'react';
-import {Text, StyleSheet, TouchableOpacity} from 'react-native';
+import {Text, StyleSheet, TouchableOpacity, NativeModules} from 'react-native';
 import {useSelector} from 'react-redux';
 
 import SafeContainer from '../components/SafeContainer';
@@ -8,39 +8,23 @@ import SafeContainer from '../components/SafeContainer';
 import {BeaconConnectionRequestProps} from '../screens/types';
 import {State} from '../reducers/types';
 
+const displayScopes: Record<string, string> = {
+    operation_request: 'Operation Request',
+    sign: 'Sign'
+}
+
 const BeaconPermissionsRequest = ({
     navigation,
 }: BeaconConnectionRequestProps) => {
+    const publicKey = useSelector((state: State) => state.app.publicKey);
     const beaconMessage = useSelector((state: State) => state.app.beaconMessage);
-
-    /*
-        { scopes: [ 'operation_request', 'sign' ],
-        origin: { kind: 'p2p', id: '4af4bdfc5f14bc3812afdd27b408ea041949804282e972afb04da24616c69c2f' },
-        id: '3043584f-16fc-8967-9555-2d07c990cfd4',
-        senderID: 'hZpXb7SAfUmx',
-        version: '2',
-        appMetadata: { name: 'TzButton', senderID: 'hZpXb7SAfUmx' },
-        network: { type: 'mainnet' } }
-    */
 
     const onCancel = () => {
         navigation.navigate('Account');
     };
 
     const onAuthorize = async () => {
-        try {
-            const authorizationScope = modalValues[activeModal].scopes.join(', ');
-            const authorizationRequestId = modalValues[activeModal].id;
-            const response: PermissionResponseInput = {
-                type: BeaconMessageType.PermissionResponse,
-                network: { type: connectedBlockchainNode.network } as Network,
-                scopes: authorizationScope.split(', ') as PermissionScope[],
-                id: authorizationRequestId,
-                publicKey: keyStore.publicKey,
-            };
-            await beaconClient.respond(response);
-            const permissions = await beaconClient.getPermissions();
-        } catch (e) {}
+        NativeModules.BeaconBridge.sendResponse(publicKey);
     };
 
     return (
@@ -52,7 +36,6 @@ const BeaconPermissionsRequest = ({
                         s.network,
                         s.p1,
                     ]}>{`Network: ${beaconMessage.network.type}`}</Text>
-                <Text style={[s.address, s.p1]}>{beaconMessage.address}</Text>
                 <Text
                     style={[
                         s.message,
@@ -61,9 +44,9 @@ const BeaconPermissionsRequest = ({
                 <View style={s.permissions}>
                     {beaconMessage?.scopes?.length &&
                         beaconMessage.scopes.map((item: string) => (
-                            <View style={s.item}>
+                            <View style={s.item} key={item}>
                                 <View style={s.dot} />
-                                <Text style={s.itemText}>{item}</Text>
+                                <Text style={s.itemText}>{displayScopes[item]}</Text>
                             </View>
                         ))}
                 </View>

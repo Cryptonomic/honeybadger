@@ -3,9 +3,6 @@ import {Alert, StyleSheet} from 'react-native';
 import {Container, Text, Button, View} from 'native-base';
 import * as Keychain from 'react-native-keychain';
 import {useDispatch} from 'react-redux';
-import {NativeModules} from 'react-native';
-
-import { setBeaconMessage } from '../reducers/app/actions';
 
 import {setKeysAction} from '../reducers/app/actions';
 import TouchID from "react-native-touch-id";
@@ -30,24 +27,7 @@ const Welcome = ({navigation}: WelcomeProps) => {
     useEffect(() => {
         async function load() {
             let keys: any;
-            let securityConfig: any;
-
-            try {
-                NativeModules.BeaconBridge.startBeacon((response: any) => {
-                    try {
-                        const beaconMessage = JSON.parse(response);
-                        console.log('startBeacon callback', JSON.stringify(beaconMessage));
-                        dispatch(setBeaconMessage(beaconMessage));
-
-                        // TODO: pre-process message
-                        navigation.navigate('BeaconPermissionsRequest')
-                    } catch (parsingError) {
-                        //
-                    }
-                });
-            } catch (error) {
-                console.log("Failed to init BeaconBridge", error);
-            }
+            let securityConfig: any
 
             try {
                 keys = await Keychain.getGenericPassword();

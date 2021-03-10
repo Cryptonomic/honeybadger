@@ -3,7 +3,8 @@ export interface NavigationProps {
         goBack: () => void;
         navigate: (target: string, params?: any) => void;
         replace: (target: string) => void;
-        getParam: (key: String) => boolean
+        getParam: (key: String) => boolean;
+        addListener: (type: string, fn: (payload: any) => void) => void;
     };
 }
 

@@ -11,6 +11,9 @@ import {
     MenuOption,
     MenuTrigger,
 } from 'react-native-popup-menu';
+import {NativeModules, NativeEventEmitter} from 'react-native';
+
+import { setBeaconMessage } from '../reducers/app/actions';
 
 import {syncAccount} from '../reducers/app/thunks';
 import {setMessage} from '../reducers/messages/actions';
@@ -106,6 +109,41 @@ const Account = ({navigation}: AccountProps) => {
 
     }, [navigation]);
 
+    useEffect(() => {
+        try {
+            NativeModules.BeaconBridge.startBeacon();
+        } catch (error) {
+            console.log("Failed to init BeaconBridge", error);
+            return;
+        }
+
+        const BeaconEmmiter = new NativeEventEmitter(NativeModules.BeaconBridge);
+
+        BeaconEmmiter.addListener('onMessage', response => {
+            try {
+                const beaconMessage = JSON.parse(response);
+                console.log('BEACON_MESSAGE', beaconMessage);
+
+                if (beaconMessage.type === 'permission_request') {
+                    dispatch(setBeaconMessage(beaconMessage));
+                    navigation.navigate('BeaconPermissionsRequest');
+                }
+
+
+            } catch (error) {
+                console.log('Failed to get message', error);
+            }
+        });
+
+        BeaconEmmiter.addListener('onError', response => {
+            try {
+                console.log('BEACON_ERROR', response[0]);
+            } catch (error) {
+                console.log('Failed to get error', error);
+            }
+        });
+    }, []);
+
     const onPress = (value: string) => {
         if (balance === 0 && value === 'SendAddress') {
             dispatch(setMessage('Balance too low', 'info'));
@@ -147,8 +185,13 @@ const Account = ({navigation}: AccountProps) => {
         navigation.navigate('Welcome');
     };
 
+    const onSendError = () => {
+        NativeModules.BeaconBridge.sendError();
+    }
+
     const menuItems = [
         { title: 'Beacon', screen: 'BeaconConnectionRequest', action: onSettingsSelect },
+        { title: 'SendError', action: onSendError },
         { title: 'Settings', screen: 'Settings', action: onSettingsSelect },
         { title: 'Clear Data', action: onClearData }
     ];
