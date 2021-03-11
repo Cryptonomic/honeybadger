@@ -13,7 +13,7 @@ import {
 } from 'react-native-popup-menu';
 import {NativeModules, NativeEventEmitter} from 'react-native';
 
-import { setBeaconMessage } from '../reducers/app/actions';
+import {setBeaconMessage, setBeaconPermissionsLoading} from '../reducers/app/actions';
 
 import {syncAccount} from '../reducers/app/thunks';
 import {setMessage} from '../reducers/messages/actions';
@@ -33,6 +33,8 @@ import Fish from '../../assets/fish.svg';
 import Circle from '../../assets/circle.svg';
 import RightArrow from '../../assets/right-arrow.svg';
 import Salmon from '../../assets/salmon.svg';
+
+import {BeaconMessageTypes, BeaconErrorTypes, BeaconSuccessTypes} from '../reducers/types';
 
 const Account = ({navigation}: AccountProps) => {
     const dispatch = useDispatch();
@@ -124,12 +126,25 @@ const Account = ({navigation}: AccountProps) => {
                 const beaconMessage = JSON.parse(response);
                 console.log('BEACON_MESSAGE', beaconMessage);
 
-                if (beaconMessage.type === 'permission_request') {
+                if (beaconMessage.type === BeaconMessageTypes.PERMISSION_REQUEST) {
+                    dispatch(setBeaconPermissionsLoading());
                     dispatch(setBeaconMessage(beaconMessage));
                     navigation.navigate('BeaconPermissionsRequest');
                 }
 
+            } catch (error) {
+                console.log('Failed to get message', error);
+            }
+        });
 
+        BeaconEmmiter.addListener('onSuccess', response => {
+            try {
+                console.log('BEACON_SUCCESS', response);
+
+                if (response.type === BeaconSuccessTypes.PERMISSION_SUCCESS) {
+                    dispatch(setBeaconPermissionsLoading());
+                    navigation.navigate('Account');
+                }
             } catch (error) {
                 console.log('Failed to get message', error);
             }
@@ -137,7 +152,11 @@ const Account = ({navigation}: AccountProps) => {
 
         BeaconEmmiter.addListener('onError', response => {
             try {
-                console.log('BEACON_ERROR', response[0]);
+                console.log('BEACON_ERROR', response);
+
+                if (response.type === BeaconErrorTypes.ADD_PEER_ERROR) {
+
+                }
             } catch (error) {
                 console.log('Failed to get error', error);
             }
@@ -185,13 +204,20 @@ const Account = ({navigation}: AccountProps) => {
         navigation.navigate('Welcome');
     };
 
-    const onSendError = () => {
-        NativeModules.BeaconBridge.sendError();
+    const onResetBeacon = () => {
+        NativeModules.BeaconBridge.removePeers();
+        NativeModules.BeaconBridge.removePermissions();
+    }
+
+    const onTest = () => {
+        NativeModules.BeaconBridge.getPeers();
+        NativeModules.BeaconBridge.getPermissions();
     }
 
     const menuItems = [
         { title: 'Beacon', screen: 'BeaconConnectionRequest', action: onSettingsSelect },
-        { title: 'SendError', action: onSendError },
+        { title: 'Beacon Reset', action: onResetBeacon },
+        { title: 'Beacon Test', action: onTest },
         { title: 'Settings', screen: 'Settings', action: onSettingsSelect },
         { title: 'Clear Data', action: onClearData }
     ];

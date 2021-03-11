@@ -16,7 +16,7 @@
     }
 
     override func supportedEvents() -> [String]! {
-        return ["onMessage", "onError"]
+        return ["onMessage", "onError", "onSuccess"]
       }
 
     private var beaconClient: Beacon.Client?
@@ -47,7 +47,57 @@
             print("Peer added")
           case let .failure(error):
             print("Could not add the peer, got error: \(error)")
-  //          self.sendEvent(withName: "onError", body: ["ADD_PEER_ERROR"])
+          self.sendEvent(withName: "onError", body: ["ADD_PEER_ERROR", "Could not add the peer, got error: \(error)"])
+        }
+      }
+    }
+  
+    @objc
+    func getPeers() {
+      self.beaconClient?.getPeers() { result in
+        switch result {
+          case .success(_):
+            print("Get Peers Success")
+            self.sendEvent(withName: "onSuccess", body: ["type": "get_peers", "data": result])
+          case let .failure(error):
+            print("Could not get peers, got error: \(error)")
+        }
+      }
+    }
+  
+    @objc
+    func getPermissions() {
+      self.beaconClient?.getPermissions() { result in
+        switch result {
+          case .success(_):
+            print("Get Permissions Success")
+            self.sendEvent(withName: "onSuccess", body: ["type": "get_permissions", "data": result])
+          case let .failure(error):
+            print("Could not get permissions, got error: \(error)")
+        }
+      }
+    }
+  
+    @objc
+    func removePermissions() {
+      self.beaconClient?.removeAllPermissions() { result in
+        switch result {
+          case .success(_):
+            print("Remove Permissions Success")
+          case let .failure(error):
+            print("Could not remove permissions, got error: \(error)")
+        }
+      }
+    }
+  
+    @objc
+    func removePeers() {
+      self.beaconClient?.removeAllPeers() { result in
+        switch result {
+          case .success(_):
+            print("Remove Peers Success")
+          case let .failure(error):
+            print("Could not remove peers, got error: \(error)")
         }
       }
     }
@@ -68,9 +118,10 @@
                 switch result {
                 case .success(_):
                     print("Sent the response")
+                  self.sendEvent(withName: "onSuccess", body: ["type": "permission_success"])
                 case let .failure(error):
                     print("Failed to send the response, got error: \(error)")
-                  self.sendEvent(withName: "onError", body: ["Failed to send the response, got error: \(error)"])
+                    self.sendEvent(withName: "onError", body: ["Failed to send the response, got error: \(error)"])
                 }
             }
           break

@@ -1,15 +1,21 @@
 import {View} from 'native-base';
 import * as React from 'react';
 import {useState} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
 import {Text, StyleSheet, TouchableOpacity, NativeModules} from 'react-native';
 import {RNCamera} from 'react-native-camera';
 import bs58check from 'bs58check';
 
 import SafeContainer from '../components/SafeContainer';
 import CustomHeader from '../components/CustomHeader';
+
+import {setBeaconPermissionsLoading} from '../reducers/app/actions';
+
+import {State} from '../reducers/types';
 import {BeaconConnectionRequestProps} from '../screens/types';
 
-interface displayDataProps { //PeerInfo
+interface displayDataProps {
+    //PeerInfo
     id: string;
     type: string;
     name: string;
@@ -18,15 +24,26 @@ interface displayDataProps { //PeerInfo
     relayServer: string;
 }
 
+const testData = {"id":"c8c26163-03f4-6161-ca94-077b90a78ef5","type":"p2p-pairing-request","name":"Beacon Example Dapp","version":"2","publicKey":"bf171411431e12666f8de4bf06d1e14b05a9db6ad63f51bd0942a98b59015697","relayServer":"matrix.papers.tech"}
+
 const BeaconConnectionRequest = ({
     navigation,
 }: BeaconConnectionRequestProps) => {
-    const [showCamera, setShowCamera] = useState(true);
-    const [data, setData] = useState<displayDataProps | null>(null);
+    const dispatch = useDispatch();
+    const beaconPermissionLoading = useSelector(
+        (state: State) => state.app.beaconPermissionLoading,
+    );
+    const [showCamera, setShowCamera] = useState(false);
+    const [data, setData] = useState<displayDataProps | null>(testData);
+    const [error, setError] = useState('');
 
     const onBarcodeRecognized = ({data}: {data: string}) => {
         if (data && data.length) {
-            const parsedData = JSON.parse(bs58check.decode(data.slice(data.indexOf('data=') + 'data='.length)));
+            const parsedData = JSON.parse(
+                bs58check.decode(
+                    data.slice(data.indexOf('data=') + 'data='.length),
+                ),
+            );
             setData(parsedData);
             setShowCamera(false);
         }
@@ -35,14 +52,28 @@ const BeaconConnectionRequest = ({
     const onCancel = () => {
         navigation.navigate('Account');
         setShowCamera(false);
+        setData(null);
+        setError('');
     };
 
     const onConnect = async () => {
         try {
-            if (data === null) { return; }
-            NativeModules.BeaconBridge.addPeer(data.id, data.name, data.publicKey, data.relayServer, data.version);
-            onCancel();
-        } catch (e) {}
+            if (data === null) {
+                return;
+            }
+            dispatch(setBeaconPermissionsLoading(true));
+            NativeModules.BeaconBridge.addPeer(
+                data.id,
+                data.name,
+                data.publicKey,
+                data.relayServer,
+                data.version,
+            );
+        } catch (e) {
+            dispatch(setBeaconPermissionsLoading());
+            // TODO: set and display error message
+            console.log('Failed to add peer');
+        }
     };
 
     const btn = {
@@ -67,13 +98,14 @@ const BeaconConnectionRequest = ({
             {!showCamera && data && (
                 <View style={s.container}>
                     <SafeContainer>
+                        {beaconPermissionLoading && (
+                            <View style={s.loading}>
+                                <Text>Loading...</Text>
+                            </View>
+                        )}
                         <Text style={s.title}>Connection Request</Text>
-                        <Text style={[s.network, s.p1]}>
-                            {data?.name}
-                        </Text>
-                        <Text style={[s.address, s.p1]}>
-                            {data.publicKey}
-                        </Text>
+                        <Text style={[s.network, s.p1]}>{data?.name}</Text>
+                        <Text style={[s.address, s.p1]}>{data.publicKey}</Text>
                         <Text
                             style={[
                                 s.message,
@@ -184,6 +216,15 @@ const s = StyleSheet.create({
     },
     whiteTxt: {
         color: 'white',
+    },
+    loading: {
+        position: 'absolute',
+        zIndex: 1,
+        width: '100%',
+        height: '100%',
+        backgroundColor: 'rgba(255,255,255,0.8)',
+        alignItems: 'center',
+        justifyContent: 'center',
     },
 });
 

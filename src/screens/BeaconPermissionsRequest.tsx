@@ -1,35 +1,54 @@
 import {View} from 'native-base';
 import * as React from 'react';
 import {Text, StyleSheet, TouchableOpacity, NativeModules} from 'react-native';
-import {useSelector} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 
 import SafeContainer from '../components/SafeContainer';
+
+import {setBeaconPermissionsLoading} from '../reducers/app/actions';
 
 import {BeaconConnectionRequestProps} from '../screens/types';
 import {State} from '../reducers/types';
 
 const displayScopes: Record<string, string> = {
     operation_request: 'Operation Request',
-    sign: 'Sign'
-}
+    sign: 'Sign',
+};
 
 const BeaconPermissionsRequest = ({
     navigation,
 }: BeaconConnectionRequestProps) => {
+    const dispatch = useDispatch();
     const publicKey = useSelector((state: State) => state.app.publicKey);
-    const beaconMessage = useSelector((state: State) => state.app.beaconMessage);
+    const beaconMessage = useSelector(
+        (state: State) => state.app.beaconMessage,
+    );
+    const beaconPermissionLoading = useSelector(
+        (state: State) => state.app.beaconPermissionLoading,
+    );
 
     const onCancel = () => {
         navigation.navigate('Account');
     };
 
     const onAuthorize = async () => {
-        NativeModules.BeaconBridge.sendResponse(publicKey);
+        try {
+            dispatch(setBeaconPermissionsLoading(true));
+            NativeModules.BeaconBridge.sendResponse(publicKey);
+        } catch (e) {
+            console.log('Failed to authorize');
+            dispatch(setBeaconPermissionsLoading());
+        }
     };
 
     return (
         <View style={s.container}>
             <SafeContainer>
+                {beaconPermissionLoading && (
+                    <View style={s.loading}>
+                        <Text>Loading...</Text>
+                    </View>
+                )}
                 <Text style={s.title}>Permissions Request</Text>
                 <Text
                     style={[
@@ -46,7 +65,9 @@ const BeaconPermissionsRequest = ({
                         beaconMessage.scopes.map((item: string) => (
                             <View style={s.item} key={item}>
                                 <View style={s.dot} />
-                                <Text style={s.itemText}>{displayScopes[item]}</Text>
+                                <Text style={s.itemText}>
+                                    {displayScopes[item]}
+                                </Text>
                             </View>
                         ))}
                 </View>
@@ -167,6 +188,15 @@ const s = StyleSheet.create({
     },
     whiteTxt: {
         color: 'white',
+    },
+    loading: {
+        position: 'absolute',
+        zIndex: 1,
+        width: '100%',
+        height: '100%',
+        backgroundColor: 'rgba(255,255,255,0.8)',
+        alignItems: 'center',
+        justifyContent: 'center',
     },
 });
 
