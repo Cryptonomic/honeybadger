@@ -132,6 +132,10 @@ const Account = ({navigation}: AccountProps) => {
                     navigation.navigate('BeaconPermissionsRequest');
                 }
 
+                if (beaconMessage.type === BeaconMessageTypes.OPERATION_REQUEST) {
+                    console.log('beacon_operation', beaconMessage)
+                }
+
             } catch (error) {
                 console.log('Failed to get message', error);
             }

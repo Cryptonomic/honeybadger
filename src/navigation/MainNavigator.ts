@@ -20,6 +20,7 @@ import RecoveryPhrase from '../screens/RecoveryPhrase';
 import RestoreAccount from '../screens/RestoreAccount';
 import BeaconConnectionRequest from '../screens/BeaconConnectionRequest';
 import BeaconPermissionsRequest from '../screens/BeaconPermissionsRequest';
+import BeaconAuthorization from '../screens/BeaconAuthorization';
 
 const MainNavigator = createStackNavigator(
     {
@@ -43,6 +44,7 @@ const MainNavigator = createStackNavigator(
         RestoreAccount: RestoreAccount,
         BeaconConnectionRequest: BeaconConnectionRequest,
         BeaconPermissionsRequest: BeaconPermissionsRequest,
+        BeaconAuthorization: BeaconAuthorization,
     },
     {
         headerMode: 'none',
