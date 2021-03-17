@@ -153,17 +153,19 @@ const Account = ({navigation}: AccountProps) => {
     const onResetBeacon = () => {
         NativeModules.BeaconBridge.removePeers();
         NativeModules.BeaconBridge.removePermissions();
+        NativeModules.BeaconBridge.removeAppMetadata();
     }
 
     const onTest = () => {
         NativeModules.BeaconBridge.getPeers();
         NativeModules.BeaconBridge.getPermissions();
+        NativeModules.BeaconBridge.getAppMetadata();
     }
 
     const menuItems = [
-        { title: 'Beacon', screen: 'BeaconConnectionRequest', action: onSettingsSelect },
+        { title: 'Beacon', screen: 'BeaconInfo', action: onSettingsSelect },
         { title: 'Beacon Reset', action: onResetBeacon },
-        { title: 'Beacon Test', action: onTest },
+        { title: 'Beacon Data', action: onTest },
         { title: 'Settings', screen: 'Settings', action: onSettingsSelect },
         { title: 'Clear Data', action: onClearData }
     ];

@@ -4,6 +4,7 @@ export interface NavigationProps {
         navigate: (target: string, params?: any) => void;
         replace: (target: string) => void;
         getParam: (key: String) => boolean;
+        isFocused: () => boolean;
         addListener: (type: string, fn: (payload: any) => void) => void;
     };
 }

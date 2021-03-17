@@ -16,4 +16,6 @@ export enum BeaconSuccessTypes {
     PERMISSION_SUCCESS = 'permission_success',
     GET_PERMISSIONS = 'get_permissions',
     GET_PEERS = 'get_peers',
+    GET_APP_METADATA = 'get_app_metadata',
+    START_BEACON = 'start_beacon',
 }

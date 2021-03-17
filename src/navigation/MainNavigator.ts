@@ -21,6 +21,7 @@ import RestoreAccount from '../screens/RestoreAccount';
 import BeaconConnectionRequest from '../beacon/screens/BeaconConnectionRequest';
 import BeaconPermissionsRequest from '../beacon/screens/BeaconPermissionsRequest';
 import BeaconAuthorization from '../beacon/screens/BeaconAuthorization';
+import BeaconInfo from '../beacon/screens/BeaconInfo';
 
 const MainNavigator = createStackNavigator(
     {
@@ -45,6 +46,7 @@ const MainNavigator = createStackNavigator(
         BeaconConnectionRequest: BeaconConnectionRequest,
         BeaconPermissionsRequest: BeaconPermissionsRequest,
         BeaconAuthorization: BeaconAuthorization,
+        BeaconInfo: BeaconInfo,
     },
     {
         headerMode: 'none',
