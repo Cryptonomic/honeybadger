@@ -1,6 +1,13 @@
 import * as React from 'react';
 import {useEffect} from 'react';
-import {View, Text, StyleSheet, NativeModules, Linking} from 'react-native';
+import {
+    View,
+    Text,
+    StyleSheet,
+    NativeModules,
+    Linking,
+    TouchableOpacity,
+} from 'react-native';
 import {useSelector} from 'react-redux';
 
 import SafeContainer from '../../components/SafeContainer';
@@ -20,6 +27,9 @@ const BeaconInfo = ({navigation}: BeaconConnectionRequestProps) => {
     const onPressLearnMore = async () => {
         await Linking.openURL('https://www.walletbeacon.io/');
     };
+
+    const onPressScanQrCode = () =>
+        navigation.navigate('BeaconConnectionRequest');
 
     useEffect(() => {}, [permissions, metadata]);
 
@@ -51,6 +61,11 @@ const BeaconInfo = ({navigation}: BeaconConnectionRequestProps) => {
                                 </Text>
                             </Text>
                         </View>
+                        <TouchableOpacity
+                            style={s.scan}
+                            onPress={onPressScanQrCode}>
+                            <Text>Scan QR Code</Text>
+                        </TouchableOpacity>
                         <ImgBeaconIntegration style={s.img} />
                     </View>
                 )}
@@ -96,6 +111,12 @@ const s = StyleSheet.create({
     },
     img: {
         marginTop: 40,
+    },
+    scan: {
+        marginTop: 40,
+        backgroundColor: '#fcd104',
+        padding: 20,
+        borderRadius: 20,
     },
 });
 
