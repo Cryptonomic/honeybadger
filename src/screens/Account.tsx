@@ -11,9 +11,9 @@ import {
     MenuOption,
     MenuTrigger,
 } from 'react-native-popup-menu';
-import {NativeModules, NativeEventEmitter} from 'react-native';
+import {NativeModules} from 'react-native';
 
-import {setBeaconMessage, setBeaconPermissionsLoading} from '../reducers/app/actions';
+import BeaconMessages from '../beacon/BeaconMessages';
 
 import {syncAccount} from '../reducers/app/thunks';
 import {setMessage} from '../reducers/messages/actions';
@@ -33,8 +33,6 @@ import Fish from '../../assets/fish.svg';
 import Circle from '../../assets/circle.svg';
 import RightArrow from '../../assets/right-arrow.svg';
 import Salmon from '../../assets/salmon.svg';
-
-import {BeaconMessageTypes, BeaconErrorTypes, BeaconSuccessTypes} from '../reducers/types';
 
 const Account = ({navigation}: AccountProps) => {
     const dispatch = useDispatch();
@@ -111,62 +109,6 @@ const Account = ({navigation}: AccountProps) => {
 
     }, [navigation]);
 
-    useEffect(() => {
-        try {
-            NativeModules.BeaconBridge.startBeacon();
-        } catch (error) {
-            console.log("Failed to init BeaconBridge", error);
-            return;
-        }
-
-        const BeaconEmmiter = new NativeEventEmitter(NativeModules.BeaconBridge);
-
-        BeaconEmmiter.addListener('onMessage', response => {
-            try {
-                const beaconMessage = JSON.parse(response);
-                console.log('BEACON_MESSAGE', beaconMessage);
-
-                if (beaconMessage.type === BeaconMessageTypes.PERMISSION_REQUEST) {
-                    dispatch(setBeaconPermissionsLoading());
-                    dispatch(setBeaconMessage(beaconMessage));
-                    navigation.navigate('BeaconPermissionsRequest');
-                }
-
-                if (beaconMessage.type === BeaconMessageTypes.OPERATION_REQUEST) {
-                    console.log('beacon_operation', beaconMessage)
-                }
-
-            } catch (error) {
-                console.log('Failed to get message', error);
-            }
-        });
-
-        BeaconEmmiter.addListener('onSuccess', response => {
-            try {
-                console.log('BEACON_SUCCESS', response);
-
-                if (response.type === BeaconSuccessTypes.PERMISSION_SUCCESS) {
-                    dispatch(setBeaconPermissionsLoading());
-                    navigation.navigate('Account');
-                }
-            } catch (error) {
-                console.log('Failed to get message', error);
-            }
-        });
-
-        BeaconEmmiter.addListener('onError', response => {
-            try {
-                console.log('BEACON_ERROR', response);
-
-                if (response.type === BeaconErrorTypes.ADD_PEER_ERROR) {
-
-                }
-            } catch (error) {
-                console.log('Failed to get error', error);
-            }
-        });
-    }, []);
-
     const onPress = (value: string) => {
         if (balance === 0 && value === 'SendAddress') {
             dispatch(setMessage('Balance too low', 'info'));
@@ -232,6 +174,7 @@ const Account = ({navigation}: AccountProps) => {
 
     return (
         <Container style={styles.container}>
+            <BeaconMessages navigation={navigation}/>
             <ScrollView contentContainerStyle={{flexGrow: 1}}>
                 <View>
                     <View style={styles.account}>

@@ -3,12 +3,12 @@ import * as React from 'react';
 import {Text, StyleSheet, TouchableOpacity, NativeModules} from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
 
-import SafeContainer from '../components/SafeContainer';
+import SafeContainer from '../../components/SafeContainer';
 
-import {setBeaconPermissionsLoading} from '../reducers/app/actions';
+import {setBeaconPermissionsLoading} from '../../reducers/app/actions';
 
-import {BeaconConnectionRequestProps} from '../screens/types';
-import {State} from '../reducers/types';
+import {BeaconConnectionRequestProps} from '../../screens/types';
+import {State} from '../../reducers/types';
 
 const displayScopes: Record<string, string> = {
     operation_request: 'Operation Request',

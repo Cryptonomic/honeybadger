@@ -18,9 +18,9 @@ import ResetPin from '../screens/ResetPin';
 import SecurityLevel from '../screens/SecurityLevel';
 import RecoveryPhrase from '../screens/RecoveryPhrase';
 import RestoreAccount from '../screens/RestoreAccount';
-import BeaconConnectionRequest from '../screens/BeaconConnectionRequest';
-import BeaconPermissionsRequest from '../screens/BeaconPermissionsRequest';
-import BeaconAuthorization from '../screens/BeaconAuthorization';
+import BeaconConnectionRequest from '../beacon/screens/BeaconConnectionRequest';
+import BeaconPermissionsRequest from '../beacon/screens/BeaconPermissionsRequest';
+import BeaconAuthorization from '../beacon/screens/BeaconAuthorization';
 
 const MainNavigator = createStackNavigator(
     {

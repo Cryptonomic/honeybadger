@@ -6,13 +6,13 @@ import {Text, StyleSheet, TouchableOpacity, NativeModules} from 'react-native';
 import {RNCamera} from 'react-native-camera';
 import bs58check from 'bs58check';
 
-import SafeContainer from '../components/SafeContainer';
-import CustomHeader from '../components/CustomHeader';
+import SafeContainer from '../../components/SafeContainer';
+import CustomHeader from '../../components/CustomHeader';
 
-import {setBeaconPermissionsLoading} from '../reducers/app/actions';
+import {setBeaconPermissionsLoading} from '../../reducers/app/actions';
 
-import {State} from '../reducers/types';
-import {BeaconConnectionRequestProps} from '../screens/types';
+import {State} from '../../reducers/types';
+import {BeaconConnectionRequestProps} from '../../screens/types';
 
 interface displayDataProps {
     //PeerInfo

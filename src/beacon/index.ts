@@ -1,14 +1,14 @@
 import { FunctionComponent } from 'react';
 
-import General from './General';
-import DexterEthtzPool from './DexterEthtzPool';
-import DexterUsdtzPool from './DexterUsdtzPool';
-import DexterWxtzPool from './DexterWxtzPool';
-import DexterTzbtcPool from './DexterTzbtcPool';
-import EthtzToken from './EthtzToken';
-import UsdtzToken from './UsdtzToken';
-import WxtzToken from './WxtzToken';
-import TzbtcToken from './TzbtcToken';
+import General from './templates/General';
+import DexterEthtzPool from './templates/DexterEthtzPool';
+import DexterUsdtzPool from './templates/DexterUsdtzPool';
+import DexterWxtzPool from './templates/DexterWxtzPool';
+import DexterTzbtcPool from './templates/DexterTzbtcPool';
+import EthtzToken from './templates/EthtzToken';
+import UsdtzToken from './templates/UsdtzToken';
+import WxtzToken from './templates/WxtzToken';
+import TzbtcToken from './templates/TzbtcToken';
 
 enum ContractTypes {
     DEXTER_ETHTZ_POOL = 'KT19c8n5mWrqpxMcR3J687yssHxotj88nGhZ',
