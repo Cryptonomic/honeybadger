@@ -24,7 +24,7 @@ interface displayDataProps {
     relayServer: string;
 }
 
-const testData = {"id":"72fb2dde-d84d-8baa-659d-683b58c74e2d","type":"p2p-pairing-request","name":"Beacon Example Dapp","version":"2","publicKey":"520cf34c53803773f044af9d4ee6a052f9909a2042bcab1dced053b52facb1a0","relayServer":"matrix.papers.tech"}
+const testData = {"id":"55914511-4a97-c7ae-f3ec-8f957184d271","type":"p2p-pairing-request","name":"Beacon Example Dapp","version":"2","publicKey":"049e5c547297cd009ec93e92fa76d1b51b099884cc9cae4c8815ff9f4a88ee05","relayServer":"matrix.papers.tech"}
 
 const BeaconConnectionRequest = ({
     navigation,

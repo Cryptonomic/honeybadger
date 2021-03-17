@@ -13,7 +13,8 @@ import {
     SetDelegationExpectedDate,
     SetPendingOperationsAction,
 } from './types';
-import {Operation, BeaconErrorMessage} from '../types';
+import {Operation} from '../types';
+import {BeaconErrorMessage} from '../../beacon/types';
 
 export const SET_KEYS = 'SET_KEYS';
 export const SET_BALANCE = 'SET_BALANCE';

@@ -4,7 +4,7 @@ import {useDispatch} from 'react-redux';
 
 import {setBeaconMessage, setBeaconPermissionsLoading} from '../reducers/app/actions';
 
-import {BeaconMessageTypes, BeaconErrorTypes, BeaconSuccessTypes} from '../reducers/types';
+import {BeaconMessageTypes, BeaconErrorTypes, BeaconSuccessTypes} from './types';
 import {NavigationProps} from '../screens/types';
 
 const BeaconMessages = ({ navigation }: NavigationProps) => {
@@ -44,11 +44,22 @@ const BeaconMessages = ({ navigation }: NavigationProps) => {
 
         BeaconEmmiter.addListener('onSuccess', response => {
             try {
-                console.log('BEACON_SUCCESS', response);
+                if (response.type === BeaconSuccessTypes.GET_PERMISSIONS) {
+                    const permissions = JSON.parse(response);
+                    console.log('BeaconPermissions', permissions);
+                    return;
+                }
+
+                if (response.type === BeaconSuccessTypes.GET_PEERS) {
+                    const peers = JSON.parse(response);
+                    console.log('BeaconPeers', peers);
+                    return;
+                }
 
                 if (response.type === BeaconSuccessTypes.PERMISSION_SUCCESS) {
                     dispatch(setBeaconPermissionsLoading());
                     navigation.navigate('Account');
+                    return;
                 }
             } catch (error) {
                 console.log('Failed to get message', error);
