@@ -51,31 +51,33 @@
         }
       }
     }
-  
-    @objc
-    func getPeers() {
-      self.beaconClient?.getPeers() { result in
-        switch result {
-          case .success(_):
-            print("Get Peers Success")
-            self.sendEvent(withName: "onSuccess", body: ["type": "get_peers", "data": result])
-          case let .failure(error):
-            print("Could not get peers, got error: \(error)")
-        }
-      }
+
+    func handlePermissions(result: Result<[Beacon.Permission], Beacon.Error>) {
+      let encoder = JSONEncoder()
+      encoder.outputFormatting = .prettyPrinted
+
+      let data = try? encoder.encode(try? result.get())
+
+      self.sendEvent(withName: "onSuccess", body: ["type": "get_permissions", "data": data.flatMap { String(data: $0, encoding: .utf8) }])
     }
   
     @objc
     func getPermissions() {
-      self.beaconClient?.getPermissions() { result in
-        switch result {
-          case .success(_):
-            print("Get Permissions Success")
-            self.sendEvent(withName: "onSuccess", body: ["type": "get_permissions", "data": result])
-          case let .failure(error):
-            print("Could not get permissions, got error: \(error)")
-        }
-      }
+      self.beaconClient?.getPermissions(completion: self.handlePermissions)
+    }
+  
+    func handlePeers(result: Result<[Beacon.Peer], Beacon.Error>) {
+      let encoder = JSONEncoder()
+      encoder.outputFormatting = .prettyPrinted
+
+      let data = try? encoder.encode(try? result.get())
+
+      self.sendEvent(withName: "onSuccess", body: ["type": "get_peers", "data": data.flatMap { String(data: $0, encoding: .utf8) }])
+    }
+  
+    @objc
+    func getPeers() {
+      self.beaconClient?.getPeers(completion: self.handlePeers)
     }
   
     @objc
