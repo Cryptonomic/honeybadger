@@ -11,6 +11,7 @@ import {
 import {useSelector} from 'react-redux';
 
 import SafeContainer from '../../components/SafeContainer';
+import CustomHeader from '../../components/CustomHeader';
 
 import {BeaconConnectionRequestProps} from '../../screens/types';
 import {State} from '../../reducers/types';
@@ -31,6 +32,8 @@ const BeaconInfo = ({navigation}: BeaconConnectionRequestProps) => {
     const onPressScanQrCode = () =>
         navigation.navigate('BeaconConnectionRequest');
 
+    const onPressBack = () => navigation.navigate('Account');
+
     useEffect(() => {}, [permissions, metadata]);
 
     useEffect(() => {
@@ -44,6 +47,7 @@ const BeaconInfo = ({navigation}: BeaconConnectionRequestProps) => {
     return (
         <View style={s.container}>
             <SafeContainer>
+                <CustomHeader onBack={onPressBack}/>
                 <Text style={s.title}>dApps connected using Beacon</Text>
                 {!permissions.length && (
                     <View style={s.center}>
