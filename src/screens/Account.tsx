@@ -11,6 +11,9 @@ import {
     MenuOption,
     MenuTrigger,
 } from 'react-native-popup-menu';
+import {NativeModules} from 'react-native';
+
+import BeaconMessages from '../beacon/BeaconMessages';
 
 import {syncAccount} from '../reducers/app/thunks';
 import {setMessage} from '../reducers/messages/actions';
@@ -46,10 +49,7 @@ const Account = ({navigation}: AccountProps) => {
     const [refreshTimer, setRefreshTimer] = useState(undefined as any);
     const [securityLevel, setSecurityLevel] = useState("3");
     const changeTab = (newTab: number) => {
-        if (newTab === tab) {
-            return;
-        }
-
+        if (newTab === tab) { return; }
         setTab(newTab);
     };
 
@@ -58,10 +58,10 @@ const Account = ({navigation}: AccountProps) => {
             try {
                 const wallet = await Keychain.getGenericPassword();
                 let data: any= await Keychain.getInternetCredentials('securitySetup');
-                if(data) {
+                if (data) {
                     data = JSON.parse(data.password);
                     if (data.securitySetup && data.phraseBackedUp) {
-                        setSecurityLevel("2");    
+                        setSecurityLevel("2");
                     } else if(data.securitySetup || data.phraseBackedUp) {
                         setSecurityLevel("1")
                     } else {
@@ -70,7 +70,7 @@ const Account = ({navigation}: AccountProps) => {
                 } else {
                     setSecurityLevel("0");
                 }
-               
+
                 if (wallet) {
                     dispatch(syncAccount());
                     if (!refreshTimer) {
@@ -79,7 +79,7 @@ const Account = ({navigation}: AccountProps) => {
                 } else {
                     navigation.replace('Welcome');
                 }
-                
+
             } catch (error) {
                 console.log("Keychain couldn't be accessed!", error);
             }
@@ -92,7 +92,7 @@ const Account = ({navigation}: AccountProps) => {
                     if(data) {
                         data = JSON.parse(data.password);
                         if (data.securitySetup && data.phraseBackedUp) {
-                            setSecurityLevel("2");    
+                            setSecurityLevel("2");
                         } else if (data.securitySetup || data.phraseBackedUp) {
                             setSecurityLevel("1")
                         } else {
@@ -128,7 +128,7 @@ const Account = ({navigation}: AccountProps) => {
 
     const onSettingsSelect = (item: any) => {
         setOpenSettings(false);
-        navigation.navigate(item.title);
+        navigation.navigate(item.screen);
     };
 
     const toggleModal = () => {
@@ -150,9 +150,24 @@ const Account = ({navigation}: AccountProps) => {
         navigation.navigate('Welcome');
     };
 
+    const onResetBeacon = () => {
+        NativeModules.BeaconBridge.removePeers();
+        NativeModules.BeaconBridge.removePermissions();
+        NativeModules.BeaconBridge.removeAppMetadata();
+    }
+
+    const onTest = () => {
+        NativeModules.BeaconBridge.getPeers();
+        NativeModules.BeaconBridge.getPermissions();
+        NativeModules.BeaconBridge.getAppMetadata();
+    }
+
     const menuItems = [
-        { title: 'Settings', action: onSettingsSelect },
-        //{ title: 'Clear Data', action: onClearData }
+        { title: 'Beacon', screen: 'BeaconInfo', action: onSettingsSelect },
+        { title: 'Beacon Reset', action: onResetBeacon },
+        { title: 'Beacon Data', action: onTest },
+        { title: 'Settings', screen: 'Settings', action: onSettingsSelect },
+        { title: 'Clear Data', action: onClearData }
     ];
 
     const navigateToSecurity = () => {
@@ -161,6 +176,7 @@ const Account = ({navigation}: AccountProps) => {
 
     return (
         <Container style={styles.container}>
+            <BeaconMessages navigation={navigation}/>
             <ScrollView contentContainerStyle={{flexGrow: 1}}>
                 <View>
                     <View style={styles.account}>
@@ -267,7 +283,7 @@ const Account = ({navigation}: AccountProps) => {
                                 <Circle style={{width:60,height:59,marginRight:16}}/>
                             </View> */}
                             <View>
-                                <RightArrow style={{width:9,height:14}}/> 
+                                <RightArrow style={{width:9,height:14}}/>
                             </View>
                         </TouchableOpacity>
                     }
@@ -307,8 +323,8 @@ const Account = ({navigation}: AccountProps) => {
                             </View>
                         </TouchableOpacity>
                     } */}
-                    
-                    
+
+
                     <View style={styles.tabs}>
                         <View
                             style={[

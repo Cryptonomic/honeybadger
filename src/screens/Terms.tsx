@@ -98,9 +98,7 @@ const Terms = ({navigation}: WelcomeProps) => {
                     <Pdf
                         source={sources[tab]}
                         scale={1.0}
-                        onLoadComplete={(numberOfPages, filePath) => {
-                            console.log(`number of pages: ${numberOfPages}`);
-                        }}
+                        onLoadComplete={(numberOfPages, filePath) => { }}
                         onError={(error) => {
                             console.log(error);
                         }}

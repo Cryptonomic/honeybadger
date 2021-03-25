@@ -35,13 +35,13 @@ const Settings = ({navigation}: SettingsProps) => {
 
                 if (data) {
                     if (data.securitySetup && data.phraseBackedUp) {
-                        setSecurityLevel("2");    
+                        setSecurityLevel("2");
                     } else if(data.securitySetup || data.phraseBackedUp) {
                         setSecurityLevel("1")
                     } else {
                         setSecurityLevel("0");
                     }
-                    
+
                 } else {
                     setSecurityLevel("0");
                 }
@@ -179,7 +179,7 @@ const Settings = ({navigation}: SettingsProps) => {
 
                                             { name == 'Security Level' &&
                                                 <React.Fragment>
-                                                    <Text style={styles.subTitle}>{getSecurityLevelText(SecurityLevel)}</Text> 
+                                                    <Text style={styles.subTitle}>{getSecurityLevelText(SecurityLevel)}</Text>
                                                 </React.Fragment>
                                             }
 
@@ -207,7 +207,7 @@ const Settings = ({navigation}: SettingsProps) => {
                                                 size={15}
                                                 color="#909090"
                                             />
-                                            
+
                                         )}
                                     </>
                                 );

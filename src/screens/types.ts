@@ -3,7 +3,9 @@ export interface NavigationProps {
         goBack: () => void;
         navigate: (target: string, params?: any) => void;
         replace: (target: string) => void;
-        getParam: (key: String) => boolean
+        getParam: (key: String) => boolean;
+        isFocused: () => boolean;
+        addListener: (type: string, fn: (payload: any) => void) => void;
     };
 }
 
@@ -20,3 +22,4 @@ export type SettingsProps = NavigationProps;
 export type SeedPhraseProps = NavigationProps;
 export type DelegateAddressProps = NavigationProps;
 export type DelegateReviewProps = NavigationProps;
+export type BeaconConnectionRequestProps = NavigationProps;

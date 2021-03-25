@@ -11,9 +11,15 @@ import {
     SET_REVEALED,
     SET_DELEGATION,
     SET_EXPECTEDDELEGATEDATE,
-    SET_PENDING_OPERATIONS
+    SET_PENDING_OPERATIONS,
+    SET_BEACON_MESSAGE,
+    SET_BEACON_PERMISSIONS,
+    SET_BEACON_METADATA,
+    SET_BEACON_PERMISSIONS_LOADING,
+    SET_BEACON_ERROR_MESSAGE,
 } from './actions';
 import {Operation} from '../types';
+import {BeaconErrorMessage} from '../../beacon/types';
 
 export interface State {
     publicKey: string; // TODO: store a KeyStore object
@@ -38,6 +44,34 @@ export interface State {
     expectedPaymentDate: Date;
     pendingTransactions: [];
     pendingDelegations: [];
+    beaconMessage: any;
+    beaconPermissions: any;
+    beaconMetadata: any;
+    beaconPermissionLoading: boolean;
+    beaconErrorMessage: BeaconErrorMessage | null;
+}
+
+export interface BeaconErrorMessageAction {
+    type: typeof SET_BEACON_ERROR_MESSAGE;
+    beaconErrorMessage: BeaconErrorMessage | null;
+}
+export interface BeaconPermissionLoadingAction {
+    type: typeof SET_BEACON_PERMISSIONS_LOADING;
+    beaconPermissionLoading: boolean;
+}
+export interface BeaconMessageAction {
+    type: typeof SET_BEACON_MESSAGE;
+    beaconMessage: any;
+}
+
+export interface BeaconPermissionsAction {
+    type: typeof SET_BEACON_PERMISSIONS;
+    beaconPermissions: any;
+}
+
+export interface BeaconMetadataAction {
+    type: typeof SET_BEACON_METADATA;
+    beaconMetadata: any
 }
 
 export interface SetKeysAction {
@@ -114,4 +148,8 @@ export type AppActions =
     | SetDelegationAction
     | SetDelegationExpectedDate
     | SetPendingOperationsAction
-    ;
+    | BeaconMessageAction
+    | BeaconPermissionsAction
+    | BeaconMetadataAction
+    | BeaconPermissionLoadingAction
+    | BeaconErrorMessageAction;

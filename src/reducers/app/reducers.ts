@@ -12,7 +12,12 @@ import {
     SET_REVEALED,
     SET_DELEGATION,
     SET_EXPECTEDDELEGATEDATE,
-    SET_PENDING_OPERATIONS
+    SET_PENDING_OPERATIONS,
+    SET_BEACON_MESSAGE,
+    SET_BEACON_PERMISSIONS,
+    SET_BEACON_METADATA,
+    SET_BEACON_PERMISSIONS_LOADING,
+    SET_BEACON_ERROR_MESSAGE,
 } from './actions';
 
 const initialState = {
@@ -32,7 +37,12 @@ const initialState = {
     delegateAddress: '',
     expectedPaymentDate: null,
     pendingTransactions: [],
-    pendingDelegations: []
+    pendingDelegations: [],
+    beaconMessage: {},
+    beaconPermissions: [],
+    beaconMetadata: [],
+    beaconPermissionLoading: false,
+    beaconErrorMessage: null,
 };
 
 const app = (state = initialState, action: AppActions) => {
@@ -75,6 +85,16 @@ const app = (state = initialState, action: AppActions) => {
             return {...state, expectedPaymentDate: action.date};
         case SET_PENDING_OPERATIONS:
             return {...state, pendingTransactions: action.transactions, pendingDelegations: action.delegations};
+        case SET_BEACON_MESSAGE:
+            return {...state, beaconMessage: action.beaconMessage};
+        case SET_BEACON_PERMISSIONS:
+            return {...state, beaconPermissions: action.beaconPermissions};
+        case SET_BEACON_METADATA:
+            return {...state, beaconMetadata: action.beaconMetadata};
+        case SET_BEACON_PERMISSIONS_LOADING:
+            return {...state, beaconPermissionLoading: action.beaconPermissionLoading};
+        case SET_BEACON_ERROR_MESSAGE:
+            return {...state, beaconErrorMessage: action.beaconErrorMessage};
         default:
             return state;
     }

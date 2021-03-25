@@ -27,7 +27,7 @@ const Welcome = ({navigation}: WelcomeProps) => {
     useEffect(() => {
         async function load() {
             let keys: any;
-            let securityConfig: any;
+            let securityConfig: any
 
             try {
                 keys = await Keychain.getGenericPassword();
@@ -74,7 +74,7 @@ const Welcome = ({navigation}: WelcomeProps) => {
         load();
     }, [dispatch, navigation]);
 
-    const getStarted = () => navigation.replace('Terms');
+    const getStarted = () => { navigation.replace('Terms') };
 
     const showAppLock = () => {
         TouchID.isSupported()
@@ -127,7 +127,7 @@ const Welcome = ({navigation}: WelcomeProps) => {
     }
 
     return (
-        !isPin ? 
+        !isPin ?
         <Container>
             <View style={styles.waveBg} />
             <SafeContainer>
@@ -147,7 +147,7 @@ const Welcome = ({navigation}: WelcomeProps) => {
                     </View>
                     <View style={styles.item}>
                         {
-                            (isAccountPresent && isPinEnabled) && 
+                            (isAccountPresent && isPinEnabled) &&
                             <React.Fragment>
                                 <Button style={styles.btn} onPress={showPin}>
                                     <Text style={styles.typo3}>Enter Pin</Text>

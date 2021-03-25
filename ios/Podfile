@@ -13,12 +13,3 @@ target 'honeybadger' do
     # Pods for testing
   end
 end
-
-target 'honeybadger-tvOS' do
-  # Pods for honeybadger-tvOS
-
-  target 'honeybadger-tvOSTests' do
-    inherit! :search_paths
-    # Pods for testing
-  end
-end
