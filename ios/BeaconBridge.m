@@ -8,6 +8,8 @@
    RCT_EXTERN_METHOD(sendResponse:(NSString *)payload)
    RCT_EXTERN_METHOD(removePermissions)
    RCT_EXTERN_METHOD(removePeers)
+   RCT_EXTERN_METHOD(removeAppMetadata)
    RCT_EXTERN_METHOD(getPermissions)
    RCT_EXTERN_METHOD(getPeers)
+   RCT_EXTERN_METHOD(getAppMetadata)
  @end
