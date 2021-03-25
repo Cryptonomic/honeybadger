@@ -29,6 +29,7 @@
             self.beaconClient = client
             self.listenForRequests()
             print("-Start-Beacon-Success-", client)
+            self.sendEvent(withName: "onSuccess", body: ["type": "start_beacon", "data": "success"])
           case let .failure(error):
             print("Could not create Beacon client, got error: \(error)")
 //            self.sendEvent(withName: "onError", body: ["Could not create Beacon client, got error: \(error)"])
@@ -80,6 +81,19 @@
       self.beaconClient?.getPeers(completion: self.handlePeers)
     }
   
+    func handleAppMetadata(result: Result<[Beacon.AppMetadata], Beacon.Error>) {
+      let encoder = JSONEncoder()
+      encoder.outputFormatting = .prettyPrinted
+      let data = try? encoder.encode(try? result.get())
+      
+      self.sendEvent(withName: "onSuccess", body: ["type": "get_app_metadata", "data": data.flatMap { String(data: $0, encoding: .utf8) }])
+    }
+  
+    @objc
+    func getAppMetadata() {
+      self.beaconClient?.getAppMetadata(completion: self.handleAppMetadata)
+    }
+  
     @objc
     func removePermissions() {
       self.beaconClient?.removeAllPermissions() { result in
@@ -100,6 +114,18 @@
             print("Remove Peers Success")
           case let .failure(error):
             print("Could not remove peers, got error: \(error)")
+        }
+      }
+    }
+  
+    @objc
+    func removeAppMetadata() {
+      self.beaconClient?.removeAllMetadata() { result in
+        switch result {
+          case .success(_):
+            print("Remove AppMetadata Success")
+          case let .failure(error):
+            print("Could not remove metadata, got error: \(error)")
         }
       }
     }
