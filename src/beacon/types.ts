@@ -8,8 +8,8 @@ export enum BeaconErrorTypes {
 }
 
 export enum BeaconMessageTypes {
-     PERMISSION_REQUEST = 'permission_request',
-     OPERATION_REQUEST = 'operation_request',
+    PERMISSION_REQUEST = 'permission_request',
+    OPERATION_REQUEST = 'operation_request',
 }
 
 export enum BeaconSuccessTypes {

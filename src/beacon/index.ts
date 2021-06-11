@@ -1,4 +1,4 @@
-import { FunctionComponent } from 'react';
+import {FunctionComponent} from 'react';
 
 import General from './templates/General';
 import DexterEthtzPool from './templates/DexterEthtzPool';
@@ -22,16 +22,16 @@ enum ContractTypes {
 }
 
 const templates: Record<string, FunctionComponent> = {
-    "general": General,
-    "dexter_ethtz_pool": DexterEthtzPool,
-    "dexter_usdtz_pool": DexterUsdtzPool,
-    "dexter_wxtz_pool": DexterWxtzPool,
-    "dexter_tzbtc_pool": DexterTzbtcPool,
-    'ethtz_token': EthtzToken,
-    'usdtz_token': UsdtzToken,
-    'wxtz_token': WxtzToken,
-    'tzbtc_toke': TzbtcToken,
-}
+    general: General,
+    dexter_ethtz_pool: DexterEthtzPool,
+    dexter_usdtz_pool: DexterUsdtzPool,
+    dexter_wxtz_pool: DexterWxtzPool,
+    dexter_tzbtc_pool: DexterTzbtcPool,
+    ethtz_token: EthtzToken,
+    usdtz_token: UsdtzToken,
+    wxtz_token: WxtzToken,
+    tzbtc_toke: TzbtcToken,
+};
 
 const getBeaconTemplate = (id: string = '') => {
     switch (true) {
@@ -54,6 +54,6 @@ const getBeaconTemplate = (id: string = '') => {
         default:
             return templates['general'];
     }
-}
+};
 
 export default getBeaconTemplate;

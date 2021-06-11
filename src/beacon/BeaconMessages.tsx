@@ -2,34 +2,47 @@ import {useEffect} from 'react';
 import {NativeModules, NativeEventEmitter} from 'react-native';
 import {useDispatch} from 'react-redux';
 
-import {setBeaconMessage, setBeaconPermissions, setBeaconPermissionsLoading} from '../reducers/app/actions';
+import {
+    setBeaconMessage,
+    setBeaconPermissions,
+    setBeaconPermissionsLoading,
+} from '../reducers/beacon/actions';
 
-import {BeaconMessageTypes, BeaconErrorTypes, BeaconSuccessTypes} from './types';
+import {
+    BeaconMessageTypes,
+    BeaconErrorTypes,
+    BeaconSuccessTypes,
+} from './types';
 import {NavigationProps} from '../screens/types';
 
-const BeaconMessages = ({ navigation }: NavigationProps) => {
+const BeaconMessages = ({navigation}: NavigationProps) => {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        const BeaconEmmiter = new NativeEventEmitter(NativeModules.BeaconBridge);
+        const BeaconEmmiter = new NativeEventEmitter(
+            NativeModules.BeaconBridge,
+        );
 
         BeaconEmmiter.addListener('onMessage', response => {
             try {
                 const beaconMessage = JSON.parse(response);
                 console.log('BEACON_MESSAGE', beaconMessage);
 
-                if (beaconMessage.type === BeaconMessageTypes.PERMISSION_REQUEST) {
+                if (
+                    beaconMessage.type === BeaconMessageTypes.PERMISSION_REQUEST
+                ) {
                     dispatch(setBeaconPermissionsLoading());
                     dispatch(setBeaconMessage(beaconMessage));
                     navigation.navigate('BeaconPermissionsRequest');
                 }
 
-                if (beaconMessage.type === BeaconMessageTypes.OPERATION_REQUEST) {
+                if (
+                    beaconMessage.type === BeaconMessageTypes.OPERATION_REQUEST
+                ) {
                     console.log('beacon_operation', beaconMessage);
                     dispatch(setBeaconMessage(beaconMessage));
                     navigation.navigate('BeaconAuthorization');
                 }
-
             } catch (error) {
                 console.log('Failed to get message', error);
             }
@@ -38,7 +51,7 @@ const BeaconMessages = ({ navigation }: NavigationProps) => {
         BeaconEmmiter.addListener('onSuccess', response => {
             try {
                 if (response.type === BeaconSuccessTypes.START_BEACON) {
-                    console.log('StartBeacon Success')
+                    console.log('StartBeacon Success');
                     NativeModules.BeaconBridge.getPermissions();
                     NativeModules.BeaconBridge.getAppMetadata();
                     return;
@@ -78,7 +91,6 @@ const BeaconMessages = ({ navigation }: NavigationProps) => {
                 console.log('BEACON_ERROR', response);
 
                 if (response.type === BeaconErrorTypes.ADD_PEER_ERROR) {
-
                 }
             } catch (error) {
                 console.log('Failed to get error', error);
@@ -88,12 +100,12 @@ const BeaconMessages = ({ navigation }: NavigationProps) => {
         try {
             NativeModules.BeaconBridge.startBeacon();
         } catch (error) {
-            console.log("Failed to init BeaconBridge", error);
+            console.log('Failed to init BeaconBridge', error);
             return;
         }
-    }, []);
+    }, [dispatch, navigation]);
 
     return null;
-}
+};
 
 export default BeaconMessages;
