@@ -21,9 +21,9 @@ import ImgBeaconIntegration from '../../../assets/beacon-integration.svg';
 const BeaconInfo = ({navigation}: BeaconConnectionRequestProps) => {
     const isFocused = navigation.isFocused();
     const permissions = useSelector(
-        (state: State) => state.app.beaconPermissions,
+        (state: State) => state.beacon.beaconPermissions,
     );
-    const metadata = useSelector((state: State) => state.app.beaconMetadata);
+    const metadata = useSelector((state: State) => state.beacon.beaconMetadata);
 
     const onPressLearnMore = async () => {
         await Linking.openURL('https://www.walletbeacon.io/');
@@ -47,7 +47,7 @@ const BeaconInfo = ({navigation}: BeaconConnectionRequestProps) => {
     return (
         <View style={s.container}>
             <SafeContainer>
-                <CustomHeader onBack={onPressBack}/>
+                <CustomHeader onBack={onPressBack} />
                 <Text style={s.title}>dApps connected using Beacon</Text>
                 {!permissions.length && (
                     <View style={s.center}>

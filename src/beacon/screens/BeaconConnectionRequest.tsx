@@ -9,7 +9,7 @@ import bs58check from 'bs58check';
 import SafeContainer from '../../components/SafeContainer';
 import CustomHeader from '../../components/CustomHeader';
 
-import {setBeaconPermissionsLoading} from '../../reducers/app/actions';
+import {setBeaconPermissionsLoading} from '../../reducers/beacon/actions';
 
 import {State} from '../../reducers/types';
 import {BeaconConnectionRequestProps} from '../../screens/types';
@@ -24,14 +24,14 @@ interface displayDataProps {
     relayServer: string;
 }
 
-const testData = {"id":"55914511-4a97-c7ae-f3ec-8f957184d271","type":"p2p-pairing-request","name":"Beacon Example Dapp","version":"2","publicKey":"049e5c547297cd009ec93e92fa76d1b51b099884cc9cae4c8815ff9f4a88ee05","relayServer":"matrix.papers.tech"}
+const testData = {"id":"33543380-56da-e291-b68f-5b0971511326","type":"p2p-pairing-request","name":"Example DApp","version":"2","publicKey":"871b1d7201807904c13cb6052f583d0f6f80f2a1bb2a7f65668c632baaa1aeb0","relayServer":"matrix.papers.tech"}
 
 const BeaconConnectionRequest = ({
     navigation,
 }: BeaconConnectionRequestProps) => {
     const dispatch = useDispatch();
     const beaconPermissionLoading = useSelector(
-        (state: State) => state.app.beaconPermissionLoading,
+        (state: State) => state.beacon.beaconPermissionLoading,
     );
     const [showCamera, setShowCamera] = useState(false);
     const [data, setData] = useState<displayDataProps | null>(testData);
