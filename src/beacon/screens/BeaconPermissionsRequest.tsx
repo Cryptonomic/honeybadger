@@ -5,7 +5,7 @@ import {useSelector, useDispatch} from 'react-redux';
 
 import SafeContainer from '../../components/SafeContainer';
 
-import {setBeaconPermissionsLoading} from '../../reducers/app/actions';
+import {setBeaconPermissionsLoading} from '../../reducers/beacon/actions';
 
 import {BeaconConnectionRequestProps} from '../../screens/types';
 import {State} from '../../reducers/types';
@@ -21,10 +21,10 @@ const BeaconPermissionsRequest = ({
     const dispatch = useDispatch();
     const publicKey = useSelector((state: State) => state.app.publicKey);
     const beaconMessage = useSelector(
-        (state: State) => state.app.beaconMessage,
+        (state: State) => state.beacon.beaconMessage,
     );
     const beaconPermissionLoading = useSelector(
-        (state: State) => state.app.beaconPermissionLoading,
+        (state: State) => state.beacon.beaconPermissionLoading,
     );
 
     const onCancel = () => {
