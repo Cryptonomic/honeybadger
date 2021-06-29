@@ -69,6 +69,9 @@ const BeaconMessages = ({navigation}: NavigationProps) => {
 
                 if (response.type === BeaconSuccessTypes.GET_PERMISSIONS) {
                     const permissions = JSON.parse(response.data);
+                    permissions.sort(
+                        (a: any, b: any) => b.connectedAt - a.connectedAt,
+                    );
                     dispatch(setBeaconPermissions(permissions));
                     return;
                 }
