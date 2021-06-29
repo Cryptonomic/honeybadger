@@ -6,6 +6,7 @@ import {
     setBeaconStatus,
     setBeaconMessage,
     setBeaconPermissions,
+    setBeaconPeers,
     setBeaconPermissionsLoading,
     setBeaconMetadata,
 } from '../reducers/beacon/actions';
@@ -55,6 +56,7 @@ const BeaconMessages = ({navigation}: NavigationProps) => {
                 if (response.type === BeaconSuccessTypes.START_BEACON) {
                     dispatch(setBeaconStatus(true));
                     NativeModules.BeaconBridge.getPermissions();
+                    NativeModules.BeaconBridge.getPeers();
                     NativeModules.BeaconBridge.getAppMetadata();
                     return;
                 }
@@ -73,14 +75,16 @@ const BeaconMessages = ({navigation}: NavigationProps) => {
 
                 if (response.type === BeaconSuccessTypes.GET_PEERS) {
                     const peers = JSON.parse(response.data);
-                    console.log('BeaconPeers', peers);
+                    dispatch(setBeaconPeers(peers));
                     return;
                 }
 
                 if (response.type === BeaconSuccessTypes.PERMISSION_SUCCESS) {
                     dispatch(setBeaconPermissionsLoading());
+                    NativeModules.BeaconBridge.getPermissions();
+                    NativeModules.BeaconBridge.getPeers();
+                    NativeModules.BeaconBridge.getAppMetadata();
                     navigation.navigate('Account');
-                    return;
                 }
             } catch (error) {
                 console.log('Failed to get message', error);

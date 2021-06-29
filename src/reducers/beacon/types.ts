@@ -4,6 +4,7 @@ import {
     SET_BEACON_STATUS,
     SET_BEACON_MESSAGE,
     SET_BEACON_PERMISSIONS,
+    SET_BEACON_PEERS,
     SET_BEACON_METADATA,
     SET_BEACON_PERMISSIONS_LOADING,
     SET_BEACON_ERROR_MESSAGE,
@@ -12,6 +13,7 @@ import {
 export interface BeaconState {
     beaconMessage: any;
     beaconPermissions: any;
+    beaconPeers: any;
     beaconMetadata: any;
     beaconPermissionLoading: boolean;
     beaconErrorMessage: BeaconErrorMessage | null;
@@ -40,6 +42,11 @@ export interface BeaconPermissionsAction {
     beaconPermissions: any;
 }
 
+export interface BeaconPeersAction {
+    type: typeof SET_BEACON_PEERS;
+    beaconPeers: any;
+}
+
 export interface BeaconMetadataAction {
     type: typeof SET_BEACON_METADATA;
     beaconMetadata: any;
@@ -49,6 +56,7 @@ export type BeaconActions =
     | BeaconStatusAction
     | BeaconMessageAction
     | BeaconPermissionsAction
+    | BeaconPeersAction
     | BeaconMetadataAction
     | BeaconPermissionLoadingAction
     | BeaconErrorMessageAction;

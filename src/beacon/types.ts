@@ -19,3 +19,8 @@ export enum BeaconSuccessTypes {
     GET_APP_METADATA = 'get_app_metadata',
     START_BEACON = 'start_beacon',
 }
+
+export enum BeaconPermissionScopes {
+    sign = 'Sign',
+    operation_request = 'Operation Request',
+}
