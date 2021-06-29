@@ -3,6 +3,7 @@ import {NativeModules, NativeEventEmitter} from 'react-native';
 import {useDispatch} from 'react-redux';
 
 import {
+    setBeaconStatus,
     setBeaconMessage,
     setBeaconPermissions,
     setBeaconPermissionsLoading,
@@ -52,6 +53,7 @@ const BeaconMessages = ({navigation}: NavigationProps) => {
         BeaconEmmiter.addListener('onSuccess', response => {
             try {
                 if (response.type === BeaconSuccessTypes.START_BEACON) {
+                    dispatch(setBeaconStatus(true));
                     NativeModules.BeaconBridge.getPermissions();
                     NativeModules.BeaconBridge.getAppMetadata();
                     return;

@@ -1,6 +1,7 @@
 import {BeaconState, BeaconActions} from './types';
 
 import {
+    SET_BEACON_STATUS,
     SET_BEACON_MESSAGE,
     SET_BEACON_PERMISSIONS,
     SET_BEACON_METADATA,
@@ -14,10 +15,13 @@ const initialState: BeaconState = {
     beaconMetadata: [],
     beaconPermissionLoading: false,
     beaconErrorMessage: null,
+    beaconReady: false,
 };
 
 const beacon = (state = initialState, action: BeaconActions) => {
     switch (action.type) {
+        case SET_BEACON_STATUS:
+            return {...state, beaconReady: action.beaconReady};
         case SET_BEACON_MESSAGE:
             return {...state, beaconMessage: action.beaconMessage};
         case SET_BEACON_PERMISSIONS:

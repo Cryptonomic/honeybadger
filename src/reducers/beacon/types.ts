@@ -1,6 +1,7 @@
 import {BeaconErrorMessage} from '../../beacon/types';
 
 import {
+    SET_BEACON_STATUS,
     SET_BEACON_MESSAGE,
     SET_BEACON_PERMISSIONS,
     SET_BEACON_METADATA,
@@ -14,8 +15,13 @@ export interface BeaconState {
     beaconMetadata: any;
     beaconPermissionLoading: boolean;
     beaconErrorMessage: BeaconErrorMessage | null;
+    beaconReady: boolean;
 }
 
+export interface BeaconStatusAction {
+    type: typeof SET_BEACON_STATUS;
+    beaconReady: boolean;
+}
 export interface BeaconErrorMessageAction {
     type: typeof SET_BEACON_ERROR_MESSAGE;
     beaconErrorMessage: BeaconErrorMessage | null;
@@ -40,6 +46,7 @@ export interface BeaconMetadataAction {
 }
 
 export type BeaconActions =
+    | BeaconStatusAction
     | BeaconMessageAction
     | BeaconPermissionsAction
     | BeaconMetadataAction

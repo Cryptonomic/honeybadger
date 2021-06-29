@@ -24,6 +24,7 @@ const BeaconInfo = ({navigation}: BeaconConnectionRequestProps) => {
         (state: State) => state.beacon.beaconPermissions,
     );
     const metadata = useSelector((state: State) => state.beacon.beaconMetadata);
+    const isReady = useSelector((state: State) => state.beacon.beaconReady);
 
     const onPressLearnMore = async () => {
         await Linking.openURL('https://www.walletbeacon.io/');
@@ -65,11 +66,19 @@ const BeaconInfo = ({navigation}: BeaconConnectionRequestProps) => {
                                 </Text>
                             </Text>
                         </View>
-                        <TouchableOpacity
-                            style={s.scan}
-                            onPress={onPressScanQrCode}>
-                            <Text>Scan QR Code</Text>
-                        </TouchableOpacity>
+                        {isReady && (
+                            <TouchableOpacity
+                                style={s.scan}
+                                onPress={onPressScanQrCode}>
+                                <Text>Scan QR Code</Text>
+                            </TouchableOpacity>
+                        )}
+                        {!isReady && (
+                            <Text style={s.unavailable}>
+                                Beacon service is unavailable. Please try again
+                                later.
+                            </Text>
+                        )}
                         <ImgBeaconIntegration style={s.img} />
                     </View>
                 )}
@@ -121,6 +130,9 @@ const s = StyleSheet.create({
         backgroundColor: '#fcd104',
         padding: 20,
         borderRadius: 20,
+    },
+    unavailable: {
+        marginTop: 40,
     },
 });
 
