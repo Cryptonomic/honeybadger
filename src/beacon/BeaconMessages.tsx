@@ -7,7 +7,7 @@ import {
     setBeaconMessage,
     setBeaconPermissions,
     setBeaconPeers,
-    setBeaconPermissionsLoading,
+    setBeaconLoading,
     setBeaconMetadata,
 } from '../reducers/beacon/actions';
 
@@ -34,7 +34,7 @@ const BeaconMessages = ({navigation}: NavigationProps) => {
                 if (
                     beaconMessage.type === BeaconMessageTypes.PERMISSION_REQUEST
                 ) {
-                    dispatch(setBeaconPermissionsLoading());
+                    dispatch(setBeaconLoading());
                     dispatch(setBeaconMessage(beaconMessage));
                     navigation.navigate('BeaconPermissionsRequest');
                 }
@@ -83,7 +83,7 @@ const BeaconMessages = ({navigation}: NavigationProps) => {
                 }
 
                 if (response.type === BeaconSuccessTypes.PERMISSION_SUCCESS) {
-                    dispatch(setBeaconPermissionsLoading());
+                    dispatch(setBeaconLoading());
                     NativeModules.BeaconBridge.getPermissions();
                     NativeModules.BeaconBridge.getPeers();
                     NativeModules.BeaconBridge.getAppMetadata();
@@ -97,6 +97,7 @@ const BeaconMessages = ({navigation}: NavigationProps) => {
         BeaconEmmiter.addListener('onError', response => {
             try {
                 console.log('BEACON_ERROR', response);
+                dispatch(setBeaconLoading());
 
                 if (response.type === BeaconErrorTypes.ADD_PEER_ERROR) {
                 }

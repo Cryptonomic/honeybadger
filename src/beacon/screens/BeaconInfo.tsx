@@ -13,13 +13,13 @@ import {useSelector} from 'react-redux';
 import SafeContainer from '../../components/SafeContainer';
 import CustomHeader from '../../components/CustomHeader';
 
-import {BeaconConnectionRequestProps} from '../../screens/types';
+import {BeaconProps} from '../../screens/types';
 import {State} from '../../reducers/types';
 import {BeaconPermissionScopes} from '../types';
 
 import ImgBeaconIntegration from '../../../assets/beacon-integration.svg';
 
-const BeaconInfo = ({navigation}: BeaconConnectionRequestProps) => {
+const BeaconInfo = ({navigation}: BeaconProps) => {
     const isFocused = navigation.isFocused();
     const permissions = useSelector(
         (state: State) => state.beacon.beaconPermissions,
@@ -106,7 +106,7 @@ const BeaconInfo = ({navigation}: BeaconConnectionRequestProps) => {
                                             scope: BeaconPermissionScopes,
                                             index: number,
                                         ) => (
-                                            <Text>
+                                            <Text key={scope}>
                                                 {`${
                                                     BeaconPermissionScopes[
                                                         scope

@@ -5,7 +5,7 @@ export const SET_BEACON_MESSAGE = 'SET_BEACON_MESSAGE';
 export const SET_BEACON_PERMISSIONS = 'SET_BEACON_PERMISSIONS';
 export const SET_BEACON_PEERS = 'SET_BEACON_PEERS';
 export const SET_BEACON_METADATA = 'SET_BEACON_METADATA';
-export const SET_BEACON_PERMISSIONS_LOADING = 'SET_BEACON_PERMISSIONS_LOADING';
+export const SET_BEACON_LOADING = 'SET_BEACON_LOADING';
 export const SET_BEACON_ERROR_MESSAGE = 'SET_BEACON_ERROR_MESSAGE';
 
 export const setBeaconStatus = (beaconReady: boolean = false) => ({
@@ -33,11 +33,9 @@ export const setBeaconMetadata = (beaconMetadata: any = []) => ({
     beaconMetadata,
 });
 
-export const setBeaconPermissionsLoading = (
-    beaconPermissionLoading: boolean = false,
-) => ({
-    type: SET_BEACON_PERMISSIONS_LOADING,
-    beaconPermissionLoading,
+export const setBeaconLoading = (beaconLoading: boolean = false) => ({
+    type: SET_BEACON_LOADING,
+    beaconLoading,
 });
 
 export const setBeaconErrorMessage = (

@@ -21,7 +21,7 @@ enum ContractTypes {
     TZBTC_TOKEN = 'KT1PWx2mnDueood7fEmfbBDKx1D9BAnnXitn',
 }
 
-const templates: Record<string, FunctionComponent> = {
+const templates: Record<string, FunctionComponent<{navigation: any}>> = {
     general: General,
     dexter_ethtz_pool: DexterEthtzPool,
     dexter_usdtz_pool: DexterUsdtzPool,

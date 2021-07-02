@@ -6,7 +6,7 @@ import {
     SET_BEACON_PERMISSIONS,
     SET_BEACON_PEERS,
     SET_BEACON_METADATA,
-    SET_BEACON_PERMISSIONS_LOADING,
+    SET_BEACON_LOADING,
     SET_BEACON_ERROR_MESSAGE,
 } from './actions';
 
@@ -15,7 +15,7 @@ const initialState: BeaconState = {
     beaconPermissions: [],
     beaconPeers: [],
     beaconMetadata: [],
-    beaconPermissionLoading: false,
+    beaconLoading: false,
     beaconErrorMessage: null,
     beaconReady: false,
 };
@@ -32,10 +32,10 @@ const beacon = (state = initialState, action: BeaconActions) => {
             return {...state, beaconPeers: action.beaconPeers};
         case SET_BEACON_METADATA:
             return {...state, beaconMetadata: action.beaconMetadata};
-        case SET_BEACON_PERMISSIONS_LOADING:
+        case SET_BEACON_LOADING:
             return {
                 ...state,
-                beaconPermissionLoading: action.beaconPermissionLoading,
+                beaconLoading: action.beaconLoading,
             };
         case SET_BEACON_ERROR_MESSAGE:
             return {...state, beaconErrorMessage: action.beaconErrorMessage};

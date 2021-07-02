@@ -5,9 +5,9 @@ import {useSelector, useDispatch} from 'react-redux';
 
 import SafeContainer from '../../components/SafeContainer';
 
-import {setBeaconPermissionsLoading} from '../../reducers/beacon/actions';
+import {setBeaconLoading} from '../../reducers/beacon/actions';
 
-import {BeaconConnectionRequestProps} from '../../screens/types';
+import {BeaconProps} from '../../screens/types';
 import {State} from '../../reducers/types';
 
 const displayScopes: Record<string, string> = {
@@ -15,16 +15,14 @@ const displayScopes: Record<string, string> = {
     sign: 'Sign',
 };
 
-const BeaconPermissionsRequest = ({
-    navigation,
-}: BeaconConnectionRequestProps) => {
+const BeaconPermissionsRequest = ({navigation}: BeaconProps) => {
     const dispatch = useDispatch();
     const publicKey = useSelector((state: State) => state.app.publicKey);
     const beaconMessage = useSelector(
         (state: State) => state.beacon.beaconMessage,
     );
-    const beaconPermissionLoading = useSelector(
-        (state: State) => state.beacon.beaconPermissionLoading,
+    const beaconLoading = useSelector(
+        (state: State) => state.beacon.beaconLoading,
     );
 
     const onCancel = () => {
@@ -33,18 +31,18 @@ const BeaconPermissionsRequest = ({
 
     const onAuthorize = async () => {
         try {
-            dispatch(setBeaconPermissionsLoading(true));
+            dispatch(setBeaconLoading(true));
             NativeModules.BeaconBridge.sendResponse(publicKey);
         } catch (e) {
             console.log('Failed to authorize');
-            dispatch(setBeaconPermissionsLoading());
+            dispatch(setBeaconLoading());
         }
     };
 
     return (
         <View style={s.container}>
             <SafeContainer>
-                {beaconPermissionLoading && (
+                {beaconLoading && (
                     <View style={s.loading}>
                         <Text>Loading...</Text>
                     </View>
