@@ -147,7 +147,7 @@ const Account = ({navigation}: AccountProps) => {
 
     const onDelegate = () => navigation.navigate('DelegateAddress');
 
-    const onSettingsSelect = (item: any) => {
+    const onMenuSelect = (item: any) => {
         setOpenSettings(false);
         navigation.navigate(item.screen);
     };
@@ -178,12 +178,13 @@ const Account = ({navigation}: AccountProps) => {
     };
 
     const beaconItems = [
-        {title: 'Beacon', screen: 'BeaconInfo', action: onSettingsSelect},
+        {title: 'Beacon', screen: 'BeaconInfo', action: onMenuSelect},
         {title: 'Beacon Reset', action: onResetBeacon},
     ];
 
     const commonItems = [
-        {title: 'Settings', screen: 'Settings', action: onSettingsSelect},
+        {title: 'NFT Gallery', screen: 'NFTGallery', action: onMenuSelect},
+        {title: 'Settings', screen: 'Settings', action: onMenuSelect},
         {title: 'Clear Data', action: onClearData},
     ];
 
