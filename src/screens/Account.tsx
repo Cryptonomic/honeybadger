@@ -1,6 +1,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, {useState, useEffect} from 'react';
-import {StyleSheet, Image, TouchableOpacity, ScrollView} from 'react-native';
+import {
+    StyleSheet,
+    Image,
+    TouchableOpacity,
+    ScrollView,
+    Platform,
+} from 'react-native';
 import {Container, Button, Text, View, Header} from 'native-base';
 import * as Keychain from 'react-native-keychain';
 import Modal from 'react-native-modal';
@@ -36,7 +42,9 @@ import Salmon from '../../assets/salmon.svg';
 
 const Account = ({navigation}: AccountProps) => {
     const dispatch = useDispatch();
-    const publicKeyHash = useSelector((state: State) => state.app.publicKeyHash);
+    const publicKeyHash = useSelector(
+        (state: State) => state.app.publicKeyHash,
+    );
     const balance = useSelector((state: State) => state.app.balance);
     const [tab, setTab] = useState(0);
     const [openSettings, setOpenSettings] = useState(false);
@@ -44,12 +52,18 @@ const Account = ({navigation}: AccountProps) => {
     const [isModalVisible, setModalVisible] = useState(false);
     const [modalWasShown, setModalWasShown] = useState(false);
     const [modalNext, setModalNext] = useState('');
-    const hasPendingOperations = useSelector((state: State) => (state.app.pendingDelegations.length > 0 || state.app.pendingTransactions.length > 0));
+    const hasPendingOperations = useSelector(
+        (state: State) =>
+            state.app.pendingDelegations.length > 0 ||
+            state.app.pendingTransactions.length > 0,
+    );
     const [isPendingModalVisible, setPendingModalVisible] = useState(false);
     const [refreshTimer, setRefreshTimer] = useState(undefined as any);
-    const [securityLevel, setSecurityLevel] = useState("3");
+    const [securityLevel, setSecurityLevel] = useState('3');
     const changeTab = (newTab: number) => {
-        if (newTab === tab) { return; }
+        if (newTab === tab) {
+            return;
+        }
         setTab(newTab);
     };
 
@@ -57,56 +71,60 @@ const Account = ({navigation}: AccountProps) => {
         async function load() {
             try {
                 const wallet = await Keychain.getGenericPassword();
-                let data: any= await Keychain.getInternetCredentials('securitySetup');
+                let data: any = await Keychain.getInternetCredentials(
+                    'securitySetup',
+                );
                 if (data) {
                     data = JSON.parse(data.password);
                     if (data.securitySetup && data.phraseBackedUp) {
-                        setSecurityLevel("2");
-                    } else if(data.securitySetup || data.phraseBackedUp) {
-                        setSecurityLevel("1")
+                        setSecurityLevel('2');
+                    } else if (data.securitySetup || data.phraseBackedUp) {
+                        setSecurityLevel('1');
                     } else {
-                        setSecurityLevel("0");
+                        setSecurityLevel('0');
                     }
                 } else {
-                    setSecurityLevel("0");
+                    setSecurityLevel('0');
                 }
 
                 if (wallet) {
                     dispatch(syncAccount());
                     if (!refreshTimer) {
-                        setRefreshTimer(setInterval(() => { dispatch(syncAccount()); }, 60000));
+                        setRefreshTimer(
+                            setInterval(() => {
+                                dispatch(syncAccount());
+                            }, 60000),
+                        );
                     }
                 } else {
                     navigation.replace('Welcome');
                 }
-
             } catch (error) {
                 console.log("Keychain couldn't be accessed!", error);
             }
         }
         load();
-        navigation.addListener(
-            'didFocus', async (payload: any) => {
-                try {
-                    let data: any= await Keychain.getInternetCredentials('securitySetup');
-                    if(data) {
-                        data = JSON.parse(data.password);
-                        if (data.securitySetup && data.phraseBackedUp) {
-                            setSecurityLevel("2");
-                        } else if (data.securitySetup || data.phraseBackedUp) {
-                            setSecurityLevel("1")
-                        } else {
-                            setSecurityLevel("0");
-                        }
+        navigation.addListener('didFocus', async (payload: any) => {
+            try {
+                let data: any = await Keychain.getInternetCredentials(
+                    'securitySetup',
+                );
+                if (data) {
+                    data = JSON.parse(data.password);
+                    if (data.securitySetup && data.phraseBackedUp) {
+                        setSecurityLevel('2');
+                    } else if (data.securitySetup || data.phraseBackedUp) {
+                        setSecurityLevel('1');
                     } else {
-                        setSecurityLevel("0");
+                        setSecurityLevel('0');
                     }
-                } catch (error) {
-                    // error
+                } else {
+                    setSecurityLevel('0');
                 }
+            } catch (error) {
+                // error
             }
-        )
-
+        });
     }, [navigation]);
 
     const onPress = (value: string) => {
@@ -114,9 +132,12 @@ const Account = ({navigation}: AccountProps) => {
             dispatch(setMessage('Balance too low', 'info'));
             return;
         }
-        if (value === 'SendAddress' && hasPendingOperations){
+        if (value === 'SendAddress' && hasPendingOperations) {
             togglePendingModal();
-        } else if ((value === 'SendAddress' || value === 'Receive') && !modalWasShown) {
+        } else if (
+            (value === 'SendAddress' || value === 'Receive') &&
+            !modalWasShown
+        ) {
             setModalNext(value);
             toggleModal();
         } else {
@@ -154,29 +175,30 @@ const Account = ({navigation}: AccountProps) => {
         NativeModules.BeaconBridge.removePeers();
         NativeModules.BeaconBridge.removePermissions();
         NativeModules.BeaconBridge.removeAppMetadata();
-    }
+    };
 
-    const onTest = () => {
-        NativeModules.BeaconBridge.getPeers();
-        NativeModules.BeaconBridge.getPermissions();
-        NativeModules.BeaconBridge.getAppMetadata();
-    }
-
-    const menuItems = [
-        { title: 'Beacon', screen: 'BeaconInfo', action: onSettingsSelect },
-        { title: 'Beacon Reset', action: onResetBeacon },
-        { title: 'Beacon Data', action: onTest },
-        { title: 'Settings', screen: 'Settings', action: onSettingsSelect },
-        { title: 'Clear Data', action: onClearData }
+    const beaconItems = [
+        {title: 'Beacon', screen: 'BeaconInfo', action: onSettingsSelect},
+        {title: 'Beacon Reset', action: onResetBeacon},
     ];
 
+    const commonItems = [
+        {title: 'Settings', screen: 'Settings', action: onSettingsSelect},
+        {title: 'Clear Data', action: onClearData},
+    ];
+
+    const menuItems =
+        Platform.OS === 'ios' ? [...beaconItems, ...commonItems] : commonItems;
+
     const navigateToSecurity = () => {
-        navigation.navigate("SecurityLevel")
-    }
+        navigation.navigate('SecurityLevel');
+    };
 
     return (
         <Container style={styles.container}>
-            <BeaconMessages navigation={navigation}/>
+            {Platform.OS === 'ios' && (
+                <BeaconMessages navigation={navigation} />
+            )}
             <ScrollView contentContainerStyle={{flexGrow: 1}}>
                 <View>
                     <View style={styles.account}>
@@ -193,7 +215,9 @@ const Account = ({navigation}: AccountProps) => {
                                         <Button
                                             style={styles.menuBtn}
                                             transparent
-                                            onPress={() => setOpenSettings(true)}>
+                                            onPress={() =>
+                                                setOpenSettings(true)
+                                            }>
                                             <View style={styles.icon}>
                                                 <View style={styles.dot} />
                                                 <View style={styles.dot} />
@@ -203,7 +227,8 @@ const Account = ({navigation}: AccountProps) => {
                                     ),
                                 }}
                             />
-                            <MenuOptions optionsContainerStyle={styles.menuOptions}>
+                            <MenuOptions
+                                optionsContainerStyle={styles.menuOptions}>
                                 {menuItems.map((item, index) => (
                                     <MenuOption
                                         onSelect={() => item.action(item)}
@@ -215,9 +240,9 @@ const Account = ({navigation}: AccountProps) => {
                                                 index === menuItems.length - 1
                                                     ? styles.menuOption
                                                     : [
-                                                        styles.menuOption,
-                                                        styles.menuLastItem,
-                                                    ],
+                                                          styles.menuOption,
+                                                          styles.menuLastItem,
+                                                      ],
                                             optionText: styles.typo5,
                                         }}
                                     />
@@ -238,7 +263,9 @@ const Account = ({navigation}: AccountProps) => {
                     </View>
                     <View style={styles.actions}>
                         <View style={styles.center}>
-                            <Button transparent onPress={() => onPress('Receive')}>
+                            <Button
+                                transparent
+                                onPress={() => onPress('Receive')}>
                                 <View style={styles.actionCircle}>
                                     <Receive />
                                 </View>
@@ -268,43 +295,65 @@ const Account = ({navigation}: AccountProps) => {
                             <SecurityLevelButton />
                         </View>
                     )*/}
-                    {
-                        securityLevel === "0" &&
-                        <TouchableOpacity style={styles.security} onPress={() => navigateToSecurity()}>
+                    {securityLevel === '0' && (
+                        <TouchableOpacity
+                            style={styles.security}
+                            onPress={() => navigateToSecurity()}>
                             <View>
                                 {/* <Image style={{width:47,height:35,marginRight:16}} source={require('../../assets/fish.png')} /> */}
-                                <Fish style={{width:47,height:35,marginRight:16}}/>
+                                <Fish
+                                    style={{
+                                        width: 47,
+                                        height: 35,
+                                        marginRight: 16,
+                                    }}
+                                />
                             </View>
-                            <View style={{width:'75%'}}>
-                                <Text style={styles.typo6}>Your Security Level</Text>
-                                <Text style={styles.typo3}>Level 1: Goldfish</Text>
+                            <View style={{width: '75%'}}>
+                                <Text style={styles.typo6}>
+                                    Your Security Level
+                                </Text>
+                                <Text style={styles.typo3}>
+                                    Level 1: Goldfish
+                                </Text>
                             </View>
                             {/* <View>
                                 <Circle style={{width:60,height:59,marginRight:16}}/>
                             </View> */}
                             <View>
-                                <RightArrow style={{width:9,height:14}}/>
+                                <RightArrow style={{width: 9, height: 14}} />
                             </View>
                         </TouchableOpacity>
-                    }
-                    {
-                        securityLevel === "1" &&
-                        <TouchableOpacity style={styles.security} onPress={() => navigateToSecurity()}>
+                    )}
+                    {securityLevel === '1' && (
+                        <TouchableOpacity
+                            style={styles.security}
+                            onPress={() => navigateToSecurity()}>
                             <View>
-                                <Salmon style={{width:47,height:35,marginRight:16}}/>
+                                <Salmon
+                                    style={{
+                                        width: 47,
+                                        height: 35,
+                                        marginRight: 16,
+                                    }}
+                                />
                             </View>
-                            <View style={{width:'75%'}}>
-                                <Text style={styles.typo6}>Your Security Level</Text>
-                                <Text style={styles.typo3}>Level 2: Savvy Salmon</Text>
+                            <View style={{width: '75%'}}>
+                                <Text style={styles.typo6}>
+                                    Your Security Level
+                                </Text>
+                                <Text style={styles.typo3}>
+                                    Level 2: Savvy Salmon
+                                </Text>
                             </View>
                             {/* <View>
                             <Circle style={{width:60,height:59,marginRight:16}}/>
                             </View> */}
                             <View>
-                                <RightArrow style={{width:9,height:14}}/>
+                                <RightArrow style={{width: 9, height: 14}} />
                             </View>
                         </TouchableOpacity>
-                    }
+                    )}
                     {/* {
                         securityLevel === "2" &&
                         <TouchableOpacity style={styles.security} onPress={() => navigateToSecurity()}>
@@ -323,7 +372,6 @@ const Account = ({navigation}: AccountProps) => {
                             </View>
                         </TouchableOpacity>
                     } */}
-
 
                     <View style={styles.tabs}>
                         <View
@@ -380,9 +428,10 @@ const Account = ({navigation}: AccountProps) => {
                 <Modal isVisible={isModalVisible}>
                     <View style={styles.warningModal}>
                         <Text style={{marginBottom: 5}}>
-                            We only recommend storing and transferring small amounts
-                            of tez with this mobile wallet. You might want to wait
-                            for hardware wallet support for larger amounts.
+                            We only recommend storing and transferring small
+                            amounts of tez with this mobile wallet. You might
+                            want to wait for hardware wallet support for larger
+                            amounts.
                         </Text>
                         <Button
                             onPress={toggleModal}
@@ -395,7 +444,9 @@ const Account = ({navigation}: AccountProps) => {
                 <Modal isVisible={isPendingModalVisible}>
                     <View style={styles.warningModal}>
                         <Text style={{marginBottom: 5}}>
-                            There is a pending operation awaiting processing on the chain. It must be included in a block or time out. New operations cannot be submitted until then.
+                            There is a pending operation awaiting processing on
+                            the chain. It must be included in a block or time
+                            out. New operations cannot be submitted until then.
                         </Text>
                         <Button
                             onPress={togglePendingModal}
@@ -480,7 +531,7 @@ const styles = StyleSheet.create({
         height: 24,
         justifyContent: 'flex-end',
         position: 'relative',
-        marginTop: 44
+        marginTop: 44,
     },
     amount: {
         marginTop: 20,
@@ -583,23 +634,22 @@ const styles = StyleSheet.create({
     },
     security: {
         borderRadius: 9,
-        shadowColor: "#000",
+        shadowColor: '#000',
         shadowOffset: {
             width: 0,
             height: 2,
         },
-        shadowOpacity: 0.10,
+        shadowOpacity: 0.1,
         shadowRadius: 3.84,
         elevation: 5,
         padding: 16,
-        margin:20,
+        margin: 20,
         backgroundColor: '#fff',
         width: '90%',
         flexDirection: 'row',
-        alignItems:'center'
+        alignItems: 'center',
     },
-    inlineElements: {
-    }
+    inlineElements: {},
 });
 
 export default Account;
