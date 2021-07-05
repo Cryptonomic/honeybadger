@@ -1,9 +1,11 @@
 import {State as AppState} from './app/types';
 import {MessagesState} from './messages/types';
+import {BeaconState} from './beacon/types';
 
 export interface State {
     app: AppState;
     messages: MessagesState;
+    beacon: BeaconState;
 }
 
 export interface Operation {

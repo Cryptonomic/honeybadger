@@ -4,10 +4,10 @@ import {MessagesActions} from './types';
 const initialState = {
     message: '',
     kind: '',
-}
+};
 
 const messages = (state = initialState, action: MessagesActions) => {
-    switch(action.type) {
+    switch (action.type) {
         case SET_MESSAGE:
             return {...state, message: action.message, kind: action.kind};
         case REMOVE_MESSAGE:
@@ -15,6 +15,6 @@ const messages = (state = initialState, action: MessagesActions) => {
         default:
             return state;
     }
-}
+};
 
 export default messages;

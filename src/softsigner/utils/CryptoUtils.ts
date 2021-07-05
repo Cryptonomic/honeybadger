@@ -1,5 +1,27 @@
+/* eslint-disable prettier/prettier */
 import * as wrapper from './Wrapper';
 import {Buffer} from 'buffer';
+
+export async function generateSaltForPwHash() : Promise<Buffer> {
+    const s = await wrapper.salt();
+    return Buffer.from(s);
+}
+
+export async function encryptMessage(message: Buffer, passphrase: string, salt: Buffer) : Promise<Buffer> {
+    const keyBytes = await wrapper.pwhash(passphrase, salt);
+    const n = await wrapper.nonce();
+    const nonce = Buffer.from(n);
+    const s = await wrapper.close(message, nonce, keyBytes);
+    const cipherText = Buffer.from(s);
+
+    return Buffer.concat([nonce, cipherText]);
+}
+
+export async function decryptMessage(message: Buffer, passphrase: string, salt: Buffer) : Promise<Buffer> {
+    const keyBytes = await wrapper.pwhash(passphrase, salt);
+    const m = await wrapper.open(message, keyBytes);
+    return Buffer.from(m);
+}
 
 export async function generateKeys(seed: Buffer) {
     const k = await wrapper.keys(seed);

@@ -9,10 +9,10 @@ import bs58check from 'bs58check';
 import SafeContainer from '../../components/SafeContainer';
 import CustomHeader from '../../components/CustomHeader';
 
-import {setBeaconPermissionsLoading} from '../../reducers/app/actions';
+import {setBeaconLoading} from '../../reducers/beacon/actions';
 
 import {State} from '../../reducers/types';
-import {BeaconConnectionRequestProps} from '../../screens/types';
+import {BeaconProps} from '../../screens/types';
 
 interface displayDataProps {
     //PeerInfo
@@ -24,14 +24,12 @@ interface displayDataProps {
     relayServer: string;
 }
 
-const testData = {"id":"55914511-4a97-c7ae-f3ec-8f957184d271","type":"p2p-pairing-request","name":"Beacon Example Dapp","version":"2","publicKey":"049e5c547297cd009ec93e92fa76d1b51b099884cc9cae4c8815ff9f4a88ee05","relayServer":"matrix.papers.tech"}
+const testData = {"id":"b58d484f-8a9e-bbc2-c374-991b6aacee34","type":"p2p-pairing-request","name":"Example DApp","version":"2","publicKey":"4e102a20f40e2d96bd5b900075a736d3dfb367fda53e586e53a01c664a633a56","relayServer":"beacon-node-0.papers.tech:8448"}
 
-const BeaconConnectionRequest = ({
-    navigation,
-}: BeaconConnectionRequestProps) => {
+const BeaconConnectionRequest = ({navigation}: BeaconProps) => {
     const dispatch = useDispatch();
-    const beaconPermissionLoading = useSelector(
-        (state: State) => state.app.beaconPermissionLoading,
+    const beaconLoading = useSelector(
+        (state: State) => state.beacon.beaconLoading,
     );
     const [showCamera, setShowCamera] = useState(false);
     const [data, setData] = useState<displayDataProps | null>(testData);
@@ -61,7 +59,7 @@ const BeaconConnectionRequest = ({
             if (data === null) {
                 return;
             }
-            dispatch(setBeaconPermissionsLoading(true));
+            dispatch(setBeaconLoading(true));
             NativeModules.BeaconBridge.addPeer(
                 data.id,
                 data.name,
@@ -70,7 +68,7 @@ const BeaconConnectionRequest = ({
                 data.version,
             );
         } catch (e) {
-            dispatch(setBeaconPermissionsLoading());
+            dispatch(setBeaconLoading());
             // TODO: set and display error message
             console.log('Failed to add peer');
         }
@@ -98,7 +96,7 @@ const BeaconConnectionRequest = ({
             {!showCamera && data && (
                 <View style={s.container}>
                     <SafeContainer>
-                        {beaconPermissionLoading && (
+                        {beaconLoading && (
                             <View style={s.loading}>
                                 <Text>Loading...</Text>
                             </View>

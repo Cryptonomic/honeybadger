@@ -1,25 +1,27 @@
 import * as React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
-import {useSelector, useDispatch} from 'react-redux';
+import {useSelector} from 'react-redux';
 
 import SafeContainer from '../../components/SafeContainer';
 
-import {BeaconConnectionRequestProps} from '../../screens/types';
 import {State} from '../../reducers/types';
+import {BeaconProps} from '../../screens/types';
 
 import getBeaconTemplate from '../';
 
-const BeaconAuthorization = ({navigation}: BeaconConnectionRequestProps) => {
-    const { id, operationDetails, website, network, appMetadata } = useSelector((state: State) => state.app.beaconMessage);
-    const isContract = String(operationDetails[0].destination).startsWith('KT1'); // TODO: // recognize contract call and simple transaction
-    const { destination, amount, parameters } = operationDetails[0];
-    const operationParameters = parameters || { value: { prim: 'Unit' }, entrypoint: 'default' };
+const BeaconAuthorization = ({navigation}: BeaconProps) => {
+    const {operationDetails, network} = useSelector(
+        (state: State) => state.beacon.beaconMessage,
+    );
+    const {destination} = operationDetails[0];
+    const {type} = network;
+    const Template = getBeaconTemplate(destination);
 
     return (
         <View style={s.container}>
             <SafeContainer>
-                <Text>BeaconAthorization</Text>
-                {getBeaconTemplate(operationDetails[0])}
+                <Text style={s.title}>{`Authorize ${type} Operation`}</Text>
+                <Template navigation={navigation} />
             </SafeContainer>
         </View>
     );
@@ -30,7 +32,13 @@ const s = StyleSheet.create({
         flex: 1,
         backgroundColor: '#ffffff',
     },
+    title: {
+        alignSelf: 'center',
+        fontFamily: 'Roboto',
+        fontSize: 24,
+        color: '#323232',
+        marginTop: 30,
+    },
 });
 
 export default BeaconAuthorization;
-

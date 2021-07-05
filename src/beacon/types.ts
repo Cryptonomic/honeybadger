@@ -8,8 +8,8 @@ export enum BeaconErrorTypes {
 }
 
 export enum BeaconMessageTypes {
-     PERMISSION_REQUEST = 'permission_request',
-     OPERATION_REQUEST = 'operation_request',
+    PERMISSION_REQUEST = 'permission_request',
+    OPERATION_REQUEST = 'operation_request',
 }
 
 export enum BeaconSuccessTypes {
@@ -18,4 +18,9 @@ export enum BeaconSuccessTypes {
     GET_PEERS = 'get_peers',
     GET_APP_METADATA = 'get_app_metadata',
     START_BEACON = 'start_beacon',
+}
+
+export enum BeaconPermissionScopes {
+    sign = 'Sign',
+    operation_request = 'Operation Request',
 }
