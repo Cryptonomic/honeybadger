@@ -5,6 +5,7 @@ import {Container, View, Text, Button} from 'native-base';
 
 import CustomHeader from '../components/CustomHeader';
 import NFTStandardView from '../components/NFTStandardView';
+import NFTTileView from '../components/NFTTileView';
 
 import {NavigationProps} from '../screens/types';
 
@@ -12,6 +13,7 @@ const items = [1, 2, 3];
 
 const NFTGallery = ({navigation}: NavigationProps) => {
     const [tab, setTab] = useState(0);
+    const [view, setView] = useState(1);
 
     const changeTab = (newTab: number) => {
         if (newTab === tab) {
@@ -66,11 +68,15 @@ const NFTGallery = ({navigation}: NavigationProps) => {
             </View>
             <ScrollView
                 style={s.tabContainer}
-                contentContainerStyle={{flexGrow: 1}}>
+                contentContainerStyle={view === 0 ? s.grow : [s.grow, s.row]}>
                 {tab === 0 &&
-                    items.map((item, index) => (
-                        <NFTStandardView item={{}} index={index} />
-                    ))}
+                    items.map((item, index) =>
+                        view === 0 ? (
+                            <NFTStandardView item={{}} index={index} />
+                        ) : (
+                            <NFTTileView item={{}} index={index} />
+                        ),
+                    )}
                 {tab === 1 && <Text>tab2</Text>}
             </ScrollView>
         </Container>
@@ -117,6 +123,14 @@ const s = StyleSheet.create({
         fontWeight: '500',
         lineHeight: 27,
         textTransform: 'capitalize',
+    },
+    row: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        justifyContent: 'space-between',
+    },
+    grow: {
+        flexGrow: 1,
     },
 });
 
