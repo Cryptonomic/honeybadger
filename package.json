@@ -11,7 +11,7 @@
     "ios:log": "react-native log-ios",
     "ios:build": "react-native bundle --entry-file='index.ts' --bundle-output='./ios/honeybadger/main.jsbundle' --dev=false --platform='ios' --assets-dest='./ios'",
     "android:run": "react-native run-android",
-    "android:build": "cd ./android && gradle bundleRelease",
+    "android:build": "cd ./android && ./gradlew assembleRelease",
     "debug": "open 'rndebugger://set-debugger-loc?host=localhost&port=8081'"
   },
   "dependencies": {
