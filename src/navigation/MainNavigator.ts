@@ -23,6 +23,7 @@ import BeaconPermissionsRequest from '../beacon/screens/BeaconPermissionsRequest
 import BeaconAuthorization from '../beacon/screens/BeaconAuthorization';
 import BeaconInfo from '../beacon/screens/BeaconInfo';
 import NFTGallery from '../screens/NFTGallery';
+import NFTDetails from '../screens/NFTDetails';
 
 const MainNavigator = createStackNavigator(
     {
@@ -49,6 +50,7 @@ const MainNavigator = createStackNavigator(
         BeaconAuthorization: BeaconAuthorization,
         BeaconInfo: BeaconInfo,
         NFTGallery: NFTGallery,
+        NFTDetails: NFTDetails,
     },
     {
         headerMode: 'none',
