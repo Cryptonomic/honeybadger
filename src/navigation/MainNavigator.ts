@@ -25,6 +25,7 @@ import BeaconInfo from '../beacon/screens/BeaconInfo';
 import NFTGallery from '../screens/NFTGallery';
 import NFTDetails from '../screens/NFTDetails';
 import NFTSend from '../screens/NFTSend';
+import NFTConfirm from '../screens/NFTConfirm';
 
 const MainNavigator = createStackNavigator(
     {
@@ -53,6 +54,7 @@ const MainNavigator = createStackNavigator(
         NFTGallery: NFTGallery,
         NFTDetails: NFTDetails,
         NFTSend: NFTSend,
+        NFTConfirm: NFTConfirm,
     },
     {
         headerMode: 'none',
