@@ -1,19 +1,37 @@
 import * as React from 'react';
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
 import {StyleSheet, ScrollView} from 'react-native';
 import {Container, View, Text, Button} from 'native-base';
+import {useDispatch, useSelector} from 'react-redux';
 
 import CustomHeader from '../components/CustomHeader';
 import NFTStandardView from '../components/NFTStandardView';
 import NFTTileView from '../components/NFTTileView';
 
 import {NavigationProps} from '../screens/types';
+import {State} from '../reducers/types';
+
+import {getNFTCollection} from '../reducers/nft/thunks';
 
 const items = [1, 2, 3];
 
+const nodeTest = {
+    displayName: 'Tezos Mainnet (nautilus.cloud)',
+    platform: 'tezos',
+    network: 'mainnet',
+    tezosUrl: 'https://tezos-prod.cryptonomic-infra.tech:443',
+    conseilUrl: 'https://conseil-prod.cryptonomic-infra.tech:443',
+    apiKey: 'galleon',
+};
+
 const NFTGallery = ({navigation}: NavigationProps) => {
+    const dispatch = useDispatch();
+    const {collectionLoading, collection} = useSelector(
+        (state: State) => state.nft,
+    );
+
     const [tab, setTab] = useState(0);
-    const [view, setView] = useState(1);
+    const [view, setView] = useState(0);
 
     const changeTab = (newTab: number) => {
         if (newTab === tab) {
@@ -21,6 +39,16 @@ const NFTGallery = ({navigation}: NavigationProps) => {
         }
         setTab(newTab);
     };
+
+    useEffect(() => {
+        dispatch(
+            getNFTCollection(
+                511,
+                'tz1djRgXXWWJiY1rpMECCxr5d9ZBqWewuiU1',
+                nodeTest,
+            ),
+        );
+    }, [dispatch]);
 
     return (
         <Container>
@@ -69,15 +97,21 @@ const NFTGallery = ({navigation}: NavigationProps) => {
             <ScrollView
                 style={s.tabContainer}
                 contentContainerStyle={view === 0 ? s.grow : [s.grow, s.row]}>
-                {tab === 0 &&
+                {collectionLoading && <Text>Loading...</Text>}
+                {!collectionLoading &&
+                    tab === 0 &&
                     items.map((item, index) =>
                         view === 0 ? (
-                            <NFTStandardView item={{}} index={index} />
+                            <NFTStandardView
+                                item={{}}
+                                index={index}
+                                key={index}
+                            />
                         ) : (
-                            <NFTTileView item={{}} index={index} />
+                            <NFTTileView item={{}} index={index} key={index} />
                         ),
                     )}
-                {tab === 1 && <Text>tab2</Text>}
+                {!collectionLoading && tab === 1 && <Text>tab2</Text>}
             </ScrollView>
         </Container>
     );

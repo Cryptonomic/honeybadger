@@ -1,14 +1,17 @@
-import {GET_NFT_COLLECTION} from './actions';
+import {SET_NFT_COLLECTION, SET_NFT_COLLECTION_LOADING} from './actions';
 import {NFTState, NFTActions} from './types';
 
 const initialState = {
     collection: [],
+    collectionLoading: false,
 };
 
 const nft = (state: NFTState = initialState, action: NFTActions) => {
     switch (action.type) {
-        case GET_NFT_COLLECTION:
+        case SET_NFT_COLLECTION:
             return {...state, collection: action.collection};
+        case SET_NFT_COLLECTION_LOADING:
+            return {...state, collectionLoading: action.collectionLoading};
         default:
             return state;
     }

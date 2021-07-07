@@ -1,11 +1,13 @@
 import {State as AppState} from './app/types';
 import {MessagesState} from './messages/types';
 import {BeaconState} from './beacon/types';
+import {NFTState} from './nft/types';
 
 export interface State {
     app: AppState;
     messages: MessagesState;
     beacon: BeaconState;
+    nft: NFTState;
 }
 
 export interface Operation {

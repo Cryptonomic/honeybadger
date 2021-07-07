@@ -1,12 +1,18 @@
-import {GET_NFT_COLLECTION} from './actions';
+import {SET_NFT_COLLECTION, SET_NFT_COLLECTION_LOADING} from './actions';
 
 export interface NFTState {
     collection: any;
+    collectionLoading: boolean;
 }
 
-export interface GetNFTCollection {
-    type: typeof GET_NFT_COLLECTION;
+export interface SetNFTCollection {
+    type: typeof SET_NFT_COLLECTION;
     collection: any;
 }
 
-export type NFTActions = GetNFTCollection;
+export interface SetNFTCollectionLoading {
+    type: typeof SET_NFT_COLLECTION_LOADING;
+    collectionLoading: boolean;
+}
+
+export type NFTActions = SetNFTCollection | SetNFTCollectionLoading;
