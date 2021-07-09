@@ -46,7 +46,7 @@ const NFTGallery = ({navigation}: NavigationProps) => {
                 'tz1djRgXXWWJiY1rpMECCxr5d9ZBqWewuiU1',
                 {
                     apiKey: config[0].apiKey,
-                    network: config[1].network,
+                    network: config[0].network,
                     conseilUrl: config[0].url,
                 },
             );
@@ -111,7 +111,7 @@ const NFTGallery = ({navigation}: NavigationProps) => {
             <ScrollView
                 style={s.tabContainer}
                 contentContainerStyle={view === 0 ? s.grow : [s.grow, s.row]}>
-                {collectionLoading && <Text>Loading...</Text>}
+                {collectionLoading && <Text style={s.loading}>Loading...</Text>}
                 {!collectionLoading &&
                     tab === 0 &&
                     collection.map((item, index: number) =>
@@ -180,6 +180,10 @@ const s = StyleSheet.create({
     },
     grow: {
         flexGrow: 1,
+    },
+    loading: {
+        alignSelf: 'center',
+        marginTop: 100,
     },
 });
 
