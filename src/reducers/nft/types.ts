@@ -1,8 +1,13 @@
-import {SET_NFT_COLLECTION, SET_NFT_COLLECTION_LOADING} from './actions';
+import {
+    SET_NFT_COLLECTION,
+    SET_NFT_COLLECTION_LOADING,
+    SET_NFT_SELECTED,
+} from './actions';
 
 export interface NFTState {
     collection: any;
     collectionLoading: boolean;
+    selected: any;
 }
 
 export interface SetNFTCollection {
@@ -15,4 +20,12 @@ export interface SetNFTCollectionLoading {
     collectionLoading: boolean;
 }
 
-export type NFTActions = SetNFTCollection | SetNFTCollectionLoading;
+export interface SetNFTSelected {
+    type: typeof SET_NFT_SELECTED;
+    selected: any;
+}
+
+export type NFTActions =
+    | SetNFTCollection
+    | SetNFTCollectionLoading
+    | SetNFTSelected;

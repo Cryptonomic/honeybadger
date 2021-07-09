@@ -14,14 +14,16 @@ import {State} from '../reducers/types';
 import {
     setNFTCollectionLoading,
     setNFTCollection,
+    setNFTSelected,
 } from '../reducers/nft/actions';
 import {getNFTCollection, getNFTObjectDetails} from '../reducers/nft/thunks';
 
 import config from '../config';
 
 const NFTGallery = ({navigation}: NavigationProps) => {
+    const isFocused = navigation.isFocused();
     const dispatch = useDispatch();
-    const {collectionLoading, collection} = useSelector(
+    const {collectionLoading, collection, selected} = useSelector(
         (state: State) => state.nft,
     );
 
@@ -37,6 +39,11 @@ const NFTGallery = ({navigation}: NavigationProps) => {
 
     const onPressUnsupported = (id: string) =>
         Linking.openURL(`https://www.hicetnunc.xyz/objkt/${id}`);
+
+    const onSelect = (item: any) => {
+        dispatch(setNFTSelected(item));
+        navigation.navigate('NFTDetails');
+    };
 
     useEffect(() => {
         const updateGallery = async () => {
@@ -119,6 +126,7 @@ const NFTGallery = ({navigation}: NavigationProps) => {
                             <NFTStandardView
                                 item={item}
                                 openLink={onPressUnsupported}
+                                onSelect={onSelect}
                                 index={index}
                                 key={index}
                             />

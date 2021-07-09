@@ -1,16 +1,19 @@
 import * as React from 'react';
 import {useState} from 'react';
 import {View, Text} from 'native-base';
-import {Image, StyleSheet, TouchableOpacity} from 'react-native';
+import {StyleSheet, TouchableOpacity} from 'react-native';
+import FastImage from 'react-native-fast-image';
 
 const NFTStandardView = ({
     item,
     index,
     openLink,
+    onSelect,
 }: {
     item: any;
     index: number;
     openLink: (id: string) => void;
+    onSelect: (item: any) => void;
 }) => {
     const {details} = item;
     const {artifactUrl, artifactType, name, creators} = details;
@@ -28,14 +31,16 @@ const NFTStandardView = ({
     const onLoadEnd = () => setImageLoadEnd(true);
 
     return (
-        <View style={index === 0 ? [s.item, s.first] : s.item}>
-            <TouchableOpacity
-                style={s.imageContainer}
-                onPress={() => !isImage && openLink(item.piece)}>
+        <TouchableOpacity
+            style={index === 0 ? [s.item, s.first] : s.item}
+            onPress={() => onSelect(item)}>
+            <View style={s.imageContainer}>
                 {isImage && (
-                    <Image
+                    <FastImage
                         style={s.image}
-                        source={{uri: artifactUrl}}
+                        source={{
+                            uri: artifactUrl,
+                        }}
                         onLoad={onLoad}
                         onLoadEnd={onLoadEnd}
                     />
@@ -53,18 +58,22 @@ const NFTStandardView = ({
                                 style={
                                     s.imageUnsupported
                                 }>{`(${artifactType})`}</Text>
-                            <Text style={[s.imageUnsupported, s.imageLink]}>
+                            <Text
+                                style={[s.imageUnsupported, s.imageLink]}
+                                onPress={() =>
+                                    !isImage && openLink(item.piece)
+                                }>
                                 View on hic et nunc
                             </Text>
                         </>
                     )}
                 </View>
-            </TouchableOpacity>
+            </View>
             <View style={s.description}>
                 <Text style={s.title}>{name}</Text>
                 <Text style={s.address}>{`By ${creators}`}</Text>
             </View>
-        </View>
+        </TouchableOpacity>
     );
 };
 
@@ -89,7 +98,8 @@ const s = StyleSheet.create({
     image: {
         width: '100%',
         height: '100%',
-        borderRadius: 8,
+        borderTopLeftRadius: 8,
+        borderTopRightRadius: 8,
         position: 'relative',
         justifyContent: 'center',
     },
@@ -106,6 +116,7 @@ const s = StyleSheet.create({
     },
     imageLink: {
         fontWeight: '700',
+        color: '#2900DB',
     },
     description: {
         width: '100%',
