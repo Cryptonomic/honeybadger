@@ -15,130 +15,128 @@ import {setNFTCollection, setNFTCollectionLoading} from './actions';
 
 import {chunkArray} from './util';
 
-export const getNFTCollection =
-    (tokenMapId: number, managerAddress: string, node: any) =>
-    async (dispatch: any, getState: any) => {
-        dispatch(setNFTCollectionLoading(true));
-        const {conseilUrl, apiKey, network} = node;
+export const getNFTCollection = async (
+    tokenMapId: number,
+    managerAddress: string,
+    node: any,
+) => {
+    const {conseilUrl, apiKey, network} = node;
 
-        let collectionQuery = ConseilQueryBuilder.blankQuery();
-        collectionQuery = ConseilQueryBuilder.addFields(
-            collectionQuery,
-            'key',
-            'value',
-            'operation_group_id',
-        );
-        collectionQuery = ConseilQueryBuilder.addPredicate(
-            collectionQuery,
-            'big_map_id',
-            ConseilOperator.EQ,
-            [tokenMapId],
-        );
-        collectionQuery = ConseilQueryBuilder.addPredicate(
-            collectionQuery,
-            'key',
-            ConseilOperator.STARTSWITH,
-            [`Pair 0x${TezosMessageUtils.writeAddress(managerAddress)}`],
-        );
-        collectionQuery = ConseilQueryBuilder.addPredicate(
-            collectionQuery,
-            'value',
-            ConseilOperator.EQ,
-            [0],
-            true,
-        );
-        collectionQuery = ConseilQueryBuilder.setLimit(collectionQuery, 10_000);
+    console.log('node', node)
 
-        const collectionResult = await TezosConseilClient.getTezosEntityData(
-            {url: conseilUrl, apiKey, network},
-            network,
-            'big_map_contents',
-            collectionQuery,
-        );
+    let collectionQuery = ConseilQueryBuilder.blankQuery();
+    collectionQuery = ConseilQueryBuilder.addFields(
+        collectionQuery,
+        'key',
+        'value',
+        'operation_group_id',
+    );
+    collectionQuery = ConseilQueryBuilder.addPredicate(
+        collectionQuery,
+        'big_map_id',
+        ConseilOperator.EQ,
+        [tokenMapId],
+    );
+    collectionQuery = ConseilQueryBuilder.addPredicate(
+        collectionQuery,
+        'key',
+        ConseilOperator.STARTSWITH,
+        [`Pair 0x${TezosMessageUtils.writeAddress(managerAddress)}`],
+    );
+    collectionQuery = ConseilQueryBuilder.addPredicate(
+        collectionQuery,
+        'value',
+        ConseilOperator.EQ,
+        [0],
+        true,
+    );
+    collectionQuery = ConseilQueryBuilder.setLimit(collectionQuery, 10_000);
 
-        const operationGroupIds = collectionResult.map(
-            r => r.operation_group_id,
-        );
-        const queryChunks = chunkArray(operationGroupIds, 30);
-        const priceQueries = queryChunks.map(c => makeLastPriceQuery(c));
+    const collectionResult = await TezosConseilClient.getTezosEntityData(
+        {url: conseilUrl, apiKey, network},
+        network,
+        'big_map_contents',
+        collectionQuery,
+    );
 
-        const priceMap: any = {};
-        await Promise.all(
-            priceQueries.map(
-                async q =>
-                    await TezosConseilClient.getTezosEntityData(
-                        {url: conseilUrl, apiKey, network},
-                        network,
-                        'operations',
-                        q,
-                    ).then(result =>
-                        result.map(row => {
-                            let amount = 0;
-                            const action = row.parameters_entrypoints;
+    const operationGroupIds = collectionResult.map(r => r.operation_group_id);
+    const queryChunks = chunkArray(operationGroupIds, 30);
+    const priceQueries = queryChunks.map(c => makeLastPriceQuery(c));
 
-                            if (action === 'collect') {
-                                amount = Number(
-                                    row.parameters
-                                        .toString()
-                                        .replace(/^Pair ([0-9]+) [0-9]+/, '$1'),
-                                );
-                            } else if (action === 'transfer') {
-                                amount = Number(
-                                    row.parameters
-                                        .toString()
-                                        .replace(
-                                            /[{] Pair \"[1-9A-HJ-NP-Za-km-z]{36}\" [{] Pair \"[1-9A-HJ-NP-Za-km-z]{36}\" [(]Pair [0-9]+ [0-9]+[)] [}] [}]/,
-                                            '$1',
-                                        ),
-                                );
-                            }
+    const priceMap: any = {};
+    await Promise.all(
+        priceQueries.map(
+            async q =>
+                await TezosConseilClient.getTezosEntityData(
+                    {url: conseilUrl, apiKey, network},
+                    network,
+                    'operations',
+                    q,
+                ).then(result =>
+                    result.map(row => {
+                        let amount = 0;
+                        const action = row.parameters_entrypoints;
 
-                            priceMap[row.operation_group_hash] = {
-                                price: new BigNumber(row.amount),
-                                amount,
-                                timestamp: row.timestamp,
-                                action,
-                            };
-                        }),
-                    ),
-            ),
-        );
+                        if (action === 'collect') {
+                            amount = Number(
+                                row.parameters
+                                    .toString()
+                                    .replace(/^Pair ([0-9]+) [0-9]+/, '$1'),
+                            );
+                        } else if (action === 'transfer') {
+                            amount = Number(
+                                row.parameters
+                                    .toString()
+                                    .replace(
+                                        /[{] Pair \"[1-9A-HJ-NP-Za-km-z]{36}\" [{] Pair \"[1-9A-HJ-NP-Za-km-z]{36}\" [(]Pair [0-9]+ [0-9]+[)] [}] [}]/,
+                                        '$1',
+                                    ),
+                            );
+                        }
 
-        const collection = collectionResult.map(row => {
-            let price = 0;
-            let receivedOn = new Date();
-            let action = '';
+                        priceMap[row.operation_group_hash] = {
+                            price: new BigNumber(row.amount),
+                            amount,
+                            timestamp: row.timestamp,
+                            action,
+                        };
+                    }),
+                ),
+        ),
+    );
 
-            try {
-                const priceRecord = priceMap[row.operation_group_id];
-                price = priceRecord.price
-                    .dividedToIntegerBy(priceRecord.amount)
-                    .toNumber();
-                receivedOn = new Date(priceRecord.timestamp);
-                action =
-                    priceRecord.action === 'collect' ? 'Purchased' : 'Received';
-            } catch {
-                //
-            }
+    const collection = collectionResult.map(row => {
+        let price = 0;
+        let receivedOn = new Date();
+        let action = '';
 
-            return {
-                piece: row.key.toString().replace(/.* ([0-9]{1,}$)/, '$1'),
-                amount: Number(row.value),
-                price: isNaN(price) ? 0 : price,
-                receivedOn,
-                action,
-            };
-        });
+        try {
+            const priceRecord = priceMap[row.operation_group_id];
+            price = priceRecord.price
+                .dividedToIntegerBy(priceRecord.amount)
+                .toNumber();
+            receivedOn = new Date(priceRecord.timestamp);
+            action =
+                priceRecord.action === 'collect' ? 'Purchased' : 'Received';
+        } catch {
+            //
+        }
 
-        console.log('collection', collection);
+        return {
+            piece: row.key.toString().replace(/.* ([0-9]{1,}$)/, '$1'),
+            amount: Number(row.value),
+            price: isNaN(price) ? 0 : price,
+            receivedOn,
+            action,
+        };
+    });
 
-        collection.sort(
-            (a, b) => b.receivedOn.getTime() - a.receivedOn.getTime(),
-        );
+    console.log('collection', collection);
 
-        dispatch(setNFTCollection(collection));
-        dispatch(setNFTCollectionLoading());
-    };
+    return collection.sort(
+        (a, b) => b.receivedOn.getTime() - a.receivedOn.getTime(),
+    );
+};
 
 function makeLastPriceQuery(operations: any) {
     let lastPriceQuery = ConseilQueryBuilder.blankQuery();

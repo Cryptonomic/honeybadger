@@ -1,19 +1,68 @@
 import * as React from 'react';
+import {useState} from 'react';
 import {View, Text} from 'native-base';
-import {Image, StyleSheet} from 'react-native';
+import {Image, StyleSheet, TouchableOpacity} from 'react-native';
 
-import banner from '../../../assets/banner.png';
+const NFTStandardView = ({
+    item,
+    index,
+    openLink,
+}: {
+    item: any;
+    index: number;
+    openLink: (id: string) => void;
+}) => {
+    const {details} = item;
+    const {artifactUrl, artifactType, name, creators} = details;
+    const isImage =
+        artifactType === 'image/gif' ||
+        artifactType === 'image/jpeg' ||
+        artifactType === 'image/png' ||
+        artifactType === 'image/apng';
 
-const bannerUri = Image.resolveAssetSource(banner).uri;
-const sample = 'tz1fde…14Mibn';
+    const [imageLoaded, setImageLoaded] = useState(false);
+    const [imageLoadEnd, setImageLoadEnd] = useState(false);
 
-const NFTStandardView = ({item, index}: {item: any; index: number}) => {
+    const onLoad = () => setImageLoaded(true);
+
+    const onLoadEnd = () => setImageLoadEnd(true);
+
     return (
         <View style={index === 0 ? [s.item, s.first] : s.item}>
-            <Image style={s.image} source={{uri: bannerUri}} />
+            <TouchableOpacity
+                style={s.imageContainer}
+                onPress={() => !isImage && openLink(item.piece)}>
+                {isImage && (
+                    <Image
+                        style={s.image}
+                        source={{uri: artifactUrl}}
+                        onLoad={onLoad}
+                        onLoadEnd={onLoadEnd}
+                    />
+                )}
+                <View style={s.imageText}>
+                    {isImage && !imageLoaded && !imageLoadEnd && (
+                        <Text>Loading...</Text>
+                    )}
+                    {!isImage && (
+                        <>
+                            <Text style={s.imageUnsupported}>
+                                Unsupported artifact type
+                            </Text>
+                            <Text
+                                style={
+                                    s.imageUnsupported
+                                }>{`(${artifactType})`}</Text>
+                            <Text style={[s.imageUnsupported, s.imageLink]}>
+                                View on hic et nunc
+                            </Text>
+                        </>
+                    )}
+                </View>
+            </TouchableOpacity>
             <View style={s.description}>
-                <Text style={s.title}>Title</Text>
-                <Text style={s.address}>{`By ${sample}`}</Text>
+                <Text style={s.title}>{name}</Text>
+                <Text style={s.address}>{`By ${creators}`}</Text>
             </View>
         </View>
     );
@@ -33,10 +82,30 @@ const s = StyleSheet.create({
         shadowRadius: 4,
         elevation: 10,
     },
-    image: {
+    imageContainer: {
         width: '100%',
         height: 208,
+    },
+    image: {
+        width: '100%',
+        height: '100%',
         borderRadius: 8,
+        position: 'relative',
+        justifyContent: 'center',
+    },
+    imageText: {
+        position: 'absolute',
+        width: '100%',
+        height: '100%',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    imageUnsupported: {
+        marginVertical: 5,
+        marginHorizontal: 25,
+    },
+    imageLink: {
+        fontWeight: '700',
     },
     description: {
         width: '100%',

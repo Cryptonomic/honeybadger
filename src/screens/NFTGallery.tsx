@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {useState, useEffect} from 'react';
-import {StyleSheet, ScrollView} from 'react-native';
+import {StyleSheet, ScrollView, Linking} from 'react-native';
 import {Container, View, Text, Button} from 'native-base';
 import {useDispatch, useSelector} from 'react-redux';
 
@@ -11,18 +11,13 @@ import NFTTileView from '../components/NFTTileView';
 import {NavigationProps} from '../screens/types';
 import {State} from '../reducers/types';
 
-import {getNFTCollection} from '../reducers/nft/thunks';
+import {
+    setNFTCollectionLoading,
+    setNFTCollection,
+} from '../reducers/nft/actions';
+import {getNFTCollection, getNFTObjectDetails} from '../reducers/nft/thunks';
 
-const items = [1, 2, 3];
-
-const nodeTest = {
-    displayName: 'Tezos Mainnet (nautilus.cloud)',
-    platform: 'tezos',
-    network: 'mainnet',
-    tezosUrl: 'https://tezos-prod.cryptonomic-infra.tech:443',
-    conseilUrl: 'https://conseil-prod.cryptonomic-infra.tech:443',
-    apiKey: 'galleon',
-};
+import config from '../config';
 
 const NFTGallery = ({navigation}: NavigationProps) => {
     const dispatch = useDispatch();
@@ -40,14 +35,33 @@ const NFTGallery = ({navigation}: NavigationProps) => {
         setTab(newTab);
     };
 
+    const onPressUnsupported = (id: string) =>
+        Linking.openURL(`https://www.hicetnunc.xyz/objkt/${id}`);
+
     useEffect(() => {
-        dispatch(
-            getNFTCollection(
+        const updateGallery = async () => {
+            dispatch(setNFTCollectionLoading(true));
+            const newCollection: any = await getNFTCollection(
                 511,
                 'tz1djRgXXWWJiY1rpMECCxr5d9ZBqWewuiU1',
-                nodeTest,
-            ),
-        );
+                {
+                    apiKey: config[0].apiKey,
+                    network: config[1].network,
+                    conseilUrl: config[0].url,
+                },
+            );
+            for (let item of newCollection) {
+                const itemDetails = await getNFTObjectDetails(
+                    config[0].nodeUrl,
+                    Number(item.piece),
+                );
+                item.details = itemDetails;
+            }
+
+            dispatch(setNFTCollection(newCollection));
+            dispatch(setNFTCollectionLoading());
+        };
+        updateGallery();
     }, [dispatch]);
 
     return (
@@ -100,10 +114,11 @@ const NFTGallery = ({navigation}: NavigationProps) => {
                 {collectionLoading && <Text>Loading...</Text>}
                 {!collectionLoading &&
                     tab === 0 &&
-                    items.map((item, index) =>
+                    collection.map((item, index: number) =>
                         view === 0 ? (
                             <NFTStandardView
-                                item={{}}
+                                item={item}
+                                openLink={onPressUnsupported}
                                 index={index}
                                 key={index}
                             />
