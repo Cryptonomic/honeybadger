@@ -2,12 +2,19 @@ import {
     SET_NFT_COLLECTION,
     SET_NFT_COLLECTION_LOADING,
     SET_NFT_SELECTED,
+    SET_NFT_GALLERY_VIEW,
 } from './actions';
 
 export interface NFTState {
     collection: any;
     collectionLoading: boolean;
     selected: any;
+    galleryView: number;
+}
+
+export interface SetNFTGalleryView {
+    type: typeof SET_NFT_GALLERY_VIEW;
+    galleryView: number;
 }
 
 export interface SetNFTCollection {
@@ -28,4 +35,5 @@ export interface SetNFTSelected {
 export type NFTActions =
     | SetNFTCollection
     | SetNFTCollectionLoading
-    | SetNFTSelected;
+    | SetNFTSelected
+    | SetNFTGalleryView;

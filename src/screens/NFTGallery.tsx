@@ -15,6 +15,7 @@ import {
     setNFTCollectionLoading,
     setNFTCollection,
     setNFTSelected,
+    setNFTGalleryView,
 } from '../reducers/nft/actions';
 import {getNFTCollection, getNFTObjectDetails} from '../reducers/nft/thunks';
 
@@ -24,14 +25,12 @@ import RowsViewIcon from '../../assets/rows-view.svg';
 import TilesViewIcon from '../../assets/tiles-view.svg';
 
 const NFTGallery = ({navigation}: NavigationProps) => {
-    const isFocused = navigation.isFocused();
     const dispatch = useDispatch();
-    const {collectionLoading, collection, selected} = useSelector(
+    const {collectionLoading, collection, galleryView} = useSelector(
         (state: State) => state.nft,
     );
 
     const [tab, setTab] = useState(0);
-    const [view, setView] = useState(1);
 
     const changeTab = (newTab: number) => {
         if (newTab === tab) {
@@ -81,8 +80,12 @@ const NFTGallery = ({navigation}: NavigationProps) => {
                 onBack={() => navigation.goBack()}
                 RightComponent={
                     <RightCustomComponent
-                        onPress={() => setView(view === 1 ? 0 : 1)}
-                        isTiles={!view}
+                        onPress={() =>
+                            dispatch(
+                                setNFTGalleryView(galleryView === 1 ? 0 : 1),
+                            )
+                        }
+                        isTiles={!galleryView}
                     />
                 }
             />
@@ -126,12 +129,14 @@ const NFTGallery = ({navigation}: NavigationProps) => {
             </View>
             <ScrollView
                 style={s.tabContainer}
-                contentContainerStyle={view === 0 ? s.grow : [s.grow, s.row]}>
+                contentContainerStyle={
+                    galleryView === 0 ? s.grow : [s.grow, s.row]
+                }>
                 {collectionLoading && <Text style={s.loading}>Loading...</Text>}
                 {!collectionLoading &&
                     tab === 0 &&
                     collection.map((item: any, index: number) =>
-                        view === 0 ? (
+                        galleryView === 0 ? (
                             <NFTStandardView
                                 item={item}
                                 openLink={onPressUnsupported}
@@ -206,6 +211,8 @@ const s = StyleSheet.create({
     },
     loading: {
         alignSelf: 'center',
+        textAlign: 'center',
+        width: '100%',
         marginTop: 100,
     },
 });
