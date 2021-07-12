@@ -280,7 +280,7 @@ const Account = ({navigation}: AccountProps) => {
                                 transparent
                                 onPress={() => onPress('SendAddress')}>
                                 <View style={styles.actionCircle}>
-                                    <Send />
+                                    <Send fill="#000000" />
                                 </View>
                             </Button>
                             <Text style={[styles.actionLabel, styles.typo4]}>

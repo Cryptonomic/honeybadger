@@ -12,6 +12,8 @@ import {State} from '../reducers/types';
 
 import {formatAmount} from '../utils/currency';
 
+import SendIcon from '../../assets/send.svg';
+
 const NFTDetails = ({navigation}: NavigationProps) => {
     const dispatch = useDispatch();
     const {details, piece, receivedOn, price} = useSelector(
@@ -61,10 +63,14 @@ const NFTDetails = ({navigation}: NavigationProps) => {
                 </Text>
                 <View style={[s.row, s.buttons]}>
                     <Button style={[s.btn, s.grey]}>
-                        <Text>Send NFT</Text>
+                        <View style={s.icon}>
+                            <SendIcon fill="#FFFFFF" />
+                        </View>
+                        <Text style={s.btnText}>Send NFT</Text>
                     </Button>
                     <Button style={[s.btn, s.white]}>
-                        <Text style={s.share}>Share</Text>
+                        <CustomIcon name="Share-Android" />
+                        <Text style={[s.share, s.btnText]}>Share</Text>
                     </Button>
                 </View>
             </ScrollView>
@@ -130,20 +136,31 @@ const s = StyleSheet.create({
     buttons: {
         marginTop: 54,
         marginBottom: 80,
-        paddingHorizontal: 20,
     },
     btn: {
         borderRadius: 25,
     },
+    btnText: {
+        fontWeight: '500',
+        fontSize: 16,
+    },
     grey: {
         backgroundColor: '#4B4B4B',
+        width: 190,
+        justifyContent: 'center',
     },
     white: {
-        backgroundColor: 'rgba(75, 75, 75, 0.5)',
+        backgroundColor: 'rgba(75, 75, 75, 0.1)',
+        width: 124,
+        justifyContent: 'center',
     },
     share: {
         color: '#000000',
         opacity: 1,
+    },
+    icon: {
+        width: 16,
+        height: 16,
     },
 });
 
