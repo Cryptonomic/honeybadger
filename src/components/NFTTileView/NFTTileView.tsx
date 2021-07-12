@@ -34,7 +34,10 @@ const NFTTileView = ({
         <TouchableOpacity
             style={index === 0 || index === 1 ? [s.item, s.first] : s.item}
             onPress={() => onSelect(item)}>
-            <View style={s.imageContainer}>
+            <View
+                style={
+                    !isImage ? [s.imageContainer, s.border] : s.imageContainer
+                }>
                 {isImage && (
                     <FastImage
                         style={s.image}
@@ -122,6 +125,10 @@ const s = StyleSheet.create({
         fontWeight: '700',
         fontSize: 10,
         color: '#2900DB',
+    },
+    border: {
+        borderWidth: 1,
+        borderColor: 'rgba(75, 75, 75, 0.1)',
     },
 });
 
