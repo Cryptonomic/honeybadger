@@ -20,6 +20,9 @@ import {getNFTCollection, getNFTObjectDetails} from '../reducers/nft/thunks';
 
 import config from '../config';
 
+import RowsViewIcon from '../../assets/rows-view.svg';
+import TilesViewIcon from '../../assets/tiles-view.svg';
+
 const NFTGallery = ({navigation}: NavigationProps) => {
     const isFocused = navigation.isFocused();
     const dispatch = useDispatch();
@@ -28,7 +31,7 @@ const NFTGallery = ({navigation}: NavigationProps) => {
     );
 
     const [tab, setTab] = useState(0);
-    const [view, setView] = useState(0);
+    const [view, setView] = useState(1);
 
     const changeTab = (newTab: number) => {
         if (newTab === tab) {
@@ -76,6 +79,12 @@ const NFTGallery = ({navigation}: NavigationProps) => {
             <CustomHeader
                 title="NFT Gallery"
                 onBack={() => navigation.goBack()}
+                RightComponent={
+                    <RightCustomComponent
+                        onPress={() => setView(view === 1 ? 0 : 1)}
+                        isTiles={!view}
+                    />
+                }
             />
             <View style={s.tabs}>
                 <View
@@ -121,7 +130,7 @@ const NFTGallery = ({navigation}: NavigationProps) => {
                 {collectionLoading && <Text style={s.loading}>Loading...</Text>}
                 {!collectionLoading &&
                     tab === 0 &&
-                    collection.map((item, index: number) =>
+                    collection.map((item: any, index: number) =>
                         view === 0 ? (
                             <NFTStandardView
                                 item={item}
@@ -131,7 +140,13 @@ const NFTGallery = ({navigation}: NavigationProps) => {
                                 key={index}
                             />
                         ) : (
-                            <NFTTileView item={{}} index={index} key={index} />
+                            <NFTTileView
+                                item={item}
+                                openLink={onPressUnsupported}
+                                onSelect={onSelect}
+                                index={index}
+                                key={index}
+                            />
                         ),
                     )}
                 {!collectionLoading && tab === 1 && <Text>tab2</Text>}
@@ -194,5 +209,20 @@ const s = StyleSheet.create({
         marginTop: 100,
     },
 });
+
+function RightCustomComponent({
+    onPress,
+    isTiles,
+}: {
+    onPress: () => void;
+    isTiles: boolean;
+}) {
+    return (
+        <Button transparent onPress={onPress}>
+            {isTiles && <TilesViewIcon />}
+            {!isTiles && <RowsViewIcon />}
+        </Button>
+    );
+}
 
 export default NFTGallery;
