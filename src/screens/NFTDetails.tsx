@@ -1,7 +1,7 @@
 import * as React from 'react';
-import {StyleSheet, ScrollView, Linking} from 'react-native';
+import {StyleSheet, ScrollView, Linking, TouchableOpacity} from 'react-native';
 import {Container, View, Text, Button} from 'native-base';
-import {useDispatch, useSelector} from 'react-redux';
+import {useSelector} from 'react-redux';
 import FastImage from 'react-native-fast-image';
 import Share from 'react-native-share';
 
@@ -20,7 +20,12 @@ const NFTDetails = ({navigation}: NavigationProps) => {
         (state: State) => state.nft.selected,
     );
 
-    const {name, creators, artifactUrl, description} = details;
+    const {name, creators, artifactUrl, description, artifactType} = details;
+    const isImage =
+        artifactType === 'image/gif' ||
+        artifactType === 'image/jpeg' ||
+        artifactType === 'image/png' ||
+        artifactType === 'image/apng';
 
     const onPressBack = () => {
         navigation.goBack();
@@ -44,18 +49,35 @@ const NFTDetails = ({navigation}: NavigationProps) => {
         }
     };
 
+    const onPressImage = () => navigation.navigate('NFTGalleryView');
+
     return (
         <Container>
             <CustomHeader title="NFT Details" onBack={onPressBack} />
             <ScrollView style={s.container} contentContainerStyle={s.grow}>
                 <Text style={s.title}>{name}</Text>
                 <Text style={s.author}>{`By ${creators}`}</Text>
-                <FastImage
-                    style={s.image}
-                    source={{
-                        uri: artifactUrl,
-                    }}
-                />
+                <TouchableOpacity onPress={() => isImage && onPressImage()}>
+                    {isImage && (
+                        <FastImage
+                            style={s.image}
+                            source={{
+                                uri: artifactUrl,
+                            }}
+                        />
+                    )}
+                    {!isImage && (
+                        <View style={[s.image, s.unsuported]}>
+                            <Text style={s.imageUnsupported}>
+                                Unsupported artifact type
+                            </Text>
+                            <Text
+                                style={
+                                    s.imageUnsupported
+                                }>{`(${artifactType})`}</Text>
+                        </View>
+                    )}
+                </TouchableOpacity>
                 <Text style={s.descripton}>{description}</Text>
                 <Text style={s.section}>Token</Text>
                 <Text style={s.details}>{`OBJKT ${piece}`}</Text>
@@ -176,6 +198,20 @@ const s = StyleSheet.create({
     icon: {
         width: 16,
         height: 16,
+    },
+    imageUnsupported: {
+        marginVertical: 5,
+        marginHorizontal: 25,
+    },
+    imageLink: {
+        fontWeight: '700',
+        color: '#2900DB',
+    },
+    unsuported: {
+        borderWidth: 1,
+        borderColor: 'rgba(0, 0, 0, 0.2)',
+        alignItems: 'center',
+        justifyContent: 'center',
     },
 });
 

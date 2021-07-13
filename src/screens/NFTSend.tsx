@@ -31,12 +31,18 @@ const NFTSend = ({navigation}: NavigationProps) => {
         (state: State) => state.app.publicKeyHash,
     );
 
-    const {name, creators, artifactUrl} = details;
-
     const [address, setAddress] = useState('');
     const [qty, setQty] = useState(1);
     const [errorAddress, setErrorAddress] = useState('');
     const [showCamera, setShowCamera] = useState(false);
+
+    const {name, creators, artifactUrl, artifactType} = details;
+
+    const isImage =
+        artifactType === 'image/gif' ||
+        artifactType === 'image/jpeg' ||
+        artifactType === 'image/png' ||
+        artifactType === 'image/apng';
 
     const onChangeAddress = (text: string) => {
         setAddress(text);
@@ -69,6 +75,8 @@ const NFTSend = ({navigation}: NavigationProps) => {
     };
 
     const onShowCamera = () => setShowCamera(true);
+
+    const onPressImage = () => navigation.navigate('NFTGalleryView');
 
     return (
         <Container>
@@ -105,14 +113,29 @@ const NFTSend = ({navigation}: NavigationProps) => {
                             </View>
                         </View>
                         <Text style={s.error}>{errorAddress}</Text>
-                        <View style={s.paper}>
-                            <FastImage
-                                style={s.image}
-                                source={{uri: artifactUrl}}
-                            />
+                        <TouchableOpacity
+                            style={s.paper}
+                            onPress={() => isImage && onPressImage()}>
+                            {isImage && (
+                                <FastImage
+                                    style={s.image}
+                                    source={{uri: artifactUrl}}
+                                />
+                            )}
+                            {!isImage && (
+                                <View style={[s.image, s.unsuported]}>
+                                    <Text style={s.imageUnsupported}>
+                                        Unsupported artifact type
+                                    </Text>
+                                    <Text
+                                        style={
+                                            s.imageUnsupported
+                                        }>{`(${artifactType})`}</Text>
+                                </View>
+                            )}
                             <Text style={s.title}>{name}</Text>
                             <Text style={s.address}>{`By ${creators}`}</Text>
-                        </View>
+                        </TouchableOpacity>
                         <Text style={s.quantity}>Quantity</Text>
                         <View style={s.row}>
                             <Button
@@ -248,6 +271,18 @@ const s = StyleSheet.create({
         borderRadius: 25,
         justifyContent: 'center',
         alignSelf: 'center',
+    },
+    imageUnsupported: {
+        marginVertical: 5,
+        marginHorizontal: 25,
+    },
+    imageLink: {
+        fontWeight: '700',
+        color: '#2900DB',
+    },
+    unsuported: {
+        alignItems: 'center',
+        justifyContent: 'center',
     },
 });
 

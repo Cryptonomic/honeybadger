@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {Container, View, Text, Button} from 'native-base';
-import {ScrollView, StyleSheet} from 'react-native';
-import {useSelector, useDispatch} from 'react-redux';
+import {ScrollView, StyleSheet, TouchableOpacity} from 'react-native';
+import {useSelector} from 'react-redux';
 import FastImage from 'react-native-fast-image';
 
 import CustomHeader from '../components/CustomHeader';
@@ -20,13 +20,21 @@ const NFTConfirm = ({navigation}: NavigationProps) => {
     );
     const {sendAddress, sendQty} = useSelector((state: State) => state.nft);
 
-    const {name, creators, artifactUrl} = details;
+    const {name, creators, artifactUrl, artifactType} = details;
+
+    const isImage =
+        artifactType === 'image/gif' ||
+        artifactType === 'image/jpeg' ||
+        artifactType === 'image/png' ||
+        artifactType === 'image/apng';
 
     const onClose = () => navigation.navigate('Account');
 
     const onEdit = () => navigation.goBack();
 
     const onConfirm = () => {};
+
+    const onPressImage = () => navigation.navigate('NFTGalleryView');
 
     return (
         <Container>
@@ -37,11 +45,29 @@ const NFTConfirm = ({navigation}: NavigationProps) => {
                     are correct.
                 </Text>
                 <Text style={s.label}>{`SEND OBJKT #${piece}`}</Text>
-                <View style={s.paper}>
-                    <FastImage style={s.image} source={{uri: artifactUrl}} />
+                <TouchableOpacity
+                    style={s.paper}
+                    onPress={() => isImage && onPressImage()}>
+                    {isImage && (
+                        <FastImage
+                            style={s.image}
+                            source={{uri: artifactUrl}}
+                        />
+                    )}
+                    {!isImage && (
+                        <View style={[s.image, s.unsuported]}>
+                            <Text style={s.imageUnsupported}>
+                                Unsupported artifact type
+                            </Text>
+                            <Text
+                                style={
+                                    s.imageUnsupported
+                                }>{`(${artifactType})`}</Text>
+                        </View>
+                    )}
                     <Text style={s.title}>{name}</Text>
                     <Text style={s.address}>{`By ${creators}`}</Text>
-                </View>
+                </TouchableOpacity>
                 <Text style={[s.section, s.first]}>From</Text>
                 <Text style={[s.info, s.details]}>
                     {truncateHash(publicKeyHash)}
@@ -173,6 +199,18 @@ const s = StyleSheet.create({
     editText: {
         color: 'rgba(0, 0, 0, .6)',
         fontWeight: '500',
+    },
+    imageUnsupported: {
+        marginVertical: 5,
+        marginHorizontal: 25,
+    },
+    imageLink: {
+        fontWeight: '700',
+        color: '#2900DB',
+    },
+    unsuported: {
+        alignItems: 'center',
+        justifyContent: 'center',
     },
 });
 
