@@ -1,19 +1,68 @@
 import {
     ConseilQueryBuilder,
     ConseilOperator,
-    ConseilSortDirection,
     TezosConseilClient,
     TezosMessageUtils,
     TezosNodeReader,
-    TezosParameterFormat,
+    MultiAssetTokenHelper,
 } from 'conseiljs';
 import {BigNumber} from 'bignumber.js';
 import {JSONPath} from 'jsonpath-plus';
 import {Buffer} from 'buffer';
 
-import {setNFTCollection, setNFTCollectionLoading} from './actions';
+import {KeyStoreUtils, SoftSigner} from '../../softsigner';
 
 import {chunkArray} from './util';
+
+import config from '../../config';
+
+import {setMessage} from '../messages/actions';
+
+export function transferThunk(
+    destination: string,
+    amount: number,
+    tokenid: number,
+    fee: number = 0,
+    gas: number = 0,
+    storage: number = 0,
+) {
+    return async (dispatch: any, getState: any) => {
+        const secretKey = getState().app.secretKey;
+        const publicKeyHash = getState().app.publicKeyHash;
+
+        const tezosUrl = config[0].nodeUrl;
+        const tokenAddress = 'KT1RJ6PbjHpwc3M5rw5s2Nbmefwbuwbdxton';
+        const keyStore = await KeyStoreUtils.restoreIdentityFromSecretKey(
+            secretKey,
+        );
+        const signer = new SoftSigner(
+            TezosMessageUtils.writeKeyWithHint(keyStore.secretKey, 'edsk'),
+        );
+
+        await MultiAssetTokenHelper.transfer(
+            tezosUrl,
+            tokenAddress,
+            signer,
+            keyStore,
+            fee,
+            publicKeyHash,
+            [{address: destination, tokenid, amount}],
+            gas,
+            storage,
+        ).catch(err => {
+            const errorMsg = JSON.stringify({name: err.message, ...err});
+            console.log(
+                `transferThunk/MultiAssetTokenHelper failed with ${errorMsg}}`,
+            );
+            dispatch(setMessage('Started token transaction failed.', 'error'));
+            return undefined;
+        });
+
+        dispatch(
+            setMessage('Successfully started token transaction.', 'error'),
+        );
+    };
+}
 
 export const getNFTCollection = async (
     tokenMapId: number,
@@ -22,7 +71,7 @@ export const getNFTCollection = async (
 ) => {
     const {conseilUrl, apiKey, network} = node;
 
-    console.log('node', node)
+    console.log('node', node);
 
     let collectionQuery = ConseilQueryBuilder.blankQuery();
     collectionQuery = ConseilQueryBuilder.addFields(
@@ -204,8 +253,10 @@ export async function getNFTObjectDetails(tezosUrl: string, objectId: number) {
     const nftName = nftDetailJson.name;
     const nftDescription = nftDetailJson.description;
     const nftCreators = nftDetailJson.creators
-        .map(c => c.trim())
-        .map(c => `${c.slice(0, 6)}...${c.slice(c.length - 6, c.length)}`)
+        .map((c: any) => c.trim())
+        .map(
+            (c: any) => `${c.slice(0, 6)}...${c.slice(c.length - 6, c.length)}`,
+        )
         .join(', '); // TODO: use names where possible
     const nftArtifact = `https://cloudflare-ipfs.com/ipfs/${nftDetailJson.formats[0].uri
         .toString()

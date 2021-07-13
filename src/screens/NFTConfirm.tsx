@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {Container, View, Text, Button} from 'native-base';
 import {ScrollView, StyleSheet, TouchableOpacity} from 'react-native';
-import {useSelector} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 import FastImage from 'react-native-fast-image';
 
 import CustomHeader from '../components/CustomHeader';
@@ -13,7 +13,10 @@ import {truncateHash} from '../utils/general';
 
 import EditIcon from '../../assets/edit.svg';
 
+import {transferThunk} from '../reducers/nft/thunks';
+
 const NFTConfirm = ({navigation}: NavigationProps) => {
+    const dispatch = useDispatch();
     const {details, piece} = useSelector((state: State) => state.nft.selected);
     const publicKeyHash = useSelector(
         (state: State) => state.app.publicKeyHash,
@@ -32,7 +35,10 @@ const NFTConfirm = ({navigation}: NavigationProps) => {
 
     const onEdit = () => navigation.goBack();
 
-    const onConfirm = () => {};
+    const onConfirm = () => {
+        dispatch(transferThunk(sendAddress, sendQty, piece));
+        navigation.navigate('Account');
+    };
 
     const onPressImage = () => navigation.navigate('NFTGalleryView');
 

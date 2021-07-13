@@ -156,7 +156,7 @@ const NFTGallery = ({navigation}: NavigationProps) => {
                             />
                         ),
                     )}
-                {!collectionLoading && tab === 1 && <Text>tab2</Text>}
+                {!collectionLoading && tab === 1 && <Text>minted</Text>}
             </ScrollView>
         </Container>
     );
