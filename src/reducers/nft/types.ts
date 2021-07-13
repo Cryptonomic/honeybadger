@@ -3,6 +3,7 @@ import {
     SET_NFT_COLLECTION_LOADING,
     SET_NFT_SELECTED,
     SET_NFT_GALLERY_VIEW,
+    SET_NFT_SEND_DETAILS,
 } from './actions';
 
 export interface NFTState {
@@ -10,6 +11,14 @@ export interface NFTState {
     collectionLoading: boolean;
     selected: any;
     galleryView: number;
+    sendQty: number;
+    sendAddress: string;
+}
+
+export interface SetNFTSendDetails {
+    type: typeof SET_NFT_SEND_DETAILS;
+    sendQty: number;
+    sendAddress: string;
 }
 
 export interface SetNFTGalleryView {
@@ -36,4 +45,5 @@ export type NFTActions =
     | SetNFTCollection
     | SetNFTCollectionLoading
     | SetNFTSelected
-    | SetNFTGalleryView;
+    | SetNFTGalleryView
+    | SetNFTSendDetails;

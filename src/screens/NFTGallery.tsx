@@ -16,6 +16,7 @@ import {
     setNFTCollection,
     setNFTSelected,
     setNFTGalleryView,
+    setNFTSendDetails,
 } from '../reducers/nft/actions';
 import {getNFTCollection, getNFTObjectDetails} from '../reducers/nft/thunks';
 
@@ -44,6 +45,7 @@ const NFTGallery = ({navigation}: NavigationProps) => {
 
     const onSelect = (item: any) => {
         dispatch(setNFTSelected(item));
+        dispatch(setNFTSendDetails());
         navigation.navigate('NFTDetails');
     };
 

@@ -26,6 +26,10 @@ const NFTDetails = ({navigation}: NavigationProps) => {
         navigation.goBack();
     };
 
+    const onPressSend = () => {
+        navigation.navigate('NFTSend');
+    };
+
     const onPressLink = () =>
         Linking.openURL(`https://www.hicetnunc.xyz/objkt/${piece}`);
 
@@ -73,7 +77,7 @@ const NFTDetails = ({navigation}: NavigationProps) => {
                     View on Hic Et Nunc
                 </Text>
                 <View style={[s.row, s.buttons]}>
-                    <Button style={[s.btn, s.grey]}>
+                    <Button style={[s.btn, s.grey]} onPress={onPressSend}>
                         <View style={s.icon}>
                             <SendIcon fill="#FFFFFF" />
                         </View>

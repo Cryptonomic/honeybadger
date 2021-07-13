@@ -1,45 +1,67 @@
 import * as React from 'react';
-import {useState} from 'react';
-import {Container, View, Text, Input, Button} from 'native-base';
-import {ScrollView, StyleSheet, Image} from 'react-native';
+import {Container, View, Text, Button} from 'native-base';
+import {ScrollView, StyleSheet} from 'react-native';
+import {useSelector, useDispatch} from 'react-redux';
+import FastImage from 'react-native-fast-image';
 
 import CustomHeader from '../components/CustomHeader';
 
 import {NavigationProps} from '../screens/types';
+import {State} from '../reducers/types';
+
+import {truncateHash} from '../utils/general';
+
+import EditIcon from '../../assets/edit.svg';
 
 const NFTConfirm = ({navigation}: NavigationProps) => {
+    const {details, piece} = useSelector((state: State) => state.nft.selected);
+    const publicKeyHash = useSelector(
+        (state: State) => state.app.publicKeyHash,
+    );
+    const {sendAddress, sendQty} = useSelector((state: State) => state.nft);
+
+    const {name, creators, artifactUrl} = details;
+
+    const onClose = () => navigation.navigate('Account');
+
+    const onEdit = () => navigation.goBack();
+
+    const onConfirm = () => {};
+
     return (
         <Container>
-            <CustomHeader
-                title="Confirm Transaction"
-                onBack={() => navigation.goBack()}
-            />
+            <CustomHeader title="Confirm Transaction" onClose={onClose} />
             <ScrollView style={s.container} contentContainerStyle={s.grow}>
                 <Text style={s.info}>
                     Please review your transaction and ensure that the details
                     are correct.
                 </Text>
-                <Text style={s.label}>SEND OBJKT #24562</Text>
+                <Text style={s.label}>{`SEND OBJKT #${piece}`}</Text>
                 <View style={s.paper}>
-                    <Image style={s.image} />
-                    <Text style={s.title}>Title</Text>
-                    <Text style={s.address}>{`By Address`}</Text>
+                    <FastImage style={s.image} source={{uri: artifactUrl}} />
+                    <Text style={s.title}>{name}</Text>
+                    <Text style={s.address}>{`By ${creators}`}</Text>
                 </View>
                 <Text style={[s.section, s.first]}>From</Text>
-                <Text style={[s.info, s.details]}>navi.tez</Text>
+                <Text style={[s.info, s.details]}>
+                    {truncateHash(publicKeyHash)}
+                </Text>
                 <Text style={[s.section, s.first]}>To</Text>
-                <Text style={[s.info, s.details]}>tz3adc...tDFTLv</Text>
+                <Text style={[s.info, s.details]}>
+                    {truncateHash(sendAddress)}
+                </Text>
                 <Text style={[s.section, s.first]}>Quantity</Text>
-                <Text style={[s.info, s.details]}>1 X</Text>
+                <Text style={[s.info, s.details]}>{`${sendQty} X`}</Text>
                 <View style={s.feeWrapper}>
                     <Text style={s.fee}>Transaction Fee</Text>
                     <Text style={s.feeValue}>0.059 XTZ ($0.02)</Text>
                 </View>
                 <View style={s.buttons}>
-                    <Button style={[s.btn, s.edit]}>
+                    <Button style={[s.btn, s.edit]} onPress={onEdit}>
                         <Text style={s.editText}>Edit</Text>
+                        <EditIcon fill="rgba(0, 0, 0, .6)" />
                     </Button>
-                    <Button style={[s.btn, s.confirm]}>
+                    <Button style={[s.btn, s.confirm]} onPress={onConfirm}>
                         <Text>Confirm</Text>
                     </Button>
                 </View>
@@ -84,7 +106,6 @@ const s = StyleSheet.create({
     image: {
         width: '100%',
         height: 180,
-        borderWidth: 1,
         borderRadius: 8,
     },
     title: {
@@ -147,9 +168,11 @@ const s = StyleSheet.create({
     },
     confirm: {
         backgroundColor: '#4B4B4B',
+        fontWeight: '500',
     },
     editText: {
-        color: '#000000',
+        color: 'rgba(0, 0, 0, .6)',
+        fontWeight: '500',
     },
 });
 

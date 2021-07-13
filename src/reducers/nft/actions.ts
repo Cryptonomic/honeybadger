@@ -3,12 +3,23 @@ import {
     SetNFTCollectionLoading,
     SetNFTSelected,
     SetNFTGalleryView,
+    SetNFTSendDetails,
 } from './types';
 
 export const SET_NFT_COLLECTION = 'GET_NFT_COLLECTION';
 export const SET_NFT_COLLECTION_LOADING = 'SET_NFT_COLLECTION_LOADING';
 export const SET_NFT_SELECTED = 'SET_NFT_SELECTED';
 export const SET_NFT_GALLERY_VIEW = 'SET_NFT_GALLERY_VIEW';
+export const SET_NFT_SEND_DETAILS = 'SET_NFT_SEND_DETAILS';
+
+export const setNFTSendDetails = (
+    sendQty: number = 1,
+    sendAddress: string = '',
+): SetNFTSendDetails => ({
+    type: SET_NFT_SEND_DETAILS,
+    sendQty,
+    sendAddress,
+});
 
 export const setNFTGalleryView = (
     galleryView: number = 0,

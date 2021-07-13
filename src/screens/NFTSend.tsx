@@ -1,45 +1,142 @@
 import * as React from 'react';
 import {useState} from 'react';
-import {Container, View, Text, Input, Button} from 'native-base';
-import {ScrollView, StyleSheet, Image} from 'react-native';
+import {Container, View, Text, Button} from 'native-base';
+import {
+    ScrollView,
+    StyleSheet,
+    TextInput,
+    TouchableOpacity,
+} from 'react-native';
+import FastImage from 'react-native-fast-image';
+import {useSelector, useDispatch} from 'react-redux';
 
 import CustomHeader from '../components/CustomHeader';
+import EnterAddressCamera from '../components/EnterAddress/EnterAddressCamera';
 
 import {NavigationProps} from '../screens/types';
+import {State} from '../reducers/types';
+
+import ScanIcon from '../../assets/scan.svg';
+import SubtractIcon from '../../assets/subtract.svg';
+import AddIcon from '../../assets/add.svg';
+
+import {validateBakerAddress} from '../reducers/app/thunks';
+
+import {setNFTSendDetails} from '../reducers/nft/actions';
 
 const NFTSend = ({navigation}: NavigationProps) => {
-    const [address, setAddress] = useState('');
+    const dispatch = useDispatch();
+    const {details, amount} = useSelector((state: State) => state.nft.selected);
+    const publicKeyHash = useSelector(
+        (state: State) => state.app.publicKeyHash,
+    );
 
-    const onChangeAddress = (text: string) => setAddress(text);
+    const {name, creators, artifactUrl} = details;
+
+    const [address, setAddress] = useState('');
+    const [qty, setQty] = useState(1);
+    const [errorAddress, setErrorAddress] = useState('');
+    const [showCamera, setShowCamera] = useState(false);
+
+    const onChangeAddress = (text: string) => {
+        setAddress(text);
+        setErrorAddress('');
+    };
+
+    const onChangeQty = (value: number) => {
+        if (value < 1 || value > amount) {
+            return;
+        }
+        setQty(value);
+    };
+
+    const onPressNext = async () => {
+        try {
+            await validateBakerAddress(address, publicKeyHash);
+            setErrorAddress('');
+            dispatch(setNFTSendDetails(qty, address));
+            navigation.navigate('NFTConfirm');
+        } catch (error) {
+            setErrorAddress(error.message);
+        }
+    };
+
+    const onBarcodeRecognized = ({data}: {data: string}) => {
+        if (data && data.length) {
+            onChangeAddress(data);
+            setShowCamera(false);
+        }
+    };
+
+    const onShowCamera = () => setShowCamera(true);
 
     return (
         <Container>
-            <CustomHeader title="Send NFT" onBack={() => navigation.goBack()} />
-            <ScrollView style={s.container} contentContainerStyle={s.grow}>
-                <Text>To</Text>
-                <View style={s.inputWrapper}>
-                    <Input
-                        style={s.input}
-                        value={address}
-                        onChangeText={onChangeAddress}
+            <EnterAddressCamera
+                open={showCamera}
+                onBarcodeRecognized={onBarcodeRecognized}
+                onBack={() => setShowCamera(false)}
+            />
+            {!showCamera && (
+                <>
+                    <CustomHeader
+                        title="Send NFT"
+                        onBack={() => navigation.goBack()}
                     />
-                </View>
-                <View style={s.paper}>
-                    <Image style={s.image} />
-                    <Text style={s.title}>Title</Text>
-                    <Text style={s.address}>{`By Address`}</Text>
-                </View>
-                <Text style={s.quantity}>Quantity</Text>
-                <View style={s.row}>
-                    <Button style={s.btn} />
-                    <Text>1</Text>
-                    <Button style={s.btn} />
-                    <Text>of 5</Text>
-                </View>
-                <Button style={s.next}>
-                    <Text>Next</Text>
-                </Button>
-            </ScrollView>
+                    <ScrollView
+                        style={s.container}
+                        contentContainerStyle={s.grow}>
+                        <Text>To</Text>
+                        <View style={s.inputWrapper}>
+                            <TextInput
+                                style={s.input}
+                                value={address}
+                                autoCorrect={false}
+                                autoCapitalize="none"
+                                placeholder="Recipient Address (e.g tz1…)"
+                                onChangeText={onChangeAddress}
+                            />
+                            <View style={s.scan}>
+                                <TouchableOpacity
+                                    style={s.scanInner}
+                                    onPress={onShowCamera}>
+                                    <ScanIcon />
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                        <Text style={s.error}>{errorAddress}</Text>
+                        <View style={s.paper}>
+                            <FastImage
+                                style={s.image}
+                                source={{uri: artifactUrl}}
+                            />
+                            <Text style={s.title}>{name}</Text>
+                            <Text style={s.address}>{`By ${creators}`}</Text>
+                        </View>
+                        <Text style={s.quantity}>Quantity</Text>
+                        <View style={s.row}>
+                            <Button
+                                style={s.btn}
+                                onPress={() => onChangeQty(qty - 1)}>
+                                <SubtractIcon />
+                            </Button>
+                            <Text style={s.qty}>{qty}</Text>
+                            <Button
+                                style={s.btn}
+                                onPress={() => onChangeQty(qty + 1)}>
+                                <AddIcon />
+                            </Button>
+                            <Text style={s.amount}>{`of ${amount}`}</Text>
+                        </View>
+                        <Button
+                            style={s.next}
+                            onPress={onPressNext}
+                            disabled={!!errorAddress}>
+                            <Text>Next</Text>
+                        </Button>
+                    </ScrollView>
+                </>
+            )}
         </Container>
     );
 };
@@ -57,16 +154,34 @@ const s = StyleSheet.create({
         letterSpacing: -0.3,
         color: '#4B4B4B',
     },
-    inputWrapper: {
-        width: '100%',
-        height: 56,
-        marginTop: 8,
-    },
     input: {
         borderWidth: 1,
         borderColor: '#2900DB',
         borderRadius: 12,
         backgroundColor: '#FFFFFF',
+        height: 56,
+        paddingHorizontal: 24,
+        paddingVertical: 16,
+    },
+    inputWrapper: {
+        position: 'relative',
+        marginTop: 8,
+    },
+    scan: {
+        position: 'absolute',
+        top: 0,
+        right: 0,
+        width: 60,
+        height: '100%',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    scanInner: {
+        width: '90%',
+        height: '80%',
+        alignItems: 'center',
+        backgroundColor: '#FFFFFF',
+        justifyContent: 'center',
     },
     paper: {
         backgroundColor: '#FFFFFF',
@@ -87,7 +202,6 @@ const s = StyleSheet.create({
     image: {
         width: '100%',
         height: 180,
-        borderWidth: 1,
         borderRadius: 8,
     },
     title: {
@@ -112,8 +226,19 @@ const s = StyleSheet.create({
         backgroundColor: '#F9C000',
     },
     row: {
+        marginTop: 13,
         flexDirection: 'row',
         alignItems: 'center',
+    },
+    qty: {
+        marginHorizontal: 8,
+    },
+    amount: {
+        marginLeft: 16,
+    },
+    error: {
+        marginTop: 6,
+        color: 'red',
     },
     next: {
         marginTop: 100,

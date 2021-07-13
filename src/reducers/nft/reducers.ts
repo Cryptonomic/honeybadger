@@ -3,6 +3,7 @@ import {
     SET_NFT_COLLECTION_LOADING,
     SET_NFT_SELECTED,
     SET_NFT_GALLERY_VIEW,
+    SET_NFT_SEND_DETAILS,
 } from './actions';
 import {NFTState, NFTActions} from './types';
 
@@ -11,10 +12,18 @@ const initialState = {
     collectionLoading: false,
     selected: null,
     galleryView: 0,
+    sendQty: 1,
+    sendAddress: '',
 };
 
 const nft = (state: NFTState = initialState, action: NFTActions) => {
     switch (action.type) {
+        case SET_NFT_SEND_DETAILS:
+            return {
+                ...state,
+                sendQty: action.sendQty,
+                sendAddress: action.sendAddress,
+            };
         case SET_NFT_GALLERY_VIEW:
             return {...state, galleryView: action.galleryView};
         case SET_NFT_COLLECTION:
