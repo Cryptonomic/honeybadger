@@ -24,7 +24,7 @@
     "bignumber.js": "^9.0.1",
     "bs58check": "^2.1.2",
     "buffer": "^5.6.0",
-    "conseiljs": "5.0.8-3",
+    "conseiljs": "5.0.9-beta.2",
     "conseiljs-ledgersigner": "5.0.4",
     "events": "^3.1.0",
     "jsonpath-plus": "^5.0.4",

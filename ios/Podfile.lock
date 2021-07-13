@@ -213,13 +213,13 @@ PODS:
     - React-jsi (= 0.64.1)
     - React-perflogger (= 0.64.1)
   - React-jsinspector (0.64.1)
-  - react-native-camera (3.44.1):
+  - react-native-camera (3.44.3):
     - React-Core
-    - react-native-camera/RCT (= 3.44.1)
-    - react-native-camera/RN (= 3.44.1)
-  - react-native-camera/RCT (3.44.1):
+    - react-native-camera/RCT (= 3.44.3)
+    - react-native-camera/RN (= 3.44.3)
+  - react-native-camera/RCT (3.44.3):
     - React-Core
-  - react-native-camera/RN (3.44.1):
+  - react-native-camera/RN (3.44.3):
     - React-Core
   - react-native-pdf (6.2.0):
     - React
@@ -517,7 +517,7 @@ SPEC CHECKSUMS:
   React-jsi: 5de8204706bd872b78ea646aee5d2561ca1214b6
   React-jsiexecutor: 124e8f99992490d0d13e0649d950d3e1aae06fe9
   React-jsinspector: 500a59626037be5b3b3d89c5151bc3baa9abf1a9
-  react-native-camera: 6e6d25f6318980dd2837747760628b4442aac01a
+  react-native-camera: fefef39fcd20850d17c3780638b04f741e0ccaae
   react-native-pdf: 909cd849e6a806731b2135263189fea39494b55e
   react-native-progress-bar-android: ce95a69f11ac580799021633071368d08aaf9ad8
   react-native-progress-view: 5816e8a6be812c2b122c6225a2a3db82d9008640
