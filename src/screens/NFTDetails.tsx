@@ -3,6 +3,7 @@ import {StyleSheet, ScrollView, Linking} from 'react-native';
 import {Container, View, Text, Button} from 'native-base';
 import {useDispatch, useSelector} from 'react-redux';
 import FastImage from 'react-native-fast-image';
+import Share from 'react-native-share';
 
 import CustomHeader from '../components/CustomHeader';
 import CustomIcon from '../components/CustomIcon';
@@ -15,7 +16,6 @@ import {formatAmount} from '../utils/currency';
 import SendIcon from '../../assets/send.svg';
 
 const NFTDetails = ({navigation}: NavigationProps) => {
-    const dispatch = useDispatch();
     const {details, piece, receivedOn, price} = useSelector(
         (state: State) => state.nft.selected,
     );
@@ -28,6 +28,17 @@ const NFTDetails = ({navigation}: NavigationProps) => {
 
     const onPressLink = () =>
         Linking.openURL(`https://www.hicetnunc.xyz/objkt/${piece}`);
+
+    const onShare = async () => {
+        try {
+            await Share.open({
+                message: `https://www.hicetnunc.xyz/objkt/${piece}`,
+                title: 'Share to',
+            });
+        } catch (e) {
+            console.log('[ERROR_SHARE]', e);
+        }
+    };
 
     return (
         <Container>
@@ -68,7 +79,7 @@ const NFTDetails = ({navigation}: NavigationProps) => {
                         </View>
                         <Text style={s.btnText}>Send NFT</Text>
                     </Button>
-                    <Button style={[s.btn, s.white]}>
+                    <Button style={[s.btn, s.white]} onPress={onShare}>
                         <CustomIcon name="Share-Android" />
                         <Text style={[s.share, s.btnText]}>Share</Text>
                     </Button>
