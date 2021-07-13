@@ -30,6 +30,9 @@ const NFTGallery = ({navigation}: NavigationProps) => {
     const {collectionLoading, collection, galleryView} = useSelector(
         (state: State) => state.nft,
     );
+    const publicKeyHash = useSelector(
+        (state: State) => state.app.publicKeyHash,
+    );
 
     const [tab, setTab] = useState(0);
 
@@ -54,7 +57,7 @@ const NFTGallery = ({navigation}: NavigationProps) => {
             dispatch(setNFTCollectionLoading(true));
             const newCollection: any = await getNFTCollection(
                 511,
-                'tz1djRgXXWWJiY1rpMECCxr5d9ZBqWewuiU1',
+                publicKeyHash,
                 {
                     apiKey: config[0].apiKey,
                     network: config[0].network,
@@ -73,7 +76,7 @@ const NFTGallery = ({navigation}: NavigationProps) => {
             dispatch(setNFTCollectionLoading());
         };
         updateGallery();
-    }, [dispatch]);
+    }, [dispatch, publicKeyHash]);
 
     return (
         <Container>
