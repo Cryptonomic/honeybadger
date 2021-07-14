@@ -11,4 +11,5 @@ export interface CustomHeaderProps {
     backIconCustomStyles?: IconStyles;
     onBack?: () => void;
     onClose?: () => void;
+    RightComponent?: any;
 }

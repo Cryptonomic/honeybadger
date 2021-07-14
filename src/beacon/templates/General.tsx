@@ -10,11 +10,12 @@ import {BeaconProps} from '../../screens/types';
 import CustomIcon from '../../components/CustomIcon';
 
 import constants from '../../utils/constants.json';
-import {formatAmount, utezToTez} from '../../utils/currency';
+import {formatAmount, utezToTez, tezToUtez} from '../../utils/currency';
 
 import {
     beaconSendTransaction,
     beaconSendDelegation,
+    beaconSendOperations,
 } from '../../reducers/beacon/thunks';
 import {getBakerDetails} from '../../reducers/app/thunks';
 
@@ -39,9 +40,16 @@ const General = ({navigation}: BeaconProps) => {
 
     const {name} = appMetadata;
     const {destination, kind, amount, delegate} = operationDetails[0];
+    const isContract = String(destination).startsWith('KT1');
 
     const onAuthorize = () => {
         if (kind === 'transaction') {
+            if (isContract) {
+                const utezFee = tezToUtez(parseFloat(`${fee}`));
+                dispatch(beaconSendOperations(operationDetails, utezFee));
+                navigation.navigate('Account');
+                return;
+            }
             dispatch(beaconSendTransaction(destination, amount, navigation));
             return;
         }

@@ -24,7 +24,7 @@ interface displayDataProps {
     relayServer: string;
 }
 
-const testData = {"id":"b58d484f-8a9e-bbc2-c374-991b6aacee34","type":"p2p-pairing-request","name":"Example DApp","version":"2","publicKey":"4e102a20f40e2d96bd5b900075a736d3dfb367fda53e586e53a01c664a633a56","relayServer":"beacon-node-0.papers.tech:8448"}
+const testData = {"id":"8c5a6e7d-b266-a6ef-0975-675ee4e23bd5","type":"p2p-pairing-request","name":"hicetnunc.xyz","version":"2","publicKey":"4955f5c06304d18767ae8bb60089eab522e40ad37025751757bad859f5b18701","relayServer":"beacon-node-1.sky.papers.tech"}
 
 const BeaconConnectionRequest = ({navigation}: BeaconProps) => {
     const dispatch = useDispatch();
@@ -32,7 +32,7 @@ const BeaconConnectionRequest = ({navigation}: BeaconProps) => {
         (state: State) => state.beacon.beaconLoading,
     );
     const [showCamera, setShowCamera] = useState(false);
-    const [data, setData] = useState<displayDataProps | null>(testData);
+    const [scanData, setScanData] = useState<displayDataProps | null>(testData);
     const [error, setError] = useState('');
 
     const onBarcodeRecognized = ({data}: {data: string}) => {
@@ -42,7 +42,7 @@ const BeaconConnectionRequest = ({navigation}: BeaconProps) => {
                     data.slice(data.indexOf('data=') + 'data='.length),
                 ),
             );
-            setData(parsedData);
+            setScanData(parsedData);
             setShowCamera(false);
         }
     };
@@ -50,22 +50,22 @@ const BeaconConnectionRequest = ({navigation}: BeaconProps) => {
     const onCancel = () => {
         navigation.navigate('Account');
         setShowCamera(false);
-        setData(null);
+        setScanData(null);
         setError('');
     };
 
     const onConnect = async () => {
         try {
-            if (data === null) {
+            if (scanData === null) {
                 return;
             }
             dispatch(setBeaconLoading(true));
             NativeModules.BeaconBridge.addPeer(
-                data.id,
-                data.name,
-                data.publicKey,
-                data.relayServer,
-                data.version,
+                scanData.id,
+                scanData.name,
+                scanData.publicKey,
+                scanData.relayServer,
+                scanData.version,
             );
         } catch (e) {
             dispatch(setBeaconLoading());
@@ -93,7 +93,7 @@ const BeaconConnectionRequest = ({navigation}: BeaconProps) => {
                     />
                 </RNCamera>
             )}
-            {!showCamera && data && (
+            {!showCamera && scanData && (
                 <View style={s.container}>
                     <SafeContainer>
                         {beaconLoading && (
@@ -102,13 +102,15 @@ const BeaconConnectionRequest = ({navigation}: BeaconProps) => {
                             </View>
                         )}
                         <Text style={s.title}>Connection Request</Text>
-                        <Text style={[s.network, s.p1]}>{data?.name}</Text>
-                        <Text style={[s.address, s.p1]}>{data.publicKey}</Text>
+                        <Text style={[s.network, s.p1]}>{scanData?.name}</Text>
+                        <Text style={[s.address, s.p1]}>
+                            {scanData.publicKey}
+                        </Text>
                         <Text
                             style={[
                                 s.message,
                                 s.p2,
-                            ]}>{`${data.name} would like to connect to your account`}</Text>
+                            ]}>{`${scanData.name} would like to connect to your account`}</Text>
                         <Text style={[s.info]}>
                             This site is requesting access to view your account
                             address. Always make sure you trust the sites you
