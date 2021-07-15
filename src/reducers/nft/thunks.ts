@@ -39,7 +39,7 @@ export function transferThunk(
             TezosMessageUtils.writeKeyWithHint(keyStore.secretKey, 'edsk'),
         );
 
-        await MultiAssetTokenHelper.transfer(
+        const operationId = await MultiAssetTokenHelper.transfer(
             tezosUrl,
             tokenAddress,
             signer,
@@ -59,7 +59,10 @@ export function transferThunk(
         });
 
         dispatch(
-            setMessage('Successfully started token transaction.', 'error'),
+            setMessage(
+                `Successfully started token transaction. ${operationId}`,
+                'info',
+            ),
         );
     };
 }

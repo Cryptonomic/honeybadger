@@ -24,15 +24,13 @@ interface displayDataProps {
     relayServer: string;
 }
 
-const testData = {"id":"8c5a6e7d-b266-a6ef-0975-675ee4e23bd5","type":"p2p-pairing-request","name":"hicetnunc.xyz","version":"2","publicKey":"4955f5c06304d18767ae8bb60089eab522e40ad37025751757bad859f5b18701","relayServer":"beacon-node-1.sky.papers.tech"}
-
 const BeaconConnectionRequest = ({navigation}: BeaconProps) => {
     const dispatch = useDispatch();
     const beaconLoading = useSelector(
         (state: State) => state.beacon.beaconLoading,
     );
     const [showCamera, setShowCamera] = useState(false);
-    const [scanData, setScanData] = useState<displayDataProps | null>(testData);
+    const [scanData, setScanData] = useState<displayDataProps | null>(null);
     const [error, setError] = useState('');
 
     const onBarcodeRecognized = ({data}: {data: string}) => {
