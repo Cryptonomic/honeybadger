@@ -9,7 +9,6 @@ import {BeaconProps} from '../../screens/types';
 
 import CustomIcon from '../../components/CustomIcon';
 
-import constants from '../../utils/constants.json';
 import {formatAmount, utezToTez, tezToUtez} from '../../utils/currency';
 
 import {
@@ -34,7 +33,7 @@ const General = ({navigation}: BeaconProps) => {
     );
     const balance = useSelector((state: State) => state.app.balance);
 
-    const [fee] = useState(utezToTez(constants.fees.simpleTransaction));
+    const [fee] = useState(utezToTez(0));
     const [baker, setBaker] = useState<null | BakerDetails>(null);
     const [loadingBaker, setLoadingBaker] = useState(false);
 
