@@ -28,9 +28,13 @@ export const setNFTGalleryView = (
     galleryView,
 });
 
-export const setNFTCollection = (collection: any = []): SetNFTCollection => ({
+export const setNFTCollection = (
+    collected: any = [],
+    minted: any = [],
+): SetNFTCollection => ({
     type: SET_NFT_COLLECTION,
-    collection,
+    collected,
+    minted,
 });
 
 export const setNFTCollectionLoading = (

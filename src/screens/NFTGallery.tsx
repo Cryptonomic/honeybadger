@@ -25,9 +25,11 @@ import config from '../config';
 import RowsViewIcon from '../../assets/rows-view.svg';
 import TilesViewIcon from '../../assets/tiles-view.svg';
 
+import {truncateHash} from '../utils/general';
+
 const NFTGallery = ({navigation}: NavigationProps) => {
     const dispatch = useDispatch();
-    const {collectionLoading, collection, galleryView} = useSelector(
+    const {collectionLoading, collected, minted, galleryView} = useSelector(
         (state: State) => state.nft,
     );
     const publicKeyHash = useSelector(
@@ -55,7 +57,7 @@ const NFTGallery = ({navigation}: NavigationProps) => {
     useEffect(() => {
         const updateGallery = async () => {
             dispatch(setNFTCollectionLoading(true));
-            const newCollection: any = await getNFTCollection(
+            const totalCollection: any = await getNFTCollection(
                 511,
                 publicKeyHash,
                 {
@@ -64,7 +66,7 @@ const NFTGallery = ({navigation}: NavigationProps) => {
                     conseilUrl: config[0].url,
                 },
             );
-            for (let item of newCollection) {
+            for (let item of totalCollection) {
                 const itemDetails = await getNFTObjectDetails(
                     config[0].nodeUrl,
                     Number(item.piece),
@@ -72,7 +74,15 @@ const NFTGallery = ({navigation}: NavigationProps) => {
                 item.details = itemDetails;
             }
 
-            dispatch(setNFTCollection(newCollection));
+            // TODO: recognize by full key
+            const newCollected = totalCollection.filter(
+                (c: any) => c.details.creators !== truncateHash(publicKeyHash),
+            );
+            const newMinted = totalCollection.filter(
+                (c: any) => c.details.creators === truncateHash(publicKeyHash),
+            );
+
+            dispatch(setNFTCollection(newCollected, newMinted));
             dispatch(setNFTCollectionLoading());
         };
         updateGallery();
@@ -140,7 +150,7 @@ const NFTGallery = ({navigation}: NavigationProps) => {
                 {collectionLoading && <Text style={s.loading}>Loading...</Text>}
                 {!collectionLoading &&
                     tab === 0 &&
-                    collection.map((item: any, index: number) =>
+                    collected.map((item: any, index: number) =>
                         galleryView === 0 ? (
                             <NFTStandardView
                                 item={item}
@@ -159,7 +169,27 @@ const NFTGallery = ({navigation}: NavigationProps) => {
                             />
                         ),
                     )}
-                {!collectionLoading && tab === 1 && <></>}
+                {!collectionLoading &&
+                    tab === 1 &&
+                    minted.map((item: any, index: number) =>
+                        galleryView === 0 ? (
+                            <NFTStandardView
+                                item={item}
+                                openLink={onPressUnsupported}
+                                onSelect={onSelect}
+                                index={index}
+                                key={index}
+                            />
+                        ) : (
+                            <NFTTileView
+                                item={item}
+                                openLink={onPressUnsupported}
+                                onSelect={onSelect}
+                                index={index}
+                                key={index}
+                            />
+                        ),
+                    )}
             </ScrollView>
         </Container>
     );

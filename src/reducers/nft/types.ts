@@ -7,7 +7,8 @@ import {
 } from './actions';
 
 export interface NFTState {
-    collection: any;
+    collected: any;
+    minted: any;
     collectionLoading: boolean;
     selected: any;
     galleryView: number;
@@ -28,7 +29,8 @@ export interface SetNFTGalleryView {
 
 export interface SetNFTCollection {
     type: typeof SET_NFT_COLLECTION;
-    collection: any;
+    collected: any;
+    minted: any;
 }
 
 export interface SetNFTCollectionLoading {

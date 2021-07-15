@@ -8,7 +8,8 @@ import {
 import {NFTState, NFTActions} from './types';
 
 const initialState = {
-    collection: [],
+    collected: [],
+    minted: [],
     collectionLoading: false,
     selected: null,
     galleryView: 0,
@@ -27,7 +28,11 @@ const nft = (state: NFTState = initialState, action: NFTActions) => {
         case SET_NFT_GALLERY_VIEW:
             return {...state, galleryView: action.galleryView};
         case SET_NFT_COLLECTION:
-            return {...state, collection: action.collection};
+            return {
+                ...state,
+                collected: action.collected,
+                minted: action.minted,
+            };
         case SET_NFT_COLLECTION_LOADING:
             return {...state, collectionLoading: action.collectionLoading};
         case SET_NFT_SELECTED:

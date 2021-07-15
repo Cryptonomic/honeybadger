@@ -6,6 +6,7 @@ import {
     Delegation,
 } from 'conseiljs';
 import {KeyStoreUtils, SoftSigner} from '../../softsigner';
+import {Buffer} from 'buffer';
 
 import {State} from '../types';
 
@@ -91,91 +92,103 @@ export const beaconSendDelegation =
 
 export const beaconSendOperations =
     (operations: any[], fee: number = 0) =>
-    async (dispatch: any, getState: any): Promise<boolean> => {
-        const secretKey = getState().app.secretKey;
-        const publicKeyHash = getState().app.publicKeyHash;
-        const tezosUrl = config[0].nodeUrl;
-        const keyStore = await KeyStoreUtils.restoreIdentityFromSecretKey(
-            secretKey,
-        );
-        const signer = new SoftSigner(
-            TezosMessageUtils.writeKeyWithHint(keyStore.secretKey, 'edsk'),
-        );
+    async (dispatch: any, getState: any): Promise<any> => {
+        try {
+            const secretKey = getState().app.secretKey;
+            const publicKeyHash = getState().app.publicKeyHash;
+            const tezosUrl = config[0].nodeUrl;
+            const keyStore = await KeyStoreUtils.restoreIdentityFromSecretKey(
+                secretKey,
+            );
+            const signer = new SoftSigner(
+                TezosMessageUtils.writeKeyWithHint(keyStore.secretKey, 'edsk'),
+            );
 
-        const formedOperations = await createOperationGroup(
-            operations,
-            tezosUrl,
-            publicKeyHash,
-            keyStore.publicKey,
-        );
+            const formedOperations: any = await createOperationGroup(
+                operations,
+                tezosUrl,
+                publicKeyHash,
+                keyStore.publicKey,
+            );
 
-        const estimate = await TezosNodeWriter.estimateOperationGroup(
-            tezosUrl,
-            'main',
-            formedOperations,
-        );
-
-        for (let i = 0; i < formedOperations.length; i++) {
-            if (i === 0 && fee === 0) {
-                formedOperations[i].fee = estimate.estimatedFee.toString();
-            } else if (i === 0 && fee > 0) {
-                formedOperations[i].fee = fee.toString();
+            // TODO: FIX fees and gas for mint operations
+            for (let o of formedOperations) {
+                if (o.parameters.entrypoint === 'mint_OBJKT') {
+                    formedOperations[0].gas_limit = '99999';
+                    formedOperations[0].fee = `1${formedOperations[0].fee}`;
+                }
             }
 
-            formedOperations[i].gas_limit =
-                estimate.operationResources[i].gas.toString();
-            formedOperations[i].storage_limit =
-                estimate.operationResources[i].storageCost.toString();
-        }
+            const estimate = await TezosNodeWriter.estimateOperationGroup(
+                tezosUrl,
+                'main',
+                formedOperations,
+            );
 
-        const result: any = await TezosNodeWriter.sendOperation(
-            tezosUrl,
-            formedOperations,
-            signer,
-        ).catch(err => {
-            const errorObj = {name: err.message, ...err};
-            console.log(err);
-            dispatch(setMessage(errorObj.name, 'error'));
-            return undefined;
-        });
+            for (let i = 0; i < formedOperations.length; i++) {
+                if (i === 0 && fee === 0) {
+                    formedOperations[i].fee = estimate.estimatedFee.toString();
+                } else if (i === 0 && fee > 0) {
+                    formedOperations[i].fee = fee.toString();
+                }
 
-        if (result) {
-            const operationResult =
-                result &&
-                result.results &&
-                result.results.contents &&
-                result.results.contents[0] &&
-                result.results.contents[0].metadata &&
-                result.results.contents[0].metadata.operation_result;
+                formedOperations[i].gas_limit =
+                    estimate.operationResources[i].gas.toString();
+                formedOperations[i].storage_limit =
+                    estimate.operationResources[i].storageCost.toString();
+            }
 
-            if (
-                operationResult &&
-                operationResult.errors &&
-                operationResult.errors.length
-            ) {
-                const error = 'Smart Contract operation failed';
-                console.log(
-                    'processOperationResult failed with',
-                    operationResult.errors,
+            const result: any = await TezosNodeWriter.sendOperation(
+                tezosUrl,
+                formedOperations,
+                signer,
+            ).catch(err => {
+                const errorObj = {name: err.message, ...err};
+                console.log(err);
+                dispatch(setMessage(errorObj.name, 'error'));
+                return undefined;
+            });
+
+            if (result) {
+                const operationResult =
+                    result &&
+                    result.results &&
+                    result.results.contents &&
+                    result.results.contents[0] &&
+                    result.results.contents[0].metadata &&
+                    result.results.contents[0].metadata.operation_result;
+
+                if (
+                    operationResult &&
+                    operationResult.errors &&
+                    operationResult.errors.length
+                ) {
+                    const error = 'Smart Contract operation failed';
+                    console.log(
+                        'processOperationResult failed with',
+                        operationResult.errors,
+                    );
+                    dispatch(setMessage(error, 'error'));
+                    return false;
+                }
+
+                const clearedOperationId = clearOperationId(
+                    result.operationGroupID,
                 );
-                dispatch(setMessage(error, 'error'));
-                return false;
+                dispatch(
+                    setMessage(
+                        `Successfully started contract invocation. ${clearedOperationId}`,
+                        'info',
+                    ),
+                );
+
+                return true;
             }
 
-            const clearedOperationId = clearOperationId(
-                result.operationGroupID,
-            );
-            dispatch(
-                setMessage(
-                    `Successfully started contract invocation. ${clearedOperationId}`,
-                    'info',
-                ),
-            );
-
-            return true;
+            return false;
+        } catch (e) {
+            console.log('MINT', e);
         }
-
-        return false;
     };
 
 async function createOperationGroup(
@@ -206,6 +219,14 @@ async function createOperationGroup(
                 }
 
                 try {
+                    //TODO: FIX mint operations bytes convert
+                    if (o.parameters.value.args[1].args[0].bytes.length) {
+                        o.parameters.value.args[1].args[0].bytes = Buffer.from(
+                            o.parameters.value.args[1].args[0].bytes,
+                        ).toString('hex');
+                    }
+                    o.parameters.value.args[1].args[0].bytes =
+                        o.parameters.value.args[1].args[0].bytes;
                     parameters = JSON.stringify(o.parameters.value);
                 } catch {
                     //
