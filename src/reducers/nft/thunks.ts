@@ -102,7 +102,7 @@ export const getNFTCollection = async (
         [0],
         true,
     );
-    collectionQuery = ConseilQueryBuilder.setLimit(collectionQuery, 10_000);
+    collectionQuery = ConseilQueryBuilder.setLimit(collectionQuery, 10000);
 
     const collectionResult = await TezosConseilClient.getTezosEntityData(
         {url: conseilUrl, apiKey, network},

@@ -39,6 +39,8 @@ import Fish from '../../assets/fish.svg';
 import Circle from '../../assets/circle.svg';
 import RightArrow from '../../assets/right-arrow.svg';
 import Salmon from '../../assets/salmon.svg';
+import BgGradient from '../../assets/bg-gradient.svg';
+import NFTIcon from '../../assets/nft.svg';
 
 const Account = ({navigation}: AccountProps) => {
     const dispatch = useDispatch();
@@ -183,7 +185,6 @@ const Account = ({navigation}: AccountProps) => {
     ];
 
     const commonItems = [
-        {title: 'NFT Gallery', screen: 'NFTGallery', action: onMenuSelect},
         {title: 'Settings', screen: 'Settings', action: onMenuSelect},
         {title: 'Clear Data', action: onClearData},
     ];
@@ -197,6 +198,7 @@ const Account = ({navigation}: AccountProps) => {
 
     return (
         <Container style={styles.container}>
+            <BgGradient style={styles.bg} />
             {Platform.OS === 'ios' && (
                 <BeaconMessages navigation={navigation} />
             )}
@@ -285,6 +287,18 @@ const Account = ({navigation}: AccountProps) => {
                             </Button>
                             <Text style={[styles.actionLabel, styles.typo4]}>
                                 Send
+                            </Text>
+                        </View>
+                        <View style={styles.center}>
+                            <Button
+                                transparent
+                                onPress={() => onPress('NFTGallery')}>
+                                <View style={styles.actionCircle}>
+                                    <NFTIcon fill="#000000" />
+                                </View>
+                            </Button>
+                            <Text style={[styles.actionLabel, styles.typo4]}>
+                                NFTs
                             </Text>
                         </View>
                     </View>
@@ -481,7 +495,12 @@ const styles = StyleSheet.create({
         marginTop: 10,
     },
     container: {
-        backgroundColor: '#fcd104',
+        position: 'relative',
+    },
+    bg: {
+        width: '100%',
+        height: '100%',
+        position: 'absolute',
     },
     bottom: {
         marginTop: 25,
@@ -545,12 +564,12 @@ const styles = StyleSheet.create({
     actionCircle: {
         alignItems: 'center',
         justifyContent: 'center',
-        width: 86,
-        height: 86,
+        width: 64,
+        height: 64,
         backgroundColor: 'rgba(0, 0, 0, 0.05)',
-        borderRadius: 86,
+        borderRadius: 64,
         margin: 20,
-        padding: 25,
+        padding: 20,
     },
     actionLabel: {
         marginTop: 30,

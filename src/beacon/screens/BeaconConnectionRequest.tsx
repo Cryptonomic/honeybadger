@@ -29,7 +29,7 @@ const BeaconConnectionRequest = ({navigation}: BeaconProps) => {
     const beaconLoading = useSelector(
         (state: State) => state.beacon.beaconLoading,
     );
-    const [showCamera, setShowCamera] = useState(false);
+    const [showCamera, setShowCamera] = useState(true);
     const [scanData, setScanData] = useState<displayDataProps | null>(null);
     const [error, setError] = useState('');
 

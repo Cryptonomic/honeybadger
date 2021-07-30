@@ -3,7 +3,7 @@
   "version": "1.7.0",
   "private": true,
   "scripts": {
-    "start": "react-native link && react-native start",
+    "start": "react-native link && react-native start --reset-cache",
     "test": "jest",
     "lint": "eslint .",
     "postinstall": "rn-nodeify --install buffer,process,stream,events,assert,crypto,vm --hack --yarn",
@@ -32,7 +32,7 @@
     "native-base": "2.13.13",
     "process": "^0.11.10",
     "react": "17.0.1",
-    "react-native": "0.64.1",
+    "react-native": "0.64.2",
     "react-native-bip39": "^2.3.0",
     "react-native-camera": "^3.32.0",
     "react-native-crypto": "^2.2.0",
