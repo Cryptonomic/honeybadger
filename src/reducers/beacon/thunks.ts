@@ -220,13 +220,14 @@ async function createOperationGroup(
 
                 try {
                     //TODO: FIX mint operations bytes convert
-                    if (o.parameters.value.args[1].args[0].bytes.length) {
+                    if (
+                        entrypoint === 'mint_OBJKT' &&
+                        o.parameters.value.args[1].args[0].bytes.length
+                    ) {
                         o.parameters.value.args[1].args[0].bytes = Buffer.from(
                             o.parameters.value.args[1].args[0].bytes,
                         ).toString('hex');
                     }
-                    o.parameters.value.args[1].args[0].bytes =
-                        o.parameters.value.args[1].args[0].bytes;
                     parameters = JSON.stringify(o.parameters.value);
                 } catch {
                     //
