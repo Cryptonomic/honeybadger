@@ -51,8 +51,6 @@ const Account = ({navigation}: AccountProps) => {
     const [tab, setTab] = useState(0);
     const [openSettings, setOpenSettings] = useState(false);
 
-    const [isModalVisible, setModalVisible] = useState(false);
-    const [modalWasShown, setModalWasShown] = useState(false);
     const [modalNext, setModalNext] = useState('');
     const hasPendingOperations = useSelector(
         (state: State) =>
@@ -134,12 +132,10 @@ const Account = ({navigation}: AccountProps) => {
             dispatch(setMessage('Balance too low', 'info'));
             return;
         }
+
         if (value === 'SendAddress' && hasPendingOperations) {
             togglePendingModal();
-        } else if (
-            (value === 'SendAddress' || value === 'Receive') &&
-            !modalWasShown
-        ) {
+        } else if (value === 'SendAddress' || value === 'Receive') {
             setModalNext(value);
             toggleModal();
         } else {
@@ -155,8 +151,6 @@ const Account = ({navigation}: AccountProps) => {
     };
 
     const toggleModal = () => {
-        setModalVisible(!isModalVisible);
-        setModalWasShown(true);
         if (modalNext) {
             navigation.navigate(modalNext);
         }
@@ -439,22 +433,6 @@ const Account = ({navigation}: AccountProps) => {
                         {tab === 1 && <Delegation onDelegate={onDelegate} />}
                     </View>
                 </View>
-
-                <Modal isVisible={isModalVisible}>
-                    <View style={styles.warningModal}>
-                        <Text style={{marginBottom: 5}}>
-                            We only recommend storing and transferring small
-                            amounts of tez with this mobile wallet. You might
-                            want to wait for hardware wallet support for larger
-                            amounts.
-                        </Text>
-                        <Button
-                            onPress={toggleModal}
-                            style={styles.warningModalButton}>
-                            <Text>OK</Text>
-                        </Button>
-                    </View>
-                </Modal>
 
                 <Modal isVisible={isPendingModalVisible}>
                     <View style={styles.warningModal}>
