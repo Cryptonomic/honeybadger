@@ -11,12 +11,9 @@ import CustomIcon from '../../components/CustomIcon';
 
 import {formatAmount, utezToTez, tezToUtez} from '../../utils/currency';
 
-import {
-    beaconSendTransaction,
-    beaconSendDelegation,
-    beaconSendOperations,
-} from '../../reducers/beacon/thunks';
-import {getBakerDetails} from '../../reducers/app/thunks';
+import { beaconSendTransaction, beaconSendDelegation, beaconSendOperations, beaconNotifyCancel } from '../../reducers/beacon/thunks';
+
+import {estimateOperationFee, getBakerDetails} from '../../reducers/app/thunks';
 
 interface BakerDetails {
     name: string;
@@ -28,12 +25,11 @@ interface BakerDetails {
 
 const General = ({navigation}: BeaconProps) => {
     const dispatch = useDispatch();
-    const {operationDetails, appMetadata} = useSelector(
-        (state: State) => state.beacon.beaconMessage,
-    );
+    const {operationDetails, appMetadata} = useSelector((state: State) => state.beacon.beaconMessage);
     const balance = useSelector((state: State) => state.app.balance);
+    const secretKey = useSelector((state: State) => state.app.secretKey);
 
-    const [fee] = useState(utezToTez(0));
+    const [fee, setFee] = useState(utezToTez(0));
     const [baker, setBaker] = useState<null | BakerDetails>(null);
     const [loadingBaker, setLoadingBaker] = useState(false);
 
@@ -58,7 +54,13 @@ const General = ({navigation}: BeaconProps) => {
         }
     };
 
-    const onCancel = () => navigation.navigate('Account');
+    const onCancel = () => {
+        try {
+            beaconNotifyCancel();
+        } finally {
+            navigation.navigate('Account');
+        }
+    };
 
     useEffect(() => {
         const fetchBaker = async () => {
@@ -71,6 +73,14 @@ const General = ({navigation}: BeaconProps) => {
         };
         fetchBaker();
     }, [delegate]);
+
+    useEffect(() => {
+        const estimateFee = async () => {
+            const estimate = await estimateOperationFee(operationDetails, secretKey);
+            setFee(utezToTez(estimate));
+        };
+        estimateFee();
+    }, [fee]);
 
     return (
         <View style={s.container}>
