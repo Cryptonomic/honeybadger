@@ -1,23 +1,18 @@
-import {
-    TezosNodeWriter,
-    TezosMessageUtils,
-    TezosNodeReader,
-    TezosConstants,
-    Delegation,
-} from 'conseiljs';
+import {NativeModules} from 'react-native';
+import { TezosNodeWriter, TezosMessageUtils } from 'conseiljs';
 import {KeyStoreUtils, SoftSigner} from '../../softsigner';
-import {Buffer} from 'buffer';
 
 import {State} from '../types';
 
 import constants from '../../utils/constants.json';
 import config from '../../config';
 
-import {getPendingOperations} from '../app/thunks';
+import {createOperationGroup, getPendingOperations} from '../app/thunks';
 
 import {setMessage} from '../messages/actions';
 
 import {clearOperationId} from '../../utils/general';
+import { BeaconErrorTypes } from '../../beacon/types';
 
 export const beaconSendTransaction =
     (
@@ -175,6 +170,9 @@ export const beaconSendOperations =
                 const clearedOperationId = clearOperationId(
                     result.operationGroupID,
                 );
+
+                beaconNotifyOperation(clearedOperationId);
+
                 dispatch(
                     setMessage(
                         `Successfully started contract invocation. ${clearedOperationId}`,
@@ -191,91 +189,10 @@ export const beaconSendOperations =
         }
     };
 
-async function createOperationGroup(
-    operations: any[],
-    tezosUrl: string,
-    publicKeyHash: string,
-    publicKey: string,
-) {
-    const networkCounter = await TezosNodeReader.getCounterForAccount(
-        tezosUrl,
-        publicKeyHash,
-    );
-    const formedOperations: any[] = [];
+export const beaconNotifyCancel = () => {
+    NativeModules.BeaconBridge.sendError(BeaconErrorTypes.ABORTED_ERROR)
+};
 
-    let counter = networkCounter;
-    for (const o of operations) {
-        counter += 1;
-        console.log('createOperationGroup', operations);
-        switch (o.kind) {
-            case 'transaction': {
-                let entrypoint: string | undefined;
-                let parameters: string | undefined;
-
-                try {
-                    entrypoint = o.parameters.entrypoint;
-                } catch {
-                    //
-                }
-
-                try {
-                    //TODO: FIX mint operations bytes convert
-                    if (o.parameters.value.args[1].args[0].bytes.length) {
-                        o.parameters.value.args[1].args[0].bytes = Buffer.from(
-                            o.parameters.value.args[1].args[0].bytes,
-                        ).toString('hex');
-                    }
-                    o.parameters.value.args[1].args[0].bytes =
-                        o.parameters.value.args[1].args[0].bytes;
-                    parameters = JSON.stringify(o.parameters.value);
-                } catch {
-                    //
-                }
-
-                const op = TezosNodeWriter.constructContractInvocationOperation(
-                    publicKeyHash,
-                    counter,
-                    o.destination,
-                    o.amount,
-                    0,
-                    TezosConstants.OperationStorageCap,
-                    TezosConstants.OperationGasCap,
-                    entrypoint,
-                    parameters,
-                );
-
-                formedOperations.push(op);
-
-                break;
-            }
-            case 'delegation': {
-                const op: Delegation = {
-                    kind: 'delegation',
-                    source: publicKeyHash,
-                    fee: '0',
-                    counter: counter.toString(),
-                    storage_limit:
-                        TezosConstants.DefaultDelegationStorageLimit.toString(),
-                    gas_limit:
-                        TezosConstants.DefaultDelegationGasLimit.toString(),
-                    delegate: o.delegate,
-                };
-
-                formedOperations.push(op);
-
-                break;
-            }
-            default: {
-                break;
-            }
-        }
-    }
-
-    return await TezosNodeWriter.appendRevealOperation(
-        tezosUrl,
-        publicKey,
-        publicKeyHash,
-        networkCounter,
-        formedOperations,
-    );
-}
+export const beaconNotifyOperation = (operationHash: string) => {
+    NativeModules.BeaconBridge.sendResponse(operationHash);
+};
