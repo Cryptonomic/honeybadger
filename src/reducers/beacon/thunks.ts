@@ -106,14 +106,6 @@ export const beaconSendOperations =
                 keyStore.publicKey,
             );
 
-            // TODO: FIX fees and gas for mint operations
-            for (let o of formedOperations) {
-                if (o.parameters.entrypoint === 'mint_OBJKT') {
-                    formedOperations[0].gas_limit = '99999';
-                    formedOperations[0].fee = `1${formedOperations[0].fee}`;
-                }
-            }
-
             const estimate = await TezosNodeWriter.estimateOperationGroup(
                 tezosUrl,
                 'main',

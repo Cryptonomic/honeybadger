@@ -111,25 +111,37 @@ const General = ({navigation}: BeaconProps) => {
                 </View>
             </View>
             <View style={[s.row, s.end]}>
-                <Text style={[s.fee, s.typo5]}>{`Operation fee ${
-                    delegate ? baker?.fee || 0 : fee
-                }`}</Text>
-                <CustomIcon name="XTZ" size={16} color="#7d7c7c" />
+                    {delegate && (<>
+                        <Text style={[s.fee, s.typo5]}>Operation fee ${baker?.fee}</Text>
+                        <CustomIcon name="XTZ" size={16} color="#7d7c7c" />
+                    </>)}
+                    {!delegate && fee > 0 && (<>
+                        <Text style={[s.fee, s.typo5]}>Operation fee ${fee}</Text>
+                        <CustomIcon name="XTZ" size={16} color="#7d7c7c" />
+                    </>)}
+                    {fee < 0 && (<Text style={[s.fee, s.typo5]}>Invalid operation</Text>)}
             </View>
             <Text style={s.info}>
                 Authorizing will allow this site to carry out this operation for
                 you. Always make sure you trust the sites you interact with.
             </Text>
             <View style={[s.row, s.actions]}>
-                <Button style={[s.button, s.cancel]} onPress={onCancel}>
-                    <Text>Cancel</Text>
-                </Button>
-                <Button
-                    style={s.button}
-                    disabled={loadingBaker}
-                    onPress={onAuthorize}>
-                    <Text style={s.btnText}>Authorize</Text>
-                </Button>
+                {(delegate || fee > 0) && (<>
+                    <Button style={[s.button, s.cancel]} onPress={onCancel}>
+                        <Text>Cancel</Text>
+                    </Button>
+                    <Button
+                        style={s.button}
+                        disabled={loadingBaker}
+                        onPress={onAuthorize}>
+                        <Text style={s.btnText}>Authorize</Text>
+                    </Button>
+                </>)}
+                {(!delegate && fee < 0) && (
+                    <Button style={[s.button, s.cancel]} onPress={onCancel}>
+                        <Text>Dismiss</Text>
+                    </Button>
+                )}
             </View>
         </View>
     );
@@ -161,6 +173,7 @@ const s = StyleSheet.create({
         borderColor: '#e0e0e0',
         fontSize: 10,
         marginTop: 10,
+        maxHeight: 200,
     },
     bold: {
         fontWeight: '600',

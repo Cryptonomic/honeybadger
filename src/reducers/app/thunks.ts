@@ -358,18 +358,13 @@ export const estimateOperationFee = async (operations: any, secretKey: any): Pro
 
         const formedOperations: any = await createOperationGroup(operations, tezosUrl, keyStore.publicKeyHash, keyStore.publicKey);
 
-        for (let o of formedOperations) { // TODO: FIX fees and gas for mint operations
-            if (o.parameters.entrypoint === 'mint_OBJKT') {
-                formedOperations[0].gas_limit = '99999';
-                formedOperations[0].fee = `1${formedOperations[0].fee}`;
-            }
-        }
-
         const estimate = await TezosNodeWriter.estimateOperationGroup(tezosUrl, 'main', formedOperations);
 
         return Number(estimate.estimatedFee);
-    } catch {
-        return 0; // TODO: present error to user
+    } catch (err) {
+        // console.log('failed estimation')
+        // console.log(JSON.stringify(err))
+        return -1; // TODO: present error to user
     }
 }
 
@@ -402,13 +397,11 @@ export async function createOperationGroup(
 
                 try {
                     if (entrypoint === 'mint_OBJKT') { // TODO: FIX mint operations bytes convert
-                        if (o.parameters.value.args[1].args[0].bytes.length) {
-                            o.parameters.value.args[1].args[0].bytes = Buffer.from(
-                                o.parameters.value.args[1].args[0].bytes,
-                            ).toString('hex');
+                        if (Array.isArray(o.parameters.value.args[1].args[0].bytes)) {
+                            const processedBytes = Buffer.from(o.parameters.value.args[1].args[0].bytes).toString('hex');
+                            o.parameters.value.args[1].args[0].bytes = processedBytes;
+                            parameters = JSON.stringify(o.parameters.value);
                         }
-                        o.parameters.value.args[1].args[0].bytes = o.parameters.value.args[1].args[0].bytes;
-                        parameters = JSON.stringify(o.parameters.value);
                     }
                 } catch {
                     //
