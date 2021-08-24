@@ -17,8 +17,6 @@ import {BeaconProps} from '../../screens/types';
 import {State} from '../../reducers/types';
 import {BeaconPermissionScopes} from '../types';
 
-import ImgBeaconIntegration from '../../../assets/beacon-integration.svg';
-
 const BeaconInfo = ({navigation}: BeaconProps) => {
     const isFocused = navigation.isFocused();
     const permissions = useSelector(
@@ -83,7 +81,15 @@ const BeaconInfo = ({navigation}: BeaconProps) => {
                                 later.
                             </Text>
                         )}
-                        <ImgBeaconIntegration style={s.img} />
+                    </View>
+                )}
+                {!!permissions.length && isReady && (
+                    <View style={s.center}>
+                        <TouchableOpacity
+                            style={s.scan}
+                            onPress={onPressScanQrCode}>
+                            <Text>Scan QR Code</Text>
+                        </TouchableOpacity>
                     </View>
                 )}
                 {!!permissions.length &&
@@ -132,15 +138,6 @@ const BeaconInfo = ({navigation}: BeaconProps) => {
                             </View>
                         </View>
                     ))}
-                {!!permissions.length && isReady && (
-                    <View style={s.center}>
-                        <TouchableOpacity
-                            style={s.scan}
-                            onPress={onPressScanQrCode}>
-                            <Text>Scan QR Code</Text>
-                        </TouchableOpacity>
-                    </View>
-                )}
             </SafeContainer>
         </View>
     );
