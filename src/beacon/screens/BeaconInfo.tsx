@@ -13,17 +13,17 @@ import {useSelector} from 'react-redux';
 import SafeContainer from '../../components/SafeContainer';
 import CustomHeader from '../../components/CustomHeader';
 
-import {BeaconConnectionRequestProps} from '../../screens/types';
+import {BeaconProps} from '../../screens/types';
 import {State} from '../../reducers/types';
+import {BeaconPermissionScopes} from '../types';
 
-import ImgBeaconIntegration from '../../../assets/beacon-integration.svg';
-
-const BeaconInfo = ({navigation}: BeaconConnectionRequestProps) => {
+const BeaconInfo = ({navigation}: BeaconProps) => {
     const isFocused = navigation.isFocused();
     const permissions = useSelector(
-        (state: State) => state.app.beaconPermissions,
+        (state: State) => state.beacon.beaconPermissions,
     );
-    const metadata = useSelector((state: State) => state.app.beaconMetadata);
+    const metadata = useSelector((state: State) => state.beacon.beaconMetadata);
+    const isReady = useSelector((state: State) => state.beacon.beaconReady);
 
     const onPressLearnMore = async () => {
         await Linking.openURL('https://www.walletbeacon.io/');
@@ -41,14 +41,17 @@ const BeaconInfo = ({navigation}: BeaconConnectionRequestProps) => {
             return;
         }
         NativeModules.BeaconBridge.getPermissions();
+        NativeModules.BeaconBridge.getPeers();
         NativeModules.BeaconBridge.getAppMetadata();
     }, [isFocused]);
 
     return (
         <View style={s.container}>
             <SafeContainer>
-                <CustomHeader onBack={onPressBack}/>
-                <Text style={s.title}>dApps connected using Beacon</Text>
+                <CustomHeader onBack={onPressBack} />
+                <Text style={permissions.length ? s.title : [s.title, s.top]}>
+                    dApps connected using Beacon
+                </Text>
                 {!permissions.length && (
                     <View style={s.center}>
                         <Text style={s.h1}>
@@ -65,20 +68,76 @@ const BeaconInfo = ({navigation}: BeaconConnectionRequestProps) => {
                                 </Text>
                             </Text>
                         </View>
+                        {isReady && (
+                            <TouchableOpacity
+                                style={s.scan}
+                                onPress={onPressScanQrCode}>
+                                <Text>Scan QR Code</Text>
+                            </TouchableOpacity>
+                        )}
+                        {!isReady && (
+                            <Text style={s.unavailable}>
+                                Beacon service is unavailable. Please try again
+                                later.
+                            </Text>
+                        )}
+                    </View>
+                )}
+                {!!permissions.length && isReady && (
+                    <View style={s.center}>
                         <TouchableOpacity
                             style={s.scan}
                             onPress={onPressScanQrCode}>
                             <Text>Scan QR Code</Text>
                         </TouchableOpacity>
-                        <ImgBeaconIntegration style={s.img} />
                     </View>
                 )}
-                {!!permissions.length && (
-                    <View>
-                        <Text></Text>
-                        <Text></Text>
-                    </View>
-                )}
+                {!!permissions.length &&
+                    isReady &&
+                    permissions.map((permission: any, idx: number) => (
+                        <View style={s.item} key={idx}>
+                            <View style={[s.row, s.section]}>
+                                <Text>Connected</Text>
+                                <Text>
+                                    {new Date(
+                                        permission.connectedAt,
+                                    ).toLocaleString()}
+                                </Text>
+                            </View>
+                            <View style={[s.row, s.section]}>
+                                <Text>Permissions</Text>
+                                <View style={s.row}>
+                                    {permission.scopes.map(
+                                        (
+                                            scope: BeaconPermissionScopes,
+                                            index: number,
+                                        ) => (
+                                            <Text key={scope}>
+                                                {`${
+                                                    BeaconPermissionScopes[
+                                                        scope
+                                                    ]
+                                                }${
+                                                    index <
+                                                    permission.scopes.length - 1
+                                                        ? ', '
+                                                        : ''
+                                                }`}
+                                            </Text>
+                                        ),
+                                    )}
+                                </View>
+                            </View>
+                            <View style={[s.row, s.section]}>
+                                <Text>Network</Text>
+                                <Text>{permission.network.type}</Text>
+                            </View>
+                            <View style={[s.row, s.section]}>
+                                <Text>Name</Text>
+                                <Text>{permission.appMetadata.name}</Text>
+                            </View>
+                        </View>
+                    ))}
             </SafeContainer>
         </View>
     );
@@ -96,6 +155,8 @@ const s = StyleSheet.create({
         textAlign: 'center',
         fontWeight: 'bold',
         fontSize: 20,
+    },
+    top: {
         marginTop: 100,
     },
     h1: {
@@ -121,6 +182,20 @@ const s = StyleSheet.create({
         backgroundColor: '#fcd104',
         padding: 20,
         borderRadius: 20,
+    },
+    unavailable: {
+        marginTop: 40,
+    },
+    row: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+    },
+    section: {
+        paddingHorizontal: 40,
+        marginTop: 10,
+    },
+    item: {
+        marginTop: 30,
     },
 });
 

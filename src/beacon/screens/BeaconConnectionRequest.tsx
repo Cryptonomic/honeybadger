@@ -9,10 +9,10 @@ import bs58check from 'bs58check';
 import SafeContainer from '../../components/SafeContainer';
 import CustomHeader from '../../components/CustomHeader';
 
-import {setBeaconPermissionsLoading} from '../../reducers/app/actions';
+import {setBeaconLoading} from '../../reducers/beacon/actions';
 
 import {State} from '../../reducers/types';
-import {BeaconConnectionRequestProps} from '../../screens/types';
+import {BeaconProps} from '../../screens/types';
 
 interface displayDataProps {
     //PeerInfo
@@ -24,17 +24,13 @@ interface displayDataProps {
     relayServer: string;
 }
 
-const testData = {"id":"55914511-4a97-c7ae-f3ec-8f957184d271","type":"p2p-pairing-request","name":"Beacon Example Dapp","version":"2","publicKey":"049e5c547297cd009ec93e92fa76d1b51b099884cc9cae4c8815ff9f4a88ee05","relayServer":"matrix.papers.tech"}
-
-const BeaconConnectionRequest = ({
-    navigation,
-}: BeaconConnectionRequestProps) => {
+const BeaconConnectionRequest = ({navigation}: BeaconProps) => {
     const dispatch = useDispatch();
-    const beaconPermissionLoading = useSelector(
-        (state: State) => state.app.beaconPermissionLoading,
+    const beaconLoading = useSelector(
+        (state: State) => state.beacon.beaconLoading,
     );
-    const [showCamera, setShowCamera] = useState(false);
-    const [data, setData] = useState<displayDataProps | null>(testData);
+    const [showCamera, setShowCamera] = useState(true);
+    const [scanData, setScanData] = useState<displayDataProps | null>(null);
     const [error, setError] = useState('');
 
     const onBarcodeRecognized = ({data}: {data: string}) => {
@@ -44,7 +40,7 @@ const BeaconConnectionRequest = ({
                     data.slice(data.indexOf('data=') + 'data='.length),
                 ),
             );
-            setData(parsedData);
+            setScanData(parsedData);
             setShowCamera(false);
         }
     };
@@ -52,25 +48,25 @@ const BeaconConnectionRequest = ({
     const onCancel = () => {
         navigation.navigate('Account');
         setShowCamera(false);
-        setData(null);
+        setScanData(null);
         setError('');
     };
 
     const onConnect = async () => {
         try {
-            if (data === null) {
+            if (scanData === null) {
                 return;
             }
-            dispatch(setBeaconPermissionsLoading(true));
+            dispatch(setBeaconLoading(true));
             NativeModules.BeaconBridge.addPeer(
-                data.id,
-                data.name,
-                data.publicKey,
-                data.relayServer,
-                data.version,
+                scanData.id,
+                scanData.name,
+                scanData.publicKey,
+                scanData.relayServer,
+                scanData.version,
             );
         } catch (e) {
-            dispatch(setBeaconPermissionsLoading());
+            dispatch(setBeaconLoading());
             // TODO: set and display error message
             console.log('Failed to add peer');
         }
@@ -95,22 +91,24 @@ const BeaconConnectionRequest = ({
                     />
                 </RNCamera>
             )}
-            {!showCamera && data && (
+            {!showCamera && scanData && (
                 <View style={s.container}>
                     <SafeContainer>
-                        {beaconPermissionLoading && (
+                        {beaconLoading && (
                             <View style={s.loading}>
                                 <Text>Loading...</Text>
                             </View>
                         )}
                         <Text style={s.title}>Connection Request</Text>
-                        <Text style={[s.network, s.p1]}>{data?.name}</Text>
-                        <Text style={[s.address, s.p1]}>{data.publicKey}</Text>
+                        <Text style={[s.network, s.p1]}>{scanData?.name}</Text>
+                        <Text style={[s.address, s.p1]}>
+                            {scanData.publicKey}
+                        </Text>
                         <Text
                             style={[
                                 s.message,
                                 s.p2,
-                            ]}>{`${data.name} would like to connect to your account`}</Text>
+                            ]}>{`${scanData.name} would like to connect to your account`}</Text>
                         <Text style={[s.info]}>
                             This site is requesting access to view your account
                             address. Always make sure you trust the sites you

@@ -11,6 +11,7 @@ import PendingTransactions from '../components/PendingTransactions';
 import {truncateHash} from '../utils/general';
 import {formatAmount} from '../utils/currency';
 import config from '../config';
+import constants from '../utils/constants.json';
 
 const Transactions = () => {
     const transactions = useSelector((state: State) => state.app.transactions);
@@ -43,6 +44,24 @@ const Transactions = () => {
                 address = truncateHash(t.source);
                 amount = formatAmount(Number(t.amount));
                 amountDirection = 1;
+            } else if (t.source === publicHashKey && t.destination.startsWith('KT1')) {
+                action = 'Called Contract';
+                if (t.entrypoint) {
+                    action = 'Called';
+                    preposition = `${t.entrypoint} of`;
+                } else {
+                    preposition = 'at';
+                }
+
+                if (Object.keys(constants.knownContractNames).includes(t.destination)) {
+                    action = 'Called';
+                    address = constants.knownContractNames[t.destination];
+                } else {
+                    address = truncateHash(t.destination);
+                }
+                iconName = 'Back-Arrow';
+                amount = formatAmount(Number(t.amount));
+                amountDirection = Number(t.amount) > 0 ? -1 : 0;
             } else if (t.source === publicHashKey) {
                 iconName = 'Back-Arrow';
                 action = 'Sent';
@@ -55,7 +74,7 @@ const Transactions = () => {
             iconName = t.delegate ? 'Link' : 'Unlink';
             action = t.delegate ? 'Delegated' : 'Delegation Canceled';
             preposition = t.delegate ? 'to' : '';
-            address = truncateHash(t.delegate) || '';
+            address = truncateHash(t.delegate || '');
             amount = '';
             amountDirection = 0;
         }
@@ -96,7 +115,7 @@ const Transactions = () => {
                     <TouchableOpacity
                         style={styles.list}
                         onPress={() => onTransactionPress(t.opGroupHash)}
-                        key={t.address}>
+                        key={t.opGroupHash}>
                         <View style={styles.listItem}>
                             <View style={styles.left}>
                                 <CustomIcon

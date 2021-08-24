@@ -130,6 +130,24 @@
       }
     }
 
+  @objc
+  func sendError(_ errorType: String) {
+    guard let request = awaitingRequest else {
+      return
+    }
+
+    let response = Beacon.Response.Error(from: request, errorType: Beacon.ErrorType(rawValue: errorType)!)
+    beaconClient?.respond(with: .error(response)) { result in
+      switch result {
+        case .success(_):
+          print("Sent the response")
+        case let .failure(error):
+          print("Failed to send the response, got error: \(error)")
+          self.sendEvent(withName: "onError", body: ["Failed to send the response, got error: \(error)"])
+      }
+    }
+  }
+
     @objc
     func sendResponse(_ payload: String) {
         guard let request = awaitingRequest else {
@@ -154,22 +172,28 @@
             }
           break
         case let .operation(operation):
-  //        let response = Beacon.Response.Operation(from: operation, transactionHash: payload)
-  //        print(response)
-          // TODO
+          let response = Beacon.Response.Operation(from: operation, transactionHash: payload)
+          beaconClient?.respond(with: .operation(response)) { result in
+            switch result {
+            case .success(_):
+              print("Sent the response")
+            case let .failure(error):
+              print("Failed to send the response, got error: \(error)")
+              self.sendEvent(withName: "onError", body: ["Failed to send the response, got error: \(error)"])
+            }
+        }
           break
         case let .signPayload(signPayload):
-  //        let response = Beacon.Response.SignPayload(from: signPayload, signature: payload)
-  //        print(response)
+          // let response = Beacon.Response.SignPayload(from: signPayload, signature: payload)
+          // print(response)
           // TODO
           break
         case let .broadcast(broadcast):
-  //        let response = Beacon.Response.Broadcast(from: broadcast, transactionHash: payload)
-  //        print(response)
+          // let response = Beacon.Response.Broadcast(from: broadcast, transactionHash: payload)
+          // print(response)
           // TODO
           break
         default:
-            // TODO
             return
         }
     }

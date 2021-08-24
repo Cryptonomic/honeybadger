@@ -10,6 +10,7 @@ const CustomHeader = ({
     title,
     onBack,
     onClose,
+    RightComponent,
     leftIconName = 'Back-Arrow',
     rightIconName = 'Cancel',
     backIconCustomStyles,
@@ -42,7 +43,7 @@ const CustomHeader = ({
             </Left>
             <Body>{title && <Title style={styles.title}>{title}</Title>}</Body>
             <Right style={styles.button}>
-                {onClose && (
+                {onClose && !RightComponent && (
                     <Button transparent onPress={onClose}>
                         <CustomIcon
                             name={rightIconName}
@@ -51,6 +52,7 @@ const CustomHeader = ({
                         />
                     </Button>
                 )}
+                {RightComponent && !onClose && RightComponent}
             </Right>
         </Header>
     );
