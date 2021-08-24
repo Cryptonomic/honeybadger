@@ -136,7 +136,7 @@ android {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         missingDimensionStrategy 'react-native-camera', 'general'
-        versionCode 58
+        versionCode 59
         versionName "1.11"
     }
     splits {
@@ -157,7 +157,7 @@ android {
         release {
             storeFile file('release.keystore')
             storePassword ''
-            keyAlias 'Galleon-Mobile-Release-Key'
+            keyAlias ''
             keyPassword ''
         }
     }
