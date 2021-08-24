@@ -1,5 +1,5 @@
 import React, { useLayoutEffect, useState } from 'react';
-import { StyleSheet, Linking, ScrollView } from 'react-native';
+import { NativeModules, StyleSheet, Linking, ScrollView } from 'react-native';
 import { Text, View, Button, Container, Switch } from 'native-base';
 import DeviceInfo from 'react-native-device-info';
 import * as Keychain from 'react-native-keychain';
@@ -64,6 +64,20 @@ const Settings = ({navigation}: SettingsProps) => {
         return "Level 3: Discreet Dolphin";
     }
 
+    const onResetBeacon = () => {
+        console.log('reset beacon')
+        NativeModules.BeaconBridge.removePeers();
+        NativeModules.BeaconBridge.removePermissions();
+        NativeModules.BeaconBridge.removeAppMetadata();
+    };
+
+    const onClearData = () => {
+        console.log('reset keystore')
+        Keychain.resetGenericPassword();
+        Keychain.resetInternetCredentials('securitySetup');
+        navigation.navigate('Welcome');
+    };
+
     const toggleAppLock = async () => {
         if (securitySetup) {
             let data: any= await Keychain.getInternetCredentials('securitySetup');
@@ -111,6 +125,19 @@ const Settings = ({navigation}: SettingsProps) => {
                     isSwitch: true,
                     action: () => navigation.navigate('AccountSetup'),
                 },
+            ],
+        },
+        {
+            title: 'Reset',
+            items: [
+                {
+                    name: 'Remove dApp Data',
+                    action: () => onResetBeacon(),
+                },
+                {
+                    name: 'Clear Account Data',
+                    action: () => onClearData(),
+                }
             ],
         },
         {

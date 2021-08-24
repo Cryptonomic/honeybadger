@@ -6,6 +6,7 @@
    RCT_EXTERN_METHOD(startBeacon)
    RCT_EXTERN_METHOD(addPeer:(NSString *)peerId name:(NSString *)name publicKey:(NSString *)publicKey relayServer:(NSString *)relayServer version:(NSString *)version)
    RCT_EXTERN_METHOD(sendResponse:(NSString *)payload)
+   RCT_EXTERN_METHOD(sendError:(NSString *)errorType)
    RCT_EXTERN_METHOD(removePermissions)
    RCT_EXTERN_METHOD(removePeers)
    RCT_EXTERN_METHOD(removeAppMetadata)

@@ -5,11 +5,14 @@ export interface BeaconErrorMessage {
 
 export enum BeaconErrorTypes {
     ADD_PEER_ERROR = 'ADD_PEER_ERROR',
+    ABORTED_ERROR = 'ABORTED_ERROR'
 }
 
 export enum BeaconMessageTypes {
     PERMISSION_REQUEST = 'permission_request',
     OPERATION_REQUEST = 'operation_request',
+    ERROR = 'error',
+    OPERATION_RESPONSE = 'operation_response'
 }
 
 export enum BeaconSuccessTypes {

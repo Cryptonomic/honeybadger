@@ -2,10 +2,12 @@ import {
     ConseilQueryBuilder,
     ConseilOperator,
     ConseilSortDirection,
+    Delegation,
     TezosConseilClient,
-    TezosNodeReader,
-    TezosNodeWriter,
+    TezosConstants,
     TezosMessageUtils,
+    TezosNodeReader,
+    TezosNodeWriter
 } from 'conseiljs';
 import {Dispatch} from 'redux';
 
@@ -94,7 +96,7 @@ export const getTransactions = async (accountHash: string) => {
     const network = config[0].network;
 
     let origin = ConseilQueryBuilder.blankQuery();
-    origin = ConseilQueryBuilder.addFields(origin, 'timestamp', 'source', 'destination', 'amount', 'operation_group_hash', 'delegate', 'kind');
+    origin = ConseilQueryBuilder.addFields(origin, 'timestamp', 'source', 'destination', 'amount', 'operation_group_hash', 'delegate', 'kind', 'parameters_entrypoints');
     origin = ConseilQueryBuilder.addPredicate(origin, 'kind', ConseilOperator.IN, ['transaction', 'delegation'], false);
     origin = ConseilQueryBuilder.addPredicate(origin, 'source', ConseilOperator.EQ, [accountHash], false);
     origin = ConseilQueryBuilder.addPredicate(origin, 'internal', ConseilOperator.EQ, ['false'], false);
@@ -103,7 +105,7 @@ export const getTransactions = async (accountHash: string) => {
     origin = ConseilQueryBuilder.setLimit(origin, 1000);
 
     let target = ConseilQueryBuilder.blankQuery();
-    target = ConseilQueryBuilder.addFields(target, 'timestamp', 'source', 'destination', 'amount', 'operation_group_hash', 'delegate', 'kind');
+    target = ConseilQueryBuilder.addFields(target, 'timestamp', 'source', 'destination', 'amount', 'operation_group_hash', 'delegate', 'kind', 'parameters_entrypoints');
     target = ConseilQueryBuilder.addPredicate(target, 'kind', ConseilOperator.EQ, ['transaction'], false);
     target = ConseilQueryBuilder.addPredicate(target, 'destination', ConseilOperator.EQ, [accountHash], false);
     target = ConseilQueryBuilder.addPredicate(target, 'internal', ConseilOperator.EQ, ['false'], false);
@@ -123,7 +125,8 @@ export const getTransactions = async (accountHash: string) => {
                         amount: ii['amount'],
                         opGroupHash: ii['operation_group_hash'],
                         delegate: ii['delegate'],
-                        kind: ii['kind']
+                        kind: ii['kind'],
+                        entrypoint: ii['parameters_entrypoints'] || '',
                     }),
                 );
                 return o;
@@ -189,10 +192,7 @@ export const sendTransaction = () => async (
     }
 };
 
-export const sendDelegation = () => async (
-    dispatch: any,
-    getState: () => State,
-) => {
+export const sendDelegation = () => async (dispatch: any, getState: () => State) => {
     try {
         const tezosUrl = config[0].nodeUrl; // TODO: getState().config
         const address = getState().app.delegateAddress; // TODO do not use state, use parameters
@@ -351,3 +351,101 @@ export const getBakerDetails = async (address: string): Promise<BakerInfo> => { 
     }
     return {address, name: '', fee: 0, logoUrl: '', estimatedRoi: 0};
 };
+
+export const estimateOperationFee = async (operations: any, secretKey: any): Promise<number> => {
+    try {
+        const keyStore = await KeyStoreUtils.restoreIdentityFromSecretKey(secretKey);
+        const tezosUrl = config[0].nodeUrl;
+
+        const formedOperations: any = await createOperationGroup(operations, tezosUrl, keyStore.publicKeyHash, keyStore.publicKey);
+
+        const estimate = await TezosNodeWriter.estimateOperationGroup(tezosUrl, 'main', formedOperations);
+
+        return Number(estimate.estimatedFee);
+    } catch (err) {
+        // console.log('failed estimation')
+        // console.log(JSON.stringify(err))
+        return -1; // TODO: present error to user
+    }
+}
+
+export async function createOperationGroup(
+    operations: any[],
+    tezosUrl: string,
+    publicKeyHash: string,
+    publicKey: string) {
+    const networkCounter = await TezosNodeReader.getCounterForAccount(
+        tezosUrl,
+        publicKeyHash,
+    );
+    const formedOperations: any[] = [];
+
+    let counter = networkCounter;
+    for (const o of operations) {
+        counter += 1;
+
+        switch (o.kind) {
+            case 'transaction': {
+                let entrypoint: string | undefined;
+                let parameters: string | undefined;
+
+                try {
+                    entrypoint = o.parameters.entrypoint;
+                    parameters = JSON.stringify(o.parameters.value);
+                } catch {
+                    //
+                }
+
+                try {
+                    if (entrypoint === 'mint_OBJKT') { // TODO: FIX mint operations bytes convert
+                        if (Array.isArray(o.parameters.value.args[1].args[0].bytes)) {
+                            const processedBytes = Buffer.from(o.parameters.value.args[1].args[0].bytes).toString('hex');
+                            o.parameters.value.args[1].args[0].bytes = processedBytes;
+                            parameters = JSON.stringify(o.parameters.value);
+                        }
+                    }
+                } catch {
+                    //
+                }
+
+                const op = TezosNodeWriter.constructContractInvocationOperation(
+                    publicKeyHash,
+                    counter,
+                    o.destination,
+                    o.amount,
+                    0,
+                    TezosConstants.OperationStorageCap,
+                    TezosConstants.OperationGasCap,
+                    entrypoint,
+                    parameters,
+                );
+
+                formedOperations.push(op);
+
+                break;
+            }
+            case 'delegation': {
+                const op: Delegation = {
+                    kind: 'delegation',
+                    source: publicKeyHash,
+                    fee: '0',
+                    counter: counter.toString(),
+                    storage_limit:
+                        TezosConstants.DefaultDelegationStorageLimit.toString(),
+                    gas_limit:
+                        TezosConstants.DefaultDelegationGasLimit.toString(),
+                    delegate: o.delegate,
+                };
+
+                formedOperations.push(op);
+
+                break;
+            }
+            default: {
+                break;
+            }
+        }
+    }
+
+    return await TezosNodeWriter.appendRevealOperation(tezosUrl, publicKey, publicKeyHash, networkCounter, formedOperations);
+}
