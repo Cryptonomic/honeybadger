@@ -52,7 +52,7 @@ const Receive = ({navigation}: ReceiveProps) => {
                                           styles.addressItemMiddle,
                                       ]
                                     : styles.addressItem
-                            }>
+                            } key={`address${i}`}>
                             {item}
                         </Text>
                     ))}
