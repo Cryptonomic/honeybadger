@@ -2,10 +2,12 @@ export const truncateHash = (value: string) => {
     if (!value) {
         return '';
     }
+
     if (value.length < 12) {
         return value;
     }
-    if (!value.startsWith('tz')) {
+
+    if (!value.startsWith('tz') && !value.startsWith('KT1')) {
         return value;
     }
 
