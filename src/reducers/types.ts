@@ -18,6 +18,7 @@ export interface Operation {
     amount?: number;
     opGroupHash: string;
     delegate?: string;
+    entrypoint?: string;
     //status: string;
 }
 

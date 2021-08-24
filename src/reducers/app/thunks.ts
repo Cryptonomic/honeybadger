@@ -96,7 +96,7 @@ export const getTransactions = async (accountHash: string) => {
     const network = config[0].network;
 
     let origin = ConseilQueryBuilder.blankQuery();
-    origin = ConseilQueryBuilder.addFields(origin, 'timestamp', 'source', 'destination', 'amount', 'operation_group_hash', 'delegate', 'kind');
+    origin = ConseilQueryBuilder.addFields(origin, 'timestamp', 'source', 'destination', 'amount', 'operation_group_hash', 'delegate', 'kind', 'parameters_entrypoints');
     origin = ConseilQueryBuilder.addPredicate(origin, 'kind', ConseilOperator.IN, ['transaction', 'delegation'], false);
     origin = ConseilQueryBuilder.addPredicate(origin, 'source', ConseilOperator.EQ, [accountHash], false);
     origin = ConseilQueryBuilder.addPredicate(origin, 'internal', ConseilOperator.EQ, ['false'], false);
@@ -105,7 +105,7 @@ export const getTransactions = async (accountHash: string) => {
     origin = ConseilQueryBuilder.setLimit(origin, 1000);
 
     let target = ConseilQueryBuilder.blankQuery();
-    target = ConseilQueryBuilder.addFields(target, 'timestamp', 'source', 'destination', 'amount', 'operation_group_hash', 'delegate', 'kind');
+    target = ConseilQueryBuilder.addFields(target, 'timestamp', 'source', 'destination', 'amount', 'operation_group_hash', 'delegate', 'kind', 'parameters_entrypoints');
     target = ConseilQueryBuilder.addPredicate(target, 'kind', ConseilOperator.EQ, ['transaction'], false);
     target = ConseilQueryBuilder.addPredicate(target, 'destination', ConseilOperator.EQ, [accountHash], false);
     target = ConseilQueryBuilder.addPredicate(target, 'internal', ConseilOperator.EQ, ['false'], false);
@@ -125,7 +125,8 @@ export const getTransactions = async (accountHash: string) => {
                         amount: ii['amount'],
                         opGroupHash: ii['operation_group_hash'],
                         delegate: ii['delegate'],
-                        kind: ii['kind']
+                        kind: ii['kind'],
+                        entrypoint: ii['parameters_entrypoints'] || '',
                     }),
                 );
                 return o;
