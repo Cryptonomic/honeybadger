@@ -17,7 +17,6 @@ import {
     MenuOption,
     MenuTrigger,
 } from 'react-native-popup-menu';
-import {NativeModules} from 'react-native';
 
 import BeaconMessages from '../beacon/BeaconMessages';
 
@@ -25,7 +24,6 @@ import {syncAccount} from '../reducers/app/thunks';
 import {setMessage} from '../reducers/messages/actions';
 import Transactions from '../components/Transactions';
 import Delegation from '../components/Delegation';
-import SecurityLevelButton from '../components/SecurityLevelButton';
 import Receive from '../../assets/receive.svg';
 import Send from '../../assets/send.svg';
 
@@ -160,27 +158,12 @@ const Account = ({navigation}: AccountProps) => {
         setPendingModalVisible(!isPendingModalVisible);
     };
 
-    const onClearData = (item: any) => {
-        setOpenSettings(false);
-        Keychain.resetGenericPassword();
-        Keychain.resetInternetCredentials('securitySetup');
-        navigation.navigate('Welcome');
-    };
-
-    const onResetBeacon = () => {
-        NativeModules.BeaconBridge.removePeers();
-        NativeModules.BeaconBridge.removePermissions();
-        NativeModules.BeaconBridge.removeAppMetadata();
-    };
-
     const beaconItems = [
-        {title: 'Beacon', screen: 'BeaconInfo', action: onMenuSelect},
-        {title: 'Beacon Reset', action: onResetBeacon},
+        {title: 'Connect dApp', screen: 'BeaconInfo', action: onMenuSelect}
     ];
 
     const commonItems = [
-        {title: 'Settings', screen: 'Settings', action: onMenuSelect},
-        {title: 'Clear Data', action: onClearData},
+        {title: 'Settings', screen: 'Settings', action: onMenuSelect}
     ];
 
     const menuItems =
