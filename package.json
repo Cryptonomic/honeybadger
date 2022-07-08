@@ -27,7 +27,7 @@
     "conseiljs-ledgersigner": "5.0.4-beta.0",
     "events": "^3.1.0",
     "jsonpath-plus": "^5.0.4",
-    "moment": "2.27.0",
+    "moment": "2.29.4",
     "native-base": "2.13.13",
     "process": "^0.11.10",
     "react": "16.13.1",
