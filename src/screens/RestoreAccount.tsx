@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, {useState, useEffect} from 'react';
 import {StyleSheet, Modal} from 'react-native';
-import {Container, Button, Text, View, Header} from 'native-base';
+import {Container, Box, Center, Button, Text, View} from 'native-base';
 import {KeyStoreUtils} from '../softsigner';
 import SeedInput from '../components/SeedInput';
 import CustomHeader from '../components/CustomHeader';
@@ -53,7 +53,7 @@ const RestoreAccount = ({navigation}: AccountProps) => {
 
         setIdentity(identity);
         setRecoveredAddress(identity.publicKeyHash);
-        setInfoModalVisible(true);        
+        setInfoModalVisible(true);
     }
 
     const recoverAccount = async () => {
@@ -78,10 +78,10 @@ const RestoreAccount = ({navigation}: AccountProps) => {
                     pin: '',
                     phraseBackedUp: true,
                     phraseBackedUpFirst: true,
-                }
+                };
                 await Keychain.setInternetCredentials('securitySetup', 'userName', JSON.stringify(setup));
 
-                dispatch(setKeysAction(identityData));   
+                dispatch(setKeysAction(identityData));
                 navigation.replace('AccountSetup');
             }
         } else {
@@ -90,10 +90,10 @@ const RestoreAccount = ({navigation}: AccountProps) => {
             setErrorModalVisible(true);
             setAccountNotFound(true);
         }
-    }
+    };
 
     const closeErrorModal = async() => {
-        setErrorModalVisible(false)
+        setErrorModalVisible(false);
         setErrorText('');
         if (isAccountNotFound) {
             const termsDate = new Date().toLocaleString();
@@ -105,13 +105,13 @@ const RestoreAccount = ({navigation}: AccountProps) => {
                 navigation.replace('AccountSetup');
             }, 100);
         }
-    }
+    };
 
     let addressParts = splitHash(recoveredAddress);
 
     return (
-        <React.Fragment>
-            <Container style={styles.yellowContainer}>
+        <>
+            <Center style={styles.yellowContainer}>
                 <CustomHeader
                     title="Recovery Phrase"
                     onBack={() => step === 1 ? navigation.replace('Welcome') : setStep(1)}
@@ -123,7 +123,7 @@ const RestoreAccount = ({navigation}: AccountProps) => {
                 {step === 2 &&
                     <RecoveryOption onChange={handleRecovery}/>
                 }
-            </Container>
+            </Center>
             <Modal
                 animationType="fade"
                 transparent={true}
@@ -134,7 +134,7 @@ const RestoreAccount = ({navigation}: AccountProps) => {
                         <Text style={styles.modalText}>Error</Text>
                         <Text style={styles.typo2}>{errorText}</Text>
                         <Button style={styles.modalBtn} onPress={closeErrorModal}>
-                            <Text>Close</Text>
+                            <Text style={{color: 'white'}}>Close</Text>
                         </Button>
                     </View>
                 </View>
@@ -174,13 +174,14 @@ const RestoreAccount = ({navigation}: AccountProps) => {
                     </View>
                 </View>
             </Modal>
-        </React.Fragment>
+        </>
     )
 }
 
 const styles = StyleSheet.create({
     yellowContainer: {
         backgroundColor: colors.bg,
+        width: '100%',
     },
     typo2: {
         fontFamily: 'Roboto-Regular',

@@ -1,6 +1,7 @@
 import React from 'react';
 import {StyleSheet} from 'react-native';
-import {Header, Button, Left, Right, Title, Body} from 'native-base';
+// import {Header, Button, Left, Right, Title, Body} from 'native-base';
+import { HStack, IconButton, Text, ArrowBackIcon, CloseIcon } from 'native-base';
 
 import CustomIcon from '../CustomIcon';
 
@@ -29,32 +30,62 @@ const CustomHeader = ({
         ...backIconCustomStyles,
     };
     return (
-        <Header transparent>
-            <Left style={styles.button}>
-                {onBack && (
-                    <Button transparent onPress={onBack}>
-                        <CustomIcon
-                            name={leftIconName}
-                            size={backIconStyles.size}
-                            color={backIconStyles.color}
+        // <Header transparent>
+        //     <Left style={styles.button}>
+        //         {onBack && (
+        //             <Button transparent onPress={onBack}>
+        //                 <CustomIcon
+        //                     name={leftIconName}
+        //                     size={backIconStyles.size}
+        //                     color={backIconStyles.color}
+        //                 />
+        //             </Button>
+        //         )}
+        //     </Left>
+        //     <Body>{title && <Title style={styles.title}>{title}</Title>}</Body>
+        //     <Right style={styles.button}>
+        //         {onClose && !RightComponent && (
+        //             <Button transparent onPress={onClose}>
+        //                 <CustomIcon
+        //                     name={rightIconName}
+        //                     size={closeIconStyles.size}
+        //                     color={closeIconStyles.color}
+        //                 />
+        //             </Button>
+        //         )}
+        //         {RightComponent && !onClose && RightComponent}
+        //     </Right>
+        // </Header>
+        <>
+            <HStack px="1" py="3" justifyContent="space-between" alignItems="center" w="100%">
+                <HStack alignItems="center" style={styles.button}>
+                    {onBack && (
+                        <IconButton 
+                            icon={<ArrowBackIcon/>}
+                            _icon={{
+                                color: "black",
+                                size: "md"
+                            }}
+                            onPress={onBack}
                         />
-                    </Button>
-                )}
-            </Left>
-            <Body>{title && <Title style={styles.title}>{title}</Title>}</Body>
-            <Right style={styles.button}>
-                {onClose && !RightComponent && (
-                    <Button transparent onPress={onClose}>
-                        <CustomIcon
-                            name={rightIconName}
-                            size={closeIconStyles.size}
-                            color={closeIconStyles.color}
+                    )}
+                </HStack>
+                <HStack>{title && <Text style={styles.title}>{title}</Text>}</HStack>
+                <HStack style={styles.button}>
+                    {onClose && !RightComponent && (
+                        <IconButton 
+                            icon={<CloseIcon/>}
+                            _icon={{
+                                color: "black",
+                                size: "md"
+                            }}
+                            onPress={onBack}
                         />
-                    </Button>
-                )}
-                {RightComponent && !onClose && RightComponent}
-            </Right>
-        </Header>
+                    )}
+                    {RightComponent && !onClose && RightComponent}
+                </HStack>
+            </HStack>
+        </>
     );
 };
 

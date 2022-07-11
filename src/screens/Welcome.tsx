@@ -1,11 +1,11 @@
-import React, {useEffect, useState} from 'react';
-import {Alert, StyleSheet} from 'react-native';
-import {Container, Text, Button, View} from 'native-base';
+import React, { useEffect, useState } from 'react';
+import { StatusBar, Alert, StyleSheet } from 'react-native';
+import { Container, Text, Button, View, Box, Center } from 'native-base';
 import * as Keychain from 'react-native-keychain';
-import {useDispatch} from 'react-redux';
+import { useDispatch } from 'react-redux';
 
-import {setKeysAction} from '../reducers/app/actions';
-import TouchID from "react-native-touch-id";
+import { setKeysAction } from '../reducers/app/actions';
+import TouchID from 'react-native-touch-id';
 
 import SafeContainer from '../components/SafeContainer';
 import PinCode from '../components/PinCode';
@@ -14,9 +14,11 @@ import Logo from '../../assets/galleon-logo.svg';
 import Cryptonomic from '../../assets/cryptonomic-icon.svg';
 import Wave from '../../assets/splash-wave-shadow.svg';
 
-import {WelcomeProps} from './types';
+import { colors } from '../theme';
 
-const Welcome = ({navigation}: WelcomeProps) => {
+import { WelcomeProps } from './types';
+
+const Welcome = ({ navigation }: WelcomeProps) => {
     const dispatch = useDispatch();
     const [isAccountPresent, setIsAccountPresent] = useState(false);
     const [isPinEnabled, setIsPinEnabled] = useState(false);
@@ -27,7 +29,7 @@ const Welcome = ({navigation}: WelcomeProps) => {
     useEffect(() => {
         async function load() {
             let keys: any;
-            let securityConfig: any
+            let securityConfig: any;
 
             try {
                 keys = await Keychain.getGenericPassword();
@@ -36,7 +38,10 @@ const Welcome = ({navigation}: WelcomeProps) => {
                     dispatch(setKeysAction(JSON.parse(keys.password)));
                 }
             } catch (error) {
-                console.log("Account information not found in the Keychain", error);
+                console.log(
+                    'Account information not found in the Keychain',
+                    error,
+                );
             }
 
             try {
@@ -49,7 +54,7 @@ const Welcome = ({navigation}: WelcomeProps) => {
 
                 await TouchID.isSupported().then((biometryType: any) => {
                     console.log(biometryType)
-                    if (biometryType == 'FaceID' || biometryType == 'TouchID') {
+                    if (biometryType === 'FaceID' || biometryType === 'TouchID') {
                         setIsBiometricSupported(true);
                     }
                     setIsBiometricEnabled(securityConfig.isBiometric);
@@ -58,12 +63,12 @@ const Welcome = ({navigation}: WelcomeProps) => {
                     setIsBiometricEnabled(false);
                 });
             } catch (error) {
-                console.log("Security configuration not found in the Keychain", error);
+                console.log('Security configuration not found in the Keychain', error);
             }
 
             if (keys !== false && (securityConfig === undefined || !securityConfig.securitySetup)) {
                 navigation.replace('Account');
-                return
+                return;
             }
 
             if (securityConfig !== undefined && securityConfig.isBiometric) {
@@ -91,14 +96,14 @@ const Welcome = ({navigation}: WelcomeProps) => {
                     passcodeFallback: false, // iOS - allows the device to fall back to using the passcode, if faceid/touch is not available. this does not mean that if touchid/faceid fails the first few times it will revert to passcode, rather that if the former are not enrolled, then it will use the passcode.
                 };
                 return TouchID.authenticate("", optionalConfigObject)
-                .then((success: any) => {
-                    // Alert.alert('Authenticated Successfully NEW');
-                    navigation.replace('Account');
-                })
-                .catch((error: any) => {
-                    //  Do noting as user has cancelled the biometric auth
-                    console.log("Touch is not available");
-                });
+                    .then((success: any) => {
+                        // Alert.alert('Authenticated Successfully NEW');
+                        navigation.replace('Account');
+                    })
+                    .catch((error: any) => {
+                        //  Do noting as user has cancelled the biometric auth
+                        console.log("Touch is not available");
+                    });
             })
             .catch(error => {
                 // Do noting as user has cancelled the biometric auth
@@ -110,8 +115,8 @@ const Welcome = ({navigation}: WelcomeProps) => {
         setIsPin(true);
     }
 
-    const handlePin = async(pinEntered: string) => {
-        let data: any= await Keychain.getInternetCredentials('securitySetup');
+    const handlePin = async (pinEntered: string) => {
+        let data: any = await Keychain.getInternetCredentials('securitySetup');
         data = JSON.parse(data.password);
         if (data.pin === pinEntered) {
             //setIsPin(false);
@@ -128,58 +133,59 @@ const Welcome = ({navigation}: WelcomeProps) => {
 
     return (
         !isPin ?
-        <Container>
-            <View style={styles.waveBg} />
-            <SafeContainer>
-                <View style={styles.wave}>
-                    <Wave />
-                </View>
-                <View style={styles.logo}>
-                    <Logo />
-                </View>
-                <View style={styles.bottom}>
-                    <View style={styles.item}>
-                        <View style={styles.text}>
-                            <Text style={styles.typo1}>A product of</Text>
-                            <Cryptonomic style={styles.logoCrytponomic} />
-                            <Text style={styles.typo2}>Cryptonomic Inc</Text>
+            <Box>
+                <StatusBar backgroundColor="#fcd104" barStyle='light-content' />
+                <View style={styles.waveBg} />
+                <SafeContainer>
+                    <View style={styles.wave}>
+                        <Wave />
+                    </View>
+                    <View style={styles.logo}>
+                        <Logo />
+                    </View>
+                    <View style={styles.bottom}>
+                        <View style={styles.item}>
+                            <View style={styles.text}>
+                                <Text style={styles.typo1}>A product of</Text>
+                                <Cryptonomic style={styles.logoCrytponomic} />
+                                <Text style={styles.typo2}>Cryptonomic Inc</Text>
+                            </View>
+                        </View>
+                        <View style={styles.item}>
+                            {
+                                (isAccountPresent && isPinEnabled) &&
+                                <React.Fragment>
+                                    <Button style={styles.btn} onPress={showPin}>
+                                        <Text style={styles.typo3}>Enter Pin</Text>
+                                    </Button>
+                                    <Text style={{ marginTop: 20 }} onPress={() => navigation.replace('ResetPin')}>Reset Pin</Text>
+                                    {
+                                        (isBiometricSupported && isBiometricEnabled) &&
+                                        <Button style={styles.btn} onPress={showAppLock}>
+                                            <Text style={styles.typo3}>Use Biometrics</Text>
+                                        </Button>
+                                    }
+                                </React.Fragment>
+                            }
+                            {
+                                (!isAccountPresent) &&
+                                <React.Fragment>
+                                    <Button style={styles.btn} onPress={() => navigation.replace('RestoreAccount')}>
+                                        <Text style={styles.typo3}>Restore Account</Text>
+                                    </Button>
+                                    <Button style={styles.btnWhite} onPress={getStarted}>
+                                        <Text style={styles.typo3White}>Create New Account</Text>
+                                    </Button>
+                                </React.Fragment>
+                            }
                         </View>
                     </View>
-                    <View style={styles.item}>
-                        {
-                            (isAccountPresent && isPinEnabled) &&
-                            <React.Fragment>
-                                <Button style={styles.btn} onPress={showPin}>
-                                    <Text style={styles.typo3}>Enter Pin</Text>
-                                </Button>
-                                <Text style={{marginTop: 20}} onPress={() => navigation.replace('ResetPin')}>Reset Pin</Text>
-                                {
-                                    (isBiometricSupported && isBiometricEnabled) &&
-                                    <Button style={styles.btn} onPress={showAppLock}>
-                                        <Text style={styles.typo3}>Use Biometrics</Text>
-                                    </Button>
-                                }
-                            </React.Fragment>
-                        }
-                        {
-                            (!isAccountPresent) &&
-                            <React.Fragment>
-                                <Button style={styles.btn} onPress={() => navigation.replace('RestoreAccount')}>
-                                    <Text style={styles.typo3}>Restore Account</Text>
-                                </Button>
-                                <Button style={styles.btnWhite} onPress={getStarted}>
-                                    <Text style={styles.typo3White}>Create New Account</Text>
-                                </Button>
-                            </React.Fragment>
-                        }
-                    </View>
-                </View>
-            </SafeContainer>
-        </Container>
-        :
-        <Container>
-            <PinCode key="pin" text='Please Enter Your Pin' handlePin={handlePin} isResetNeeded={false} isSkipAllowed={false} allowChange={true} redirectToResetPin={redirectToResetPin}/>
-        </Container>
+                </SafeContainer>
+            </Box>
+            :
+            <Center style={styles.containerWrapper}>
+                <PinCode key="pin" text='Please Enter Your Pin' handlePin={handlePin} isResetNeeded={false} isSkipAllowed={false} allowChange={true} redirectToResetPin={redirectToResetPin} />
+            </Center>
     );
 };
 
@@ -255,6 +261,7 @@ const styles = StyleSheet.create({
         fontWeight: '500',
         letterSpacing: 0.85,
         textTransform: 'capitalize',
+        color: 'white'
     },
     typo3White: {
         fontFamily: 'Roboto-Medium',
@@ -263,7 +270,10 @@ const styles = StyleSheet.create({
         letterSpacing: 0.85,
         textTransform: 'capitalize',
         color: '#4b4b4b'
-    }
+    },
+    containerWrapper: {
+        backgroundColor: colors.bg,
+    },
 });
 
 export default Welcome;

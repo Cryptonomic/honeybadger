@@ -1,17 +1,17 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, {useState} from 'react';
-import {StyleSheet} from 'react-native';
-import {Container, Text, Button, View} from 'native-base';
-import {useDispatch} from 'react-redux';
+import React, { useState } from 'react';
+import { StatusBar, StyleSheet } from 'react-native';
+import { Container, Text, Button, View, Box } from 'native-base';
+import { useDispatch } from 'react-redux';
 import Pdf from 'react-native-pdf';
 
-import {setTermsDate} from '../reducers/app/actions';
+import { setTermsDate } from '../reducers/app/actions';
 
 import SafeContainer from '../components/SafeContainer';
 import BottomCover from '../components/BottomCover';
 import CustomHeader from '../components/CustomHeader';
-import {colors} from '../theme';
-import {WelcomeProps} from './types';
+import { colors } from '../theme';
+import { WelcomeProps } from './types';
 
 const sources = [
     {
@@ -26,7 +26,7 @@ const sources = [
     },
 ];
 
-const Terms = ({navigation}: WelcomeProps) => {
+const Terms = ({ navigation }: WelcomeProps) => {
     const dispatch = useDispatch();
     const [tab, setTab] = useState(0);
 
@@ -45,8 +45,9 @@ const Terms = ({navigation}: WelcomeProps) => {
     };
 
     return (
-        <Container style={styles.container}>
+        <Box style={styles.container}>
             <SafeContainer>
+                <StatusBar backgroundColor="#fcd104" barStyle='light-content' />
                 <CustomHeader title="Accept Terms" />
                 <View style={styles.content}>
                     <View style={styles.tabs}>
@@ -59,7 +60,7 @@ const Terms = ({navigation}: WelcomeProps) => {
                             ]}>
                             <Button
                                 style={styles.center}
-                                transparent
+                                variant="unstyled"
                                 onPress={() => changeTab(0)}>
                                 <Text
                                     style={[
@@ -81,7 +82,7 @@ const Terms = ({navigation}: WelcomeProps) => {
                             ]}>
                             <Button
                                 style={styles.center}
-                                transparent
+                                variant="unstyled"
                                 onPress={() => changeTab(1)}>
                                 <Text
                                     style={[
@@ -96,6 +97,7 @@ const Terms = ({navigation}: WelcomeProps) => {
                         </View>
                     </View>
                     <Pdf
+                        trustAllCerts={false}
                         source={sources[tab]}
                         scale={1.0}
                         onLoadComplete={(numberOfPages, filePath) => { }}
@@ -106,14 +108,14 @@ const Terms = ({navigation}: WelcomeProps) => {
                     />
                     <View style={styles.actionsWrapper}>
                         <View style={styles.actions}>
-                            <Button transparent onPress={onCancel}>
+                            <Button variant="unstyled" onPress={onCancel}>
                                 <View style={styles.btn}>
                                     <Text style={styles.cancelText}>
                                         Cancel
                                     </Text>
                                 </View>
                             </Button>
-                            <Button transparent onPress={getStarted}>
+                            <Button variant="unstyled" onPress={getStarted}>
                                 <View style={[styles.btn, styles.accept]}>
                                     <Text style={styles.acceptText}>
                                         Accept
@@ -125,7 +127,7 @@ const Terms = ({navigation}: WelcomeProps) => {
                 </View>
             </SafeContainer>
             <BottomCover />
-        </Container>
+        </Box>
     );
 };
 

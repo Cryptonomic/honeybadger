@@ -1,16 +1,17 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import {
+    StatusBar,
     StyleSheet,
     Image,
     TouchableOpacity,
     ScrollView,
     Platform,
 } from 'react-native';
-import {Container, Button, Text, View, Header} from 'native-base';
+import { Box, Button, Text, View } from 'native-base';
 import * as Keychain from 'react-native-keychain';
 import Modal from 'react-native-modal';
-import {useSelector, useDispatch} from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import {
     Menu,
     MenuOptions,
@@ -20,27 +21,28 @@ import {
 
 import BeaconMessages from '../beacon/BeaconMessages';
 
-import {syncAccount} from '../reducers/app/thunks';
-import {setMessage} from '../reducers/messages/actions';
+import { syncAccount } from '../reducers/app/thunks';
+import { setMessage } from '../reducers/messages/actions';
 import Transactions from '../components/Transactions';
 import Delegation from '../components/Delegation';
 import Receive from '../../assets/receive.svg';
 import Send from '../../assets/send.svg';
 
 import CustomIcon from '../components/CustomIcon';
-import {truncateHash} from '../utils/general';
-import {formatAmount} from '../utils/currency';
+import { truncateHash } from '../utils/general';
+import { formatAmount } from '../utils/currency';
 
-import {State} from '../reducers/types';
-import {AccountProps} from './types';
+import { State } from '../reducers/types';
+import { AccountProps } from './types';
 import Fish from '../../assets/fish.svg';
 import Circle from '../../assets/circle.svg';
 import RightArrow from '../../assets/right-arrow.svg';
 import Salmon from '../../assets/salmon.svg';
 import BgGradient from '../../assets/bg-gradient.svg';
 import NFTIcon from '../../assets/nft.svg';
+import XTZIcon from '../../assets/xtz.svg';
 
-const Account = ({navigation}: AccountProps) => {
+const Account = ({ navigation }: AccountProps) => {
     const dispatch = useDispatch();
     const publicKeyHash = useSelector(
         (state: State) => state.app.publicKeyHash,
@@ -74,6 +76,7 @@ const Account = ({navigation}: AccountProps) => {
                 );
                 if (data) {
                     data = JSON.parse(data.password);
+                    console.log("account data=>", data)
                     if (data.securitySetup && data.phraseBackedUp) {
                         setSecurityLevel('2');
                     } else if (data.securitySetup || data.phraseBackedUp) {
@@ -135,7 +138,7 @@ const Account = ({navigation}: AccountProps) => {
             togglePendingModal();
         } else if (value === 'SendAddress' || value === 'Receive') {
             setModalNext(value);
-            toggleModal();
+            toggleModal(value);
         } else {
             navigation.navigate(value);
         }
@@ -148,9 +151,9 @@ const Account = ({navigation}: AccountProps) => {
         navigation.navigate(item.screen);
     };
 
-    const toggleModal = () => {
-        if (modalNext) {
-            navigation.navigate(modalNext);
+    const toggleModal = (value: string) => {
+        if (value) {
+            navigation.navigate(value);
         }
     };
 
@@ -159,27 +162,29 @@ const Account = ({navigation}: AccountProps) => {
     };
 
     const beaconItems = [
-        {title: 'Connect dApp', screen: 'BeaconInfo', action: onMenuSelect}
+        { title: 'Connect dApp', screen: 'BeaconInfo', action: onMenuSelect }
     ];
 
     const commonItems = [
-        {title: 'Settings', screen: 'Settings', action: onMenuSelect}
+        { title: 'Settings', screen: 'Settings', action: onMenuSelect }
     ];
 
-    const menuItems =
-        Platform.OS === 'ios' ? [...beaconItems, ...commonItems] : commonItems;
+    // const menuItems =
+    //     Platform.OS === 'ios' ? [...beaconItems, ...commonItems] : commonItems;
+    const menuItems = [...beaconItems, ...commonItems];
 
     const navigateToSecurity = () => {
         navigation.navigate('SecurityLevel');
     };
 
     return (
-        <Container style={styles.container}>
+        <Box style={styles.container}>
+            <StatusBar backgroundColor="#fcd104" barStyle='light-content' />
             <BgGradient style={styles.bg} />
             {Platform.OS === 'ios' && (
-                <BeaconMessages navigation={navigation} />
+                <BeaconMessages navigation={navigation} route={undefined} />
             )}
-            <ScrollView contentContainerStyle={{flexGrow: 1}}>
+            <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
                 <View>
                     <View style={styles.account}>
                         {/*<Text style={styles.typo1}>{`My account (${truncateHash(
@@ -194,7 +199,7 @@ const Account = ({navigation}: AccountProps) => {
                                     TriggerTouchableComponent: () => (
                                         <Button
                                             style={styles.menuBtn}
-                                            transparent
+                                            variant="unstyled"
                                             onPress={() =>
                                                 setOpenSettings(true)
                                             }>
@@ -220,9 +225,9 @@ const Account = ({navigation}: AccountProps) => {
                                                 index === menuItems.length - 1
                                                     ? styles.menuOption
                                                     : [
-                                                          styles.menuOption,
-                                                          styles.menuLastItem,
-                                                      ],
+                                                        styles.menuOption,
+                                                        styles.menuLastItem,
+                                                    ],
                                             optionText: styles.typo5,
                                         }}
                                     />
@@ -232,10 +237,13 @@ const Account = ({navigation}: AccountProps) => {
                     </View>
                     <View style={styles.amount}>
                         <View style={[styles.center, styles.row]}>
-                            <Text style={styles.typo2}>
+                            <Text fontSize="3xl" style={styles.typo2}>
                                 {formatAmount(balance)}
                             </Text>
-                            <CustomIcon name="XTZ" size={30} color="#1a1919" />
+                            {/* <CustomIcon name="XTZ" size={30} color="#1a1919" /> */}
+                            <View style={styles.xtzIcon}>
+                                <XTZIcon />
+                            </View>
                         </View>
                         {/*<View style={styles.center}>
                             <Text style={styles.typo3}>$0.00</Text>
@@ -244,7 +252,9 @@ const Account = ({navigation}: AccountProps) => {
                     <View style={styles.actions}>
                         <View style={styles.center}>
                             <Button
-                                transparent
+                                variant="unstyled"
+                                size="sm"
+                                style={styles.actionBtn}
                                 onPress={() => onPress('Receive')}>
                                 <View style={styles.actionCircle}>
                                     <Receive />
@@ -256,7 +266,9 @@ const Account = ({navigation}: AccountProps) => {
                         </View>
                         <View style={styles.center}>
                             <Button
-                                transparent
+                                variant="unstyled"
+                                size="sm"
+                                style={styles.actionBtn}
                                 onPress={() => onPress('SendAddress')}>
                                 <View style={styles.actionCircle}>
                                     <Send fill="#000000" />
@@ -268,7 +280,9 @@ const Account = ({navigation}: AccountProps) => {
                         </View>
                         <View style={styles.center}>
                             <Button
-                                transparent
+                                variant="unstyled"
+                                size="sm"
+                                style={styles.actionBtn}
                                 onPress={() => onPress('NFTGallery')}>
                                 <View style={styles.actionCircle}>
                                     <NFTIcon fill="#000000" />
@@ -301,7 +315,7 @@ const Account = ({navigation}: AccountProps) => {
                                     }}
                                 />
                             </View>
-                            <View style={{width: '75%'}}>
+                            <View style={{ width: '75%' }}>
                                 <Text style={styles.typo6}>
                                     Your Security Level
                                 </Text>
@@ -313,7 +327,7 @@ const Account = ({navigation}: AccountProps) => {
                                 <Circle style={{width:60,height:59,marginRight:16}}/>
                             </View> */}
                             <View>
-                                <RightArrow style={{width: 9, height: 14}} />
+                                <RightArrow style={{ width: 9, height: 14 }} />
                             </View>
                         </TouchableOpacity>
                     )}
@@ -330,7 +344,7 @@ const Account = ({navigation}: AccountProps) => {
                                     }}
                                 />
                             </View>
-                            <View style={{width: '75%'}}>
+                            <View style={{ width: '75%' }}>
                                 <Text style={styles.typo6}>
                                     Your Security Level
                                 </Text>
@@ -342,7 +356,7 @@ const Account = ({navigation}: AccountProps) => {
                             <Circle style={{width:60,height:59,marginRight:16}}/>
                             </View> */}
                             <View>
-                                <RightArrow style={{width: 9, height: 14}} />
+                                <RightArrow style={{ width: 9, height: 14 }} />
                             </View>
                         </TouchableOpacity>
                     )}
@@ -375,7 +389,7 @@ const Account = ({navigation}: AccountProps) => {
                             ]}>
                             <Button
                                 style={styles.tabBtn}
-                                transparent
+                                variant="unstyled"
                                 onPress={() => changeTab(0)}>
                                 <Text
                                     style={[
@@ -397,7 +411,7 @@ const Account = ({navigation}: AccountProps) => {
                             ]}>
                             <Button
                                 style={styles.tabBtn}
-                                transparent
+                                variant="unstyled"
                                 onPress={() => changeTab(1)}>
                                 <Text
                                     style={[
@@ -419,7 +433,7 @@ const Account = ({navigation}: AccountProps) => {
 
                 <Modal isVisible={isPendingModalVisible}>
                     <View style={styles.warningModal}>
-                        <Text style={{marginBottom: 5}}>
+                        <Text style={{ marginBottom: 5 }}>
                             There is a pending operation awaiting processing on
                             the chain. It must be included in a block or time
                             out. New operations cannot be submitted until then.
@@ -432,7 +446,7 @@ const Account = ({navigation}: AccountProps) => {
                     </View>
                 </Modal>
             </ScrollView>
-        </Container>
+        </Box>
     );
 };
 
@@ -495,6 +509,16 @@ const styles = StyleSheet.create({
         width: 50,
         height: 50,
     },
+    actionBtn: {
+        width: 50,
+        height: 50,
+    },
+    xtzIcon: {
+        height: 30,
+        width: 30,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
     icon: {
         alignItems: 'center',
         justifyContent: 'center',
@@ -518,9 +542,10 @@ const styles = StyleSheet.create({
         marginTop: 20,
     },
     actions: {
-        marginTop: 50,
+        marginTop: 40,
         flexDirection: 'row',
-        justifyContent: 'center',
+        justifyContent: 'space-around',
+        marginHorizontal: 30
     },
     actionCircle: {
         alignItems: 'center',
@@ -586,7 +611,7 @@ const styles = StyleSheet.create({
     },
     typo2: {
         fontFamily: 'Roboto-Medium',
-        fontSize: 36,
+        // fontSize: 36,
         fontWeight: '500',
         color: 'rgb(26, 25, 25)',
     },

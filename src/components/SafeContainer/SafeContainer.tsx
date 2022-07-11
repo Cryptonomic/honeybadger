@@ -1,7 +1,12 @@
-import React, {FC} from 'react';
+import React, {ReactNode} from 'react';
 import {SafeAreaView, View, StyleSheet} from 'react-native';
 
-const SafeContainer: FC = ({children}) => {
+interface Props {
+    children?: ReactNode
+    // any props that come into the component
+}
+
+const SafeContainer = ({children}: Props) => {
     return (
         <SafeAreaView>
             <View style={styles.container}>{children}</View>

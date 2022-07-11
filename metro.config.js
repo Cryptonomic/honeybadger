@@ -5,6 +5,17 @@
  * @format
  */
 
+// module.exports = {
+//   transformer: {
+//     getTransformOptions: async () => ({
+//       transform: {
+//         experimentalImportSupport: false,
+//         inlineRequires: true,
+//       },
+//     }),
+//   },
+// };
+
 const { getDefaultConfig } = require("metro-config");
 
 module.exports = (async () => {
@@ -19,23 +30,8 @@ module.exports = (async () => {
     },
     resolver: {
       assetExts: assetExts.filter(ext => ext !== "svg"),
-      sourceExts: [...sourceExts, "svg"]
+      // sourceExts: [...sourceExts, "svg"],
+      sourceExts: ['jsx', 'js', 'ts', 'tsx', 'cjs', 'svg'],
     }
   };
 })();
-
-// module.exports = {
-//   transformer: {
-//     getTransformOptions: async () => ({
-//       transform: {
-//         experimentalImportSupport: false,
-//         inlineRequires: false,
-//       },
-//     }),
-//   },
-//   // resolver: {
-//   //   extraNodeModules: {
-//   //     crypto: require('react-native-cyrpto'),
-//   //   },
-//   // },
-// };
